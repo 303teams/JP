@@ -5,10 +5,15 @@ import ElementUI from 'element-plus'
 import 'element-plus/theme-chalk/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import * as ElIconModules from '@element-plus/icons'
+import 'lib-flexible/flexible.js'
 
-// axios.defaults.baseURL = 'http://localhost:8082'; // 统一配置的服务器地址
+const app = createApp(App)
+//  统一注册el-icon图标
+for(let iconName in ElIconModules){
+    app.component(iconName,ElIconModules[iconName])
+}
 
-const app = createApp(App);
 app.use(router);
 app.use(ElementUI)
 app.use(VueAxios,axios)

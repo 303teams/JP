@@ -1,8 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import WelcomePage from "@/components/WelcomePage";
 import LoginComponent from "@/components/LoginComponent";
-import RegisterComponent from "@/components/RegisterComponent";
-import MarketPage from "@/components/MarketPage";
+import HomePage from "@/components/HomePage.vue";
 
 const routerHistory = createWebHistory();
 
@@ -11,37 +9,37 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: '/welcome'
+            redirect: '/login'
         },
         {
-            path: '/welcome',
-            name: 'WelcomePage',
-            component: WelcomePage,
-            children: [
-                // {
-                //     path: '/',
-                //     redirect: '/welcome/login'
-                // },
-                {
-                    path: '/welcome',
-                    redirect: '/welcome/login'
-                },
-                {
-                    path: '/welcome/login',
-                    name: 'Login',
-                    component: LoginComponent
-                },
-                {
-                    path: '/welcome/register',
-                    name: 'register',
-                    component: RegisterComponent
-                }
-            ]
+          path: "/login",
+          name: "Login",
+          component: LoginComponent
         },
+        // {
+        //     path: '/',
+        //     name: 'WelcomePage',
+        //     component: WelcomePage,
+        //     children: [
+        //         // {
+        //         //     path: '/',
+        //         //     redirect: '/welcome/login'
+        //         // },
+        //         {
+        //             path: '/welcome',
+        //             redirect: '/welcome/login'
+        //         },
+        //         {
+        //             path: '/welcome/login',
+        //             name: 'Login',
+        //             component: LoginComponent
+        //         }
+        //     ]
+        // },
         {
-            path: '/market',
-            name: 'MarketPage',
-            component: MarketPage
+            path: '/home',
+            name: 'HomePage',
+            component:HomePage
         }
 
     ],
