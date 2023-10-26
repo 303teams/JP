@@ -1,15 +1,16 @@
 package com.bjtu.controller;
 
+import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.User;
 import com.bjtu.service.UserService;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
+import java.rmi.ServerException;
 import java.util.List;
 
 @RestController
@@ -19,8 +20,17 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @AuthAccess
+    @GetMapping("/email/{email}")
+    public int sendEmailCode(@PathVariable String email){
+
+        userService.sendEmailCode(email);
+        return 1;
+    }
+
     @PostMapping("login")
-    public RspObject<User> login( String username,  String password){
+    public RspObject<User> login( String username,  String password, String role){
+
         System.out.println(username+" "+password);
 
         Assert.hasLength(username,"用户名不能为空！");

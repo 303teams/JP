@@ -84,9 +84,51 @@ export default {
         }
       })
     },
+<<<<<<< Updated upstream
     toReg() {
       this.$router.push("/welcome/register");
     }
+=======
+
+    EmailVerify: function () {
+      if(this.$refs.UserEmailVerifyRef !== undefined){
+        this.$refs.UserEmailVerifyRef.resetFields();
+      }
+      this.EmailVerifyDialogVis = true;
+    },
+    changePassword: function () {
+    },
+    sendVerificationCode: function () {
+      if(!this.UserEmailVerifyForm.email){
+        this.$message.warning("请输入邮箱！");
+        return;
+      }
+// //邮箱格式验证
+//       if(!/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/.test(this.UserEmailVerifyForm.email)){
+//         this.$message.warning("请输入正确的邮箱！");
+//         return;
+//       }
+
+//发送验证码
+      this.request.get("/user/email/", + this.UserEmailVerifyForm.email).then(res => {
+        if(res.data.code === 200){
+          this.$message.success("验证码发送成功！");
+        }else{
+          this.$message.error("验证码发送失败！");
+        }
+      })
+
+
+    },
+    confirmEmail: function () {
+      if(this.$refs.ResetPasswordRef !== undefined){
+        this.$refs.ResetPasswordRef.resetFields();
+      }
+
+      this.EmailVerifyDialogVis = false;
+      this.resetPasswordDialogVis = true;
+    },
+>>>>>>> Stashed changes
   }
 }
 </script>
