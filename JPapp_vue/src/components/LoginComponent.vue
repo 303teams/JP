@@ -84,9 +84,35 @@ export default {
         }
       })
     },
-    toReg() {
-      this.$router.push("/welcome/register");
-    }
+
+    EmailVerify: function () {
+      if(this.$refs.UserEmailVerifyRef !== undefined){
+        this.$refs.UserEmailVerifyRef.resetFields();
+      }
+      this.EmailVerifyDialogVis = true;
+    },
+    changePassword: function () {
+    },
+    sendVerificationCode: function () {
+      this.request.post("/user/email/" + this.EmailVerifyDialogVis.email).then(res => {
+        if(res.code === '200'){
+          this.$message.success("发送成功")
+        }else{
+          this.$message.error("发送失败")
+        }
+          }
+
+      )
+
+    },
+    confirmEmail: function () {
+      if(this.$refs.ResetPasswordRef !== undefined){
+        this.$refs.ResetPasswordRef.resetFields();
+      }
+
+      this.EmailVerifyDialogVis = false;
+      this.resetPasswordDialogVis = true;
+    },
   }
 }
 </script>
