@@ -7,6 +7,9 @@ import java.util.List;
 
 public interface UserService {
 
+
+
+
     public RspObject<User> login(String username, String password);
 
     public RspObject<Boolean> insert(User user);
@@ -15,4 +18,8 @@ public interface UserService {
 
     public RspObject<Boolean> deleteOne(String username);
 
+
+    User sendEmail(User user);
+
+    void sendEmailCode(String email);
 }
