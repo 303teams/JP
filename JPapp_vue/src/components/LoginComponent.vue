@@ -42,7 +42,7 @@
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
               <el-input v-model="UserEmailVerifyForm.code" placeholder="请输入验证码" style="flex: 1;"></el-input>
-              <el-button type="text" @click="sendVerificationCode" style="margin-left: 15px">发送验证码</el-button>
+              <el-button type="text" @click="sendVerificationCode" :disabled="disableSend" style="margin-left: 15px">发送验证码</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -85,6 +85,7 @@ export default {
   name: "LoginComponent",
   data() {
     return {
+      disableSend: false,
       user: {              // 登录表单
         username: '',
         password: '',
@@ -194,7 +195,20 @@ export default {
     changePassword: function () {
     },
     sendVerificationCode: function () {
-
+      this.disableSend = true
+      this.axios.post('/email', { email: this.UserEmailVerifyForm.email }).then(res => {
+        if (res.data.status === 'success') {
+          this.$message.success(res.data.msg)
+        } else {
+          this.$message.error(res.data.msg)
+        }
+        this.disableSend = false
+      }).catch(error => {
+        console.log(error)
+        this.$message.error('发送验证码失败')
+        this.disableSend = false
+      })
+    }
     },
     confirmEmail: function () {
       if(this.$refs.ResetPasswordRef !== undefined){
@@ -204,7 +218,7 @@ export default {
       this.EmailVerifyDialogVis = false;
       this.resetPasswordDialogVis = true;
     },
-  }
+
 }
 </script>
 
