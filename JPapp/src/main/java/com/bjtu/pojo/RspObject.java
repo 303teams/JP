@@ -36,7 +36,7 @@ public class RspObject<T> {
     }
 
     public static void main(String[] args) {
-        System.out.println(success(new User("lzc","11","男","wqer")));
+//        System.out.println(success(new User("lzc","11","男","")));
     }
 
 }

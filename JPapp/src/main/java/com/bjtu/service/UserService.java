@@ -7,7 +7,11 @@ import java.util.List;
 
 public interface UserService {
 
-    public RspObject<User> login(String username, String password);
+    public RspObject<User> StudentLogin(String username, String password);
+
+    public RspObject<User> TeacherLogin(String username, String password);
+
+    public RspObject<User> ManagerLogin(String username, String password);
 
     public RspObject<Boolean> insert(User user);
 

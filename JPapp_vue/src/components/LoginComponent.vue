@@ -34,10 +34,10 @@
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="UserEmailVerifyRef" label-width="80px" style = "padding-right: 20px" :model="UserEmailVerifyForm" :rules="EmailRules">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="UserEmailVerifyForm.username" placeholder="请输入用户名"></el-input>
+            <el-input prefix-icon="user" v-model="UserEmailVerifyForm.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="UserEmailVerifyForm.email" placeholder="请输入邮箱"></el-input>
+            <el-input prefix-icon="message" v-model="UserEmailVerifyForm.email" placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
@@ -144,7 +144,7 @@ export default {
       console.log(this.role);
     },
     login: function () {
-      this.$refs.form.validate((valid) => {
+      this.$refs.LoginRef.validate((valid) => {
         if (valid) {
           console.log("开始登录！")
           let vm = this;
@@ -167,8 +167,8 @@ export default {
           }).then(res => {
             // 登录成功
             console.log(111);
+            console.log(res.data);
             if (res.data.code == 200) {
-              this.$message.success("登录成功！欢迎" + res.data.data.username);
               setTimeout(() => {
                 this.$router.push('/home');
               }, 1000)
@@ -194,7 +194,24 @@ export default {
     changePassword: function () {
     },
     sendVerificationCode: function () {
+      if(!this.UserEmailVerifyForm.email){
+        this.$message.warning("请输入邮箱！");
+        return;
+      }
+      //邮箱格式验证
+      if(!/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/.test(this.UserEmailVerifyForm.email)){
+        this.$message.warning("请输入正确的邮箱！");
+        return;
+      }
 
+      //发送验证码
+      this.request.post("/user/email/", + this.UserEmailVerifyForm.email).then(res => {
+        if(res.data.code === 200){
+          this.$message.success("验证码发送成功！");
+        }else{
+          this.$message.error("验证码发送失败！");
+        }
+      })
     },
     confirmEmail: function () {
       if(this.$refs.ResetPasswordRef !== undefined){

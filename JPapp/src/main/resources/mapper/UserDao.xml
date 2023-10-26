@@ -18,7 +18,15 @@
         select * from tb_user
     </select>
 
-    <select id="findByName" resultType="user">
-        select * from tb_user where user_name = #{username}
+    <select id="findByStudentName" resultType="student">
+        select * from student where sname = #{username}
+    </select>
+
+    <select id="findByTeacherName" resultType="teacher">
+        select * from teacher where tname = #{username}
+    </select>
+
+    <select id="findByManagerName" resultType="manager">
+        select * from manager where id = #{mno}
     </select>
 </mapper>

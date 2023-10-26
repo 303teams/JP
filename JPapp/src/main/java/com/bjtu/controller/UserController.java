@@ -20,24 +20,23 @@ public class UserController {
     UserService userService;
 
     @PostMapping("login")
-    public RspObject<User> login( String username,  String password){
-        System.out.println(username+" "+password);
+    public RspObject<User> login( String username,  String password, String role){
+        System.out.println(username+" "+password+" "+role);
 
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(password,"密码不能为空！");
 
-        return userService.login(username,password);
+        if(role.equals("1")){
+            return userService.ManagerLogin(username,password);
+        }else if(role.equals("2")){
+            return userService.StudentLogin(username,password);
+        }else if(role.equals("3")) {
+            return userService.TeacherLogin(username, password);
+        }else{
+            return RspObject.fail("角色不存在！");
+        }
     }
 
-    @PostMapping("register")
-    public RspObject<Boolean> register(String username,String password){
-        Assert.hasLength(username,"用户名不能为空！");
-        Assert.hasLength(password,"密码不能为空！");
-
-        User user = new User(username,password);
-
-        return userService.insert(user);
-    }
 
     @PostMapping("searchAll")
     public RspObject<List<User>> searchAll(){
