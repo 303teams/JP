@@ -21,6 +21,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
     EmailService emailService;
 
     @PostMapping("login")
@@ -62,10 +63,14 @@ public class UserController {
             // 将验证码存储到Redis中
 //            redisTemplate.opsForValue().set(redisKey, code, 5, TimeUnit.MINUTES);
             // 发送注册邮件
+//            System.out.println(email);
+//            System.out.println(code);
+            System.out.println(1);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
+            System.out.println(2);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
-            return RspObject.fail("验证码已发送至您的邮箱");
+            return RspObject.fail("验证码未发送至您的邮箱");
         }
     }
 

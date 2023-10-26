@@ -29,8 +29,8 @@ spring:
         smtp:
           ssl:
             #本地测试，先放开ssl
-            enable: false
-            required: false
+            enable: true
+            required: true
           #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
         debug: true
 
