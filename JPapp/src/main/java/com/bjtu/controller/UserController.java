@@ -10,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.bjtu.util.Utils;
 
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.rmi.ServerException;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("user")
@@ -29,6 +30,7 @@ public class UserController {
 
     @Autowired
     EmailService emailService;
+
 
 
     @PostMapping("login")
@@ -63,14 +65,16 @@ public class UserController {
         return userService.deleteOne(username);
     }
 
+
+
     @PostMapping("email")
-    public RspObject<Object> register(@RequestParam String email) {
+    public RspObject<Object> register(HttpServletRequest request,@RequestParam String email) {
         try {
             // 生成验证码
             String code = Utils.generateVerificationCode();
-            // 将验证码存储到Redis中
-//            redisTemplate.opsForValue().set(redisKey, code, 5, TimeUnit.MINUTES);
-            // 发送注册邮件
+
+            HttpSession session = request.getSession();
+            session.setAttribute("code",code);
 //            System.out.println(email);
 //            System.out.println(code);
             System.out.println(1);
@@ -80,6 +84,47 @@ public class UserController {
         } catch (Exception e) {
             return RspObject.fail("验证码未发送至您的邮箱");
         }
+    }
+    @PostMapping("/verify")
+    public String verify(HttpServletRequest request,String code){
+        HttpSession session = request.getSession();
+
+        if(session.getAttribute("code").toString().equals(code)){
+            return "验证码正确！";
+        }else{
+            return "验证码不正确！";
+        }
+    }
+
+    @PostMapping("/change")
+    public String change(String username,String first,String second){
+
+        System.out.println(username+first+" "+second);
+
+        if(first.equals(second)){
+
+            User user = new User(username,second);
+            userService.insert(user);
+
+            return "成功修改！";
+        }else{
+            return "两次输入的密码不匹配！";
+        }
+    }
+
+
+    @GetMapping("/setSessoin")
+    public RspObject<Object> setSessoin(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute("title","我是session里的");
+        return RspObject.success("setok");
+    }
+
+    @GetMapping("/getSessoin")
+    public RspObject<Object> getSessoin(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        System.out.println(session.getAttribute("title"));
+        return RspObject.success("getok");
     }
 
 }
