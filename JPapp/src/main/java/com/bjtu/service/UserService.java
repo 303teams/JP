@@ -15,4 +15,6 @@ public interface UserService {
 
     public RspObject<Boolean> deleteOne(String username);
 
+    public RspObject<Boolean> isMatchEmail(String email);
+
 }

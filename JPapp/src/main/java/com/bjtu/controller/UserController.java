@@ -39,6 +39,11 @@ public class UserController {
         return userService.insert(user);
     }
 
+    public RspObject<Boolean> isMatchEmail(String email){
+        Assert.hasLength(email,"邮箱不能为空！");
+        return userService.isMatchEmail(email);
+    }
+
     @PostMapping("searchAll")
     public RspObject<List<User>> searchAll(){
         return userService.searchAll();

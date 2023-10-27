@@ -13,4 +13,6 @@ public interface UserDao {
     public List<User> findAll();
     public User findByName(String username);
 
+    public boolean isMatchEmail(String email);
+
 }

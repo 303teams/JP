@@ -27,6 +27,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public RspObject<Boolean> isMatchEmail(String email) {
+        if(userDao.isMatchEmail(email)){
+            return RspObject.success(Boolean.TRUE);
+        }else{
+            return RspObject.fail("email not exist!",Boolean.FALSE);
+        }
+    }
+
     @Override
     public RspObject<Boolean> insert(User user) {
         if(userDao.findByName(user.getUsername()) != null){

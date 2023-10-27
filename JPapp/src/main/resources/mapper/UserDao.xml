@@ -21,4 +21,21 @@
     <select id="findByName" resultType="user">
         select * from tb_user where user_name = #{username}
     </select>
+    <select id="isMatchEmail" resultType="java.lang.Boolean" parameterType="java.lang.String">
+        SELECT 1
+        FROM student
+        WHERE semail = #{email}
+
+        UNION
+
+        SELECT 1
+        FROM teacher
+        WHERE temail = #{email}
+
+        UNION
+
+        SELECT 1
+        FROM admin
+        WHERE aemail = #{email}
+    </select>
 </mapper>
