@@ -4,29 +4,31 @@
       <div style= "flex: 1; display: flex; align-items: center">
         <img src="@/assets/sanguosha.png" alt="" style="width: 100%">
       </div>
-      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
-          <h3>欢迎登录!</h3>
-          <el-form-item label="用户名:" label-width="5em" prop="username">
-            <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="密 码:" label-width="5em" prop="password">
-            <el-input prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
-          </el-form-item>
-          <el-radio-group v-model="user.role" @change = "clickChange">
-            <el-radio label="1">管理员</el-radio>
-            <el-radio label="2">学生</el-radio>
-            <el-radio label="3">老师</el-radio>
-          </el-radio-group>
-          <el-button type="primary" style = "width: 80%; margin: 15px" @click="login">登录</el-button>
-          <div style="flex: 1; font-size: 12px;">
-            <span style="letter-spacing: 2px;">密码忘记了？点此处</span>
-            <span style="color: #4682B4; cursor: pointer" @click="EmailVerify">
+
+        <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+          <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
+            <h3>欢迎登录!</h3>
+            <el-form-item label="用户名:" label-width="5em" prop="username">
+              <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <el-form-item label="密 码:" label-width="5em" prop="password">
+              <el-input prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
+            </el-form-item>
+            <el-radio-group v-model="user.role" @change = "clickChange">
+              <el-radio label="1">管理员</el-radio>
+              <el-radio label="2">学生</el-radio>
+              <el-radio label="3">老师</el-radio>
+            </el-radio-group>
+            <el-button type="primary" style = "width: 80%; margin: 15px" @click="login">登录</el-button>
+            <div style="flex: 1; font-size: 12px;">
+              <span style="letter-spacing: 2px;">密码忘记了？点此处</span>
+              <span style="color: #4682B4; cursor: pointer" @click="EmailVerify">
               找回密码
             </span>
-          </div>
-        </el-form>
-      </div>
+            </div>
+          </el-form>
+        </div>
+
     </div>
 
     <!--输入用户名、邮箱和验证码的对话框-->
@@ -66,8 +68,10 @@
             <el-input v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码" type="password"></el-input>
           </el-form-item>
         </el-form>
-      </div>
-      <span class="dialog-footer">
+
+
+        </div>
+        <span class="dialog-footer">
         <el-button @click="resetPasswordDialogVis = false">取消</el-button>
         <el-button type="primary" @click="changePassword">确认</el-button>
         </span>
@@ -198,6 +202,46 @@ export default {
       this.disableSend = true
       let vm = this;
       this.axios.post('http://localhost:8081/user/email', { 'email': vm.UserEmailVerifyForm.email }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success(res.data.data)
+        } else {
+          this.$message.error(res.data.data)
+          console.log(res.data)
+        }
+        this.disableSend = false
+      }).catch(error => {
+        console.log(error)
+        this.$message.error('发送验证码失败')
+        this.disableSend = false
+      })
+    },
+    confirmEmail: function () {
+      if(this.$refs.ResetPasswordRef !== undefined){
+        this.$refs.ResetPasswordRef.resetFields();
+      }
+
+      this.EmailVerifyDialogVis = false;
+      this.resetPasswordDialogVis = true;
+    },
+    },
+
+    EmailVerify: function () {
+      if(this.$refs.UserEmailVerifyRef !== undefined){
+        this.$refs.UserEmailVerifyRef.resetFields();
+      }
+      this.EmailVerifyDialogVis = true;
+    },
+    changePassword: function () {
+    },
+    sendVerificationCode: function () {
+      this.disableSend = true
+      let vm = this;
+      this.axios.post('http://localhost:8081/user/email', { 'email': vm.UserEmailVerifyForm.email }, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -224,9 +268,6 @@ export default {
       this.EmailVerifyDialogVis = false;
       this.resetPasswordDialogVis = true;
     },
-  }
-
-
 }
 </script>
 
