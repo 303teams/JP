@@ -1,13 +1,11 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mybatistest
+    url: jdbc:mysql://localhost:3306/jp
     username: root
-<<<<<<< Updated upstream
-    password: Lizhichao12
-=======
+
     password: wbyzwmml555
->>>>>>> Stashed changes
+
 
 mybatis:
   configuration:
@@ -46,9 +44,5 @@ mybatis:
 
 
 server:
-<<<<<<< Updated upstream
-  port: 8080
-=======
-  port: 8081
 
->>>>>>> Stashed changes
+  port: 8081
