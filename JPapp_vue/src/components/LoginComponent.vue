@@ -69,9 +69,9 @@
           </el-form-item>
         </el-form>
 
+
         </div>
         <span class="dialog-footer">
-
         <el-button @click="resetPasswordDialogVis = false">取消</el-button>
         <el-button type="primary" @click="changePassword">确认</el-button>
         </span>
