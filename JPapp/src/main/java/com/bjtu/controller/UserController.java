@@ -31,10 +31,12 @@ public class UserController {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    private HttpSession session;
 
 
     @PostMapping("login")
-    public RspObject<User> login( String username,  String password, String role){
+    public RspObject<User> login( String username,  String password){
 
         System.out.println(username+" "+password);
 
@@ -68,61 +70,57 @@ public class UserController {
 
 
     @PostMapping("email")
-    public RspObject<Object> register(HttpServletRequest request,@RequestParam String email) {
+    public RspObject<Object> register(HttpServletRequest request,@RequestParam String username,@RequestParam String email) {
         try {
             // 生成验证码
             String code = Utils.generateVerificationCode();
 
-            HttpSession session = request.getSession();
             session.setAttribute("code",code);
+            session.setAttribute("username",username);
 //            System.out.println(email);
 //            System.out.println(code);
-            System.out.println(1);
+//            System.out.println(1);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
-            System.out.println(2);
+//            System.out.println(2);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
             return RspObject.fail("验证码未发送至您的邮箱");
         }
     }
     @PostMapping("/verify")
-    public String verify(HttpServletRequest request,String code){
-        HttpSession session = request.getSession();
+    public RspObject<Object> verify(HttpServletRequest request,String code){
+
+        System.out.println(session.getAttribute("code"));
+//        System.out.println(request.getSession());
 
         if(session.getAttribute("code").toString().equals(code)){
-            return "验证码正确！";
+            System.out.println("okkkkk");
+            return RspObject.success("验证通过！");
         }else{
-            return "验证码不正确！";
+            return RspObject.fail("验证不通过！");
         }
     }
 
     @PostMapping("/change")
-    public String change(String username,String first,String second){
+    public RspObject<Object> change(String password){
 
-        System.out.println(username+first+" "+second);
-
-        if(first.equals(second)){
-
-            User user = new User(username,second);
-            userService.insert(user);
-
-            return "成功修改！";
-        }else{
-            return "两次输入的密码不匹配！";
-        }
+//        System.out.println(username+first+" "+second);
+        userService.modifyPassword(session.getAttribute("username").toString(),password);
+            return RspObject.success("修改成功！");
+//        }else{
+//            return "两次输入的密码不匹配！";
+//        }
     }
 
 
     @GetMapping("/setSessoin")
     public RspObject<Object> setSessoin(HttpServletRequest request){
-        HttpSession session = request.getSession();
         session.setAttribute("title","我是session里的");
         return RspObject.success("setok");
     }
 
     @GetMapping("/getSessoin")
     public RspObject<Object> getSessoin(HttpServletRequest request){
-        HttpSession session = request.getSession();
         System.out.println(session.getAttribute("title"));
         return RspObject.success("getok");
     }

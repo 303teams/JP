@@ -12,7 +12,7 @@
               <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item label="密 码:" label-width="5em" prop="password">
-              <el-input prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
+              <el-input prefix-icon="lock" v-model="user.password" placeholder="请输入密码" type="password"></el-input>
             </el-form-item>
             <el-radio-group v-model="user.role" @change = "clickChange">
               <el-radio label="1">管理员</el-radio>
@@ -149,7 +149,7 @@ export default {
       console.log(this.role);
     },
     login: function () {
-      this.$refs.form.validate((valid) => {
+      this.$refs.LoginRef.validate((valid) => {
         if (valid) {
           console.log("开始登录！")
           let vm = this;
@@ -160,7 +160,7 @@ export default {
             data: {
               'username': vm.user.username,
               'password': vm.user.password,
-              'role': vm.user.role
+              // 'role': vm.user.role
             },
             // transformResquest: [function (data) {
             //     return qs.stringify(data);
@@ -197,11 +197,35 @@ export default {
       this.EmailVerifyDialogVis = true;
     },
     changePassword: function () {
+      let vm = this;
+      this.axios.post('http://localhost:8081/user/change', {
+        'password': vm.resetPasswordForm.newPassword
+          }, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success(res.data.data)
+        } else {
+          this.$message.error(res.data.data)
+          console.log(res.data)
+        }
+        this.disableSend = false
+      }).catch(error => {
+        console.log(error)
+        this.$message.error('发送验证码失败')
+        this.disableSend = false
+      })
+
     },
     sendVerificationCode: function () {
       this.disableSend = true
       let vm = this;
-      this.axios.post('http://localhost:8081/user/email', { 'email': vm.UserEmailVerifyForm.email }, {
+      this.axios.post('http://localhost:8081/user/email', {
+        'username' : vm.UserEmailVerifyForm.username,
+        'email': vm.UserEmailVerifyForm.email }, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -220,13 +244,29 @@ export default {
         this.disableSend = false
       })
     },
-    confirmEmail: function () {
-      if(this.$refs.ResetPasswordRef !== undefined){
-        this.$refs.ResetPasswordRef.resetFields();
-      }
 
-      this.EmailVerifyDialogVis = false;
-      this.resetPasswordDialogVis = true;
+    confirmEmail: function () {
+      // if(this.$refs.ResetPasswordRef !== undefined){
+      //   this.$refs.ResetPasswordRef.resetFields();
+      // }
+      this.disableSend = true
+      let vm = this;
+      this.axios.post('http://localhost:8081/user/verify', {'code': vm.UserEmailVerifyForm.code},
+          {headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }}).then(res => {
+        if (res.data.code === 200) {
+          vm.$message.success(res.data);
+          this.EmailVerifyDialogVis = false;
+          this.resetPasswordDialogVis = true;
+        } else {
+          this.$message.warning("验证失败:" + res.data.msg)
+        }
+      }).catch(err => {
+        this.$message.error("发生未知错误！");
+        console.log(err);
+      });
+
     },
     },
 
@@ -237,6 +277,10 @@ export default {
       this.EmailVerifyDialogVis = true;
     },
     changePassword: function () {
+
+
+
+
     },
     sendVerificationCode: function () {
       this.disableSend = true

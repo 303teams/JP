@@ -66,6 +66,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public RspObject<Boolean> modifyPassword(String username, String password) {
+        userDao.modifyPassword(username,password);
+        return RspObject.success(Boolean.TRUE);
+    }
+
 
     @Override
     public void sendEmailCode(String email){

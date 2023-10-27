@@ -19,3 +19,6 @@ app.use(VueAxios,axios)
 app.mount('#app');
 
 
+axios.defaults.withCredentials = true
+
+

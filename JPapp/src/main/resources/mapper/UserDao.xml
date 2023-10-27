@@ -21,4 +21,10 @@
     <select id="findByName" resultType="user">
         select * from tb_user where user_name = #{username}
     </select>
+
+    <update id="modifyPassword">
+        update tb_user set password = #{password} where user_name = #{username}
+    </update>
+
+
 </mapper>
