@@ -196,11 +196,18 @@ export default {
     },
     sendVerificationCode: function () {
       this.disableSend = true
-      this.axios.post('/email', { email: this.UserEmailVerifyForm.email }).then(res => {
-        if (res.data.status === 'success') {
-          this.$message.success(res.data.msg)
+      let vm = this;
+      this.axios.post('http://localhost:8081/user/email', { 'email': vm.UserEmailVerifyForm.email }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success(res.data.data)
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.data)
+          console.log(res.data)
         }
         this.disableSend = false
       }).catch(error => {

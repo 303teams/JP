@@ -55,7 +55,7 @@ public class UserController {
         return userService.deleteOne(username);
     }
 
-    @PostMapping("/email")
+    @PostMapping("email")
     public RspObject<Object> register(@RequestParam String email) {
         try {
             // 生成验证码
