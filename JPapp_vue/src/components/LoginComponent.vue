@@ -5,15 +5,15 @@
         <img src="@/assets/sanguosha.png" alt="" style="width: 100%">
       </div>
         <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-          <el-form ref="form" :label-position="right" label-width="80px" :model="items" :rules="rules">
+          <el-form ref="form" :label-position="right" label-width="80px" :model="user" :rules="rules">
             <h3>欢迎登录!</h3>
             <el-form-item label="用户名:" label-width="5em" prop="username">
-              <el-input prefix-icon="user" v-model="items.username" placeholder="请输入用户名"></el-input>
+              <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item label="密 码:" label-width="5em" prop="password">
-              <el-input prefix-icon="lock" v-model="items.password" placeholder="请输入密码"></el-input>
+              <el-input prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
             </el-form-item>
-            <el-radio-group v-model="items.radio" @change = "clickChange">
+            <el-radio-group v-model="user.radio" @change = "clickChange">
               <el-radio label="1">管理员</el-radio>
               <el-radio label="2">学生</el-radio>
               <el-radio label="3">老师</el-radio>
