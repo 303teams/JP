@@ -215,7 +215,6 @@ export default {
         this.$message.error('发送验证码失败')
         this.disableSend = false
       })
-    }
     },
     confirmEmail: function () {
       if(this.$refs.ResetPasswordRef !== undefined){
@@ -225,6 +224,8 @@ export default {
       this.EmailVerifyDialogVis = false;
       this.resetPasswordDialogVis = true;
     },
+    }
+
 
 }
 </script>
