@@ -4,6 +4,7 @@
       <div style= "flex: 1; display: flex; align-items: center">
         <img src="@/assets/sanguosha.png" alt="" style="width: 100%">
       </div>
+
         <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
           <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
             <h3>欢迎登录!</h3>
@@ -27,6 +28,7 @@
             </div>
           </el-form>
         </div>
+
     </div>
 
     <!--输入用户名、邮箱和验证码的对话框-->
@@ -66,8 +68,10 @@
             <el-input v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码" type="password"></el-input>
           </el-form-item>
         </el-form>
+
         </div>
         <span class="dialog-footer">
+
         <el-button @click="resetPasswordDialogVis = false">取消</el-button>
         <el-button type="primary" @click="changePassword">确认</el-button>
         </span>
@@ -235,26 +239,26 @@ export default {
     changePassword: function () {
     },
     sendVerificationCode: function () {
-      if(!this.UserEmailVerifyForm.email){
-        this.$message.warning("请输入邮箱！");
-        return;
-      }
-// //邮箱格式验证
-//       if(!/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/.test(this.UserEmailVerifyForm.email)){
-//         this.$message.warning("请输入正确的邮箱！");
-//         return;
-//       }
-
-//发送验证码
-      this.request.get("/user/email/", + this.UserEmailVerifyForm.email).then(res => {
-        if(res.data.code === 200){
-          this.$message.success("验证码发送成功！");
-        }else{
-          this.$message.error("验证码发送失败！");
+      this.disableSend = true
+      let vm = this;
+      this.axios.post('http://localhost:8081/user/email', { 'email': vm.UserEmailVerifyForm.email }, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success(res.data.data)
+        } else {
+          this.$message.error(res.data.data)
+          console.log(res.data)
         }
+        this.disableSend = false
+      }).catch(error => {
+        console.log(error)
+        this.$message.error('发送验证码失败')
+        this.disableSend = false
       })
-
-
     },
     confirmEmail: function () {
       if(this.$refs.ResetPasswordRef !== undefined){
