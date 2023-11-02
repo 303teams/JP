@@ -1,9 +1,7 @@
 package com.bjtu.pojo;
 
-import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

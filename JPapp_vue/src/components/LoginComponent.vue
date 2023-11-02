@@ -11,7 +11,7 @@
               <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item label="密 码:" label-width="5em" prop="password">
-              <el-input prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
+              <el-input type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-radio-group v-model="user.role" @change = "clickChange">
               <el-radio label="1">管理员</el-radio>
@@ -42,7 +42,10 @@
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
               <el-input v-model="UserEmailVerifyForm.code" placeholder="请输入验证码" style="flex: 1;"></el-input>
-              <el-button type="text" @click="sendVerificationCode" :disabled="disableSend" style="margin-left: 15px">发送验证码</el-button>
+              <el-button v-if="codeShow" type="text" @click="sendVerificationCode" style="margin-left: 15px; width: 80px;">
+                发送验证码
+              </el-button>
+              <el-button v-else type="text" disabled style="margin-left: 15px; width: 80px;">{{count}}s</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -79,13 +82,16 @@
 // import qs from 'qs'
 
 import {right} from "core-js/internals/array-reduce";
+// import axios from "axios";
 
 export default {
 
   name: "LoginComponent",
   data() {
     return {
-      disableSend: false,
+      codeShow: true,
+      timer: null,
+      count: '',
       user: {              // 登录表单
         username: '',
         password: '',
@@ -144,6 +150,7 @@ export default {
     clickChange: function () {
       console.log(this.role);
     },
+    //登录
     login: function () {
       this.$refs.LoginRef.validate((valid) => {
         if (valid) {
@@ -169,7 +176,7 @@ export default {
             // 登录成功
             console.log(111);
             console.log(res.data);
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               setTimeout(() => {
                 this.$router.push('/home');
               }, 1000)
@@ -186,46 +193,82 @@ export default {
       })
     },
 
+    //忘记密码
     EmailVerify: function () {
       if(this.$refs.UserEmailVerifyRef !== undefined){
         this.$refs.UserEmailVerifyRef.resetFields();
       }
       this.EmailVerifyDialogVis = true;
     },
+    //修改密码
     changePassword: function () {
     },
+    //发送验证码
     sendVerificationCode: function () {
-      if(!this.UserEmailVerifyForm.email){
-        this.$message.warning("请输入邮箱！");
+      if(this.UserEmailVerifyForm.email === ""||this.UserEmailVerifyForm.username === ""){
+        this.$message.warning("请填写完整！");
         return;
       }
       //邮箱格式验证
-      if(!/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/.test(this.UserEmailVerifyForm.email)){
+      if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.UserEmailVerifyForm.email)){
         this.$message.warning("请输入正确的邮箱！");
         return;
       }
 
+      let vm = this;
       //发送验证码
-      this.request.post("/user/email/", + this.UserEmailVerifyForm.email).then(res => {
-        if(res.data.code === 200){
+     this.axios.post('http://localhost:8081/user/email', {'email': vm.UserEmailVerifyForm.email},
+         {headers: {
+             'Content-Type': 'application/x-www-form-urlencoded'
+           }}).then(res => {
+        if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
-        }else{
-          this.$message.error("验证码发送失败！");
+        } else {
+          this.$message.warning("验证码发送失败:" + res.data.msg)
         }
+      }).catch(err => {
+        this.$message.error("发生未知错误！");
+        console.log(err);
+      });
 
-      })
+      const TIME_COUNT = 60;
+      if (!this.timer) {
+        this.count = TIME_COUNT;
+        this.codeShow = false;
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--;
+          } else {
+            this.codeShow = true;
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        }, 1000)
+      }
     },
+    //邮箱身份验证
     confirmEmail: function () {
       if(this.$refs.ResetPasswordRef !== undefined){
         this.$refs.ResetPasswordRef.resetFields();
       }
+      let vm = this;
+      this.axios.post('http://localhost:8081/user/verify', {'code': vm.UserEmailVerifyForm.code},
+          {headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }}).then(res => {
+        if (res.data.code === 200) {
+          this.EmailVerifyDialogVis = false;
+          this.resetPasswordDialogVis = true;
+        } else {
+          this.$message.warning("验证失败:" + res.data.msg)
+        }
+      }).catch(err => {
+        this.$message.error("发生未知错误！");
+        console.log(err);
+      });
 
-      this.EmailVerifyDialogVis = false;
-      this.resetPasswordDialogVis = true;
     },
-    }
-
-
+  }
 }
 </script>
 
