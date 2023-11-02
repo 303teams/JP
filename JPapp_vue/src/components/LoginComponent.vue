@@ -42,7 +42,7 @@
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
               <el-input v-model="UserEmailVerifyForm.code" placeholder="请输入验证码" style="flex: 1;"></el-input>
-              <el-button type="text" @click="sendVerificationCode" style="margin-left: 15px">发送验证码</el-button>
+              <el-button type="text" @click="sendVerificationCode" :disabled="disableSend" style="margin-left: 15px">发送验证码</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -85,6 +85,7 @@ export default {
   name: "LoginComponent",
   data() {
     return {
+      disableSend: false,
       user: {              // 登录表单
         username: '',
         password: '',
@@ -211,6 +212,7 @@ export default {
         }else{
           this.$message.error("验证码发送失败！");
         }
+
       })
     },
     confirmEmail: function () {
@@ -221,7 +223,9 @@ export default {
       this.EmailVerifyDialogVis = false;
       this.resetPasswordDialogVis = true;
     },
-  }
+    }
+
+
 }
 </script>
 
