@@ -1,6 +1,6 @@
 package com.bjtu.dao;
 
-import com.bjtu.pojo.Manager;
+import com.bjtu.pojo.Admin;
 import com.bjtu.pojo.Teacher;
 import com.bjtu.pojo.User;
 import com.bjtu.pojo.Student;
@@ -14,7 +14,7 @@ public interface UserDao {
     public void insert(User user);
     public void deleteByName(String username);
     public List<User> findAll();
-    public Student findByStudentName(String username);
-    public Teacher findByTeacherName(String username);
-    public Manager findByManagerName(String username);
+    public Student findByStudentNum(String sno);
+    public Teacher findByTeacherNum(String tno);
+    public Admin findByAdminNum(String mno);
 }

@@ -36,7 +36,7 @@ public class UserController {
         Assert.hasLength(password,"密码不能为空！");
 
         if(role.equals("1")){
-            return userService.ManagerLogin(username,password);
+            return userService.AdminLogin(username,password);
         }else if(role.equals("2")){
             return userService.StudentLogin(username,password);
         }else if(role.equals("3")) {

@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RspObject<User> StudentLogin(String username, String password) {
-        Student student = userDao.findByStudentName(username);
+        Student student = userDao.findByStudentNum(username);
         if (student == null) {
             return RspObject.fail("该学生不存在!");
         } else if (!student.getSpassword().equals(password)) {
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RspObject<User> TeacherLogin(String username, String password) {
-        Teacher teacher = userDao.findByTeacherName(username);
+        Teacher teacher = userDao.findByTeacherNum(username);
         if (teacher == null) {
             return RspObject.fail("该老师不存在!");
         } else if (!teacher.getTpassword().equals(password)) {
@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RspObject<User> ManagerLogin(String username, String password) {
-        Manager manager = userDao.findByManagerName(username);
-        if (manager == null) {
+    public RspObject<User> AdminLogin(String username, String password) {
+        Admin admin = userDao.findByAdminNum(username);
+        if (admin == null) {
             return RspObject.fail("该管理员不存在!");
-        } else if (!manager.getMpassword().equals(password)) {
+        } else if (!admin.getMpassword().equals(password)) {
             return RspObject.fail("密码错误!");
         } else {
-            return RspObject.success(manager);
+            return RspObject.success(admin);
         }
     }
 
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RspObject<Boolean> insert(User user) {
-        if(userDao.findByStudentName(user.getUsername()) != null){
+        if(userDao.findByStudentNum(user.getUsername()) != null){
             return RspObject.fail("user already exist!",Boolean.FALSE);
         }else{
             userDao.insert(user);
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RspObject<Boolean> deleteOne(String username) {
-        if(userDao.findByStudentName(username) == null){
+        if(userDao.findByStudentNum(username) == null){
             return RspObject.fail("user not exist!",Boolean.FALSE);
         }else{
             userDao.deleteByName(username);

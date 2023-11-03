@@ -11,7 +11,7 @@ public interface UserService {
 
     public RspObject<User> TeacherLogin(String username, String password);
 
-    public RspObject<User> ManagerLogin(String username, String password);
+    public RspObject<User> AdminLogin(String username, String password);
 
     public RspObject<Boolean> insert(User user);
 

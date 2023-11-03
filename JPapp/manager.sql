@@ -1,4 +1,4 @@
-create table manager
+create table admin
 (
     mno       int         not null
         primary key,

@@ -5,14 +5,14 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("admin")
-public class Manager extends User {
+public class Admin extends User {
     private String mno;
     private String mpassword;
     private String memail;
 
-    public Manager() {}
+    public Admin() {}
 
-    public Manager(String mno, String mpassword, String memail) {
+    public Admin(String mno, String mpassword, String memail) {
         super(mno, mpassword);
         this.mno = mno;
         this.mpassword = mpassword;
