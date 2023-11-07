@@ -1,6 +1,7 @@
 package com.bjtu.service.impl;
 
 import com.bjtu.dao.StudentDao;
+import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.Student;
 import com.bjtu.pojo.User;

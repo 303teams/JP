@@ -14,4 +14,10 @@ public class ExceptionMaster {
         return RspObject.fail(e.getCode(), e.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public RspObject exception(Exception e) {
+        return RspObject.fail(e.getMessage());
+    }
+
 }

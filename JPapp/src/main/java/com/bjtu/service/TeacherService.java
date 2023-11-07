@@ -17,5 +17,4 @@ public interface TeacherService {
 
     public RspObject<Boolean> deleteOne(Integer id);
 
-
 }

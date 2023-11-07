@@ -16,16 +16,12 @@ public class EmailService {
     private JavaMailSender javaMailSender;
 
     public void sendSimpleMessage(String to, String subject, String text) {
-        System.out.println(3);
         SimpleMailMessage message = new SimpleMailMessage();
-        System.out.println(4);
         message.setFrom("247492078@qq.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        System.out.println(5);
         javaMailSender.send(message);
-        System.out.println(6);
 
     }
 
