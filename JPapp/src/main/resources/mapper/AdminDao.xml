@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjtu.dao.AdminDao">
+
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into admin(id,password,email,name) values (#{id}, #{password},#{email},#{name})
+    </insert>
+
+    <delete id="deleteByNum" parameterType="string">
+        delete from admin where id = #{num}
+    </delete>
+
+    <select id="findAll" resultType="Admin">
+        select * from admin
+    </select>
+
+    <select id="findByNum" resultType="Admin">
+        select * from admin where id = #{num}
+    </select>
+
+    <!--    <select id="findByStudentNum" resultType="student">-->
+    <!--        select * from student where sno = #{sno}-->
+    <!--    </select>-->
+
+    <!--    <select id="findByTeacherNum" resultType="teacher">-->
+    <!--        select * from teacher where tno = #{tno}-->
+    <!--    </select>-->
+
+    <!--    <select id="findByAdminNum" resultType="admin">-->
+    <!--        select * from admin where id = #{mno}-->
+    <!--    </select>-->
+</mapper>

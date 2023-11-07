@@ -1,30 +1,33 @@
 package com.bjtu.pojo;
 
+
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
+//@Entity
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
+    //    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
+    public String password;
+    public String name;
+    public String email;
 
-    private Integer id;
-    private String username;
-    private String password;
-    private String gender;
-    private String addr;
+    public User() {
+    }
 
-    public User(Integer id, String username, String password, String gender, String addr) {
+    public User(Integer id, String password, String name,String email) {
         this.id = id;
-        this.username = username;
         this.password = password;
-        this.gender = gender;
-        this.addr = addr;
+        this.email = email;
+        this.name = name;
     }
 
-    public User(String username, String password, String gender, String addr) {
-        this(0,username,password,gender,addr);
-    }
-    public User(String username, String password) {
-        this(0,username,password,"","");
-    }
 }
+
+

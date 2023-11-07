@@ -1,76 +1,89 @@
 package com.bjtu.controller;
 
+import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.User;
-import com.bjtu.service.EmailService;
-import com.bjtu.service.UserService;
+import com.bjtu.service.AdminService;
+import com.bjtu.service.StudentService;
+import com.bjtu.service.TeacherService;
+import com.bjtu.service.impl.EmailService;
+
+import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.bjtu.util.Utils;
 
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import com.bjtu.exception.ServiceException;
 
 @RestController
 @RequestMapping("user")
 public class UserController {
 
     @Autowired
-    UserService userService;
+    StudentService studentService;
+    @Autowired
+    TeacherService teacherService;
+    @Autowired
+    AdminService adminService;
 
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    private HttpSession session;
+
+    @AuthAccess
     @PostMapping("login")
-    public RspObject<User> login( String username,  String password){
-        System.out.println(username+" "+password);
+    public RspObject<User> login(String username, String password, String role){
+        System.out.println(username+" "+password+" "+role);
 
+//        异常捕获
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(password,"密码不能为空！");
 
-        return userService.login(username,password);
+        Integer id = Integer.parseInt(username);
+
+        if(role.equals("1")){
+            return adminService.login(id,password);
+        }else if(role.equals("2")){
+            return studentService.login(id,password);
+        }else if(role.equals("3")) {
+            return teacherService.login(id, password);
+        }else{
+            return RspObject.fail("账户不存在！");
+        }
     }
 
-    @PostMapping("register")
-    public RspObject<Boolean> register(String username,String password){
-        Assert.hasLength(username,"用户名不能为空！");
-        Assert.hasLength(password,"密码不能为空！");
-
-        User user = new User(username,password);
-
-        return userService.insert(user);
-    }
-
-    @PostMapping("searchAll")
-    public RspObject<List<User>> searchAll(){
-        return userService.searchAll();
-    }
-
-    @PostMapping("delete")
-    public RspObject<Boolean> delete(String username){
-        Assert.hasLength(username,"用户名不能为空！");
-        return userService.deleteOne(username);
-    }
-
-    @PostMapping("/email")
-    public RspObject<Object> register(@RequestParam String email) {
+    @AuthAccess
+    @PostMapping("email")
+    public RspObject<Object> email(String email) {
         try {
             // 生成验证码
             String code = Utils.generateVerificationCode();
-            // 将验证码存储到Redis中
-//            redisTemplate.opsForValue().set(redisKey, code, 5, TimeUnit.MINUTES);
-            // 发送注册邮件
-//            System.out.println(email);
-//            System.out.println(code);
-            System.out.println(1);
+            session.setAttribute("vcode",code);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
-            System.out.println(2);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
-            return RspObject.fail("验证码未发送至您的邮箱");
+//            return RspObject.fail("验证码未发送至您的邮箱");
+            throw new ServiceException("验证码未发送至您的邮箱");
+        }
+
+    }
+
+    @AuthAccess
+    @PostMapping("/verify")
+    public RspObject<Object> verify(HttpServletRequest request, String code){
+        System.out.println(session.getAttribute("vcode"));
+        if(session.getAttribute("vcode").toString().equals(code)){
+            return RspObject.success("验证码正确！");
+        }else{
+            return RspObject.fail("验证码错误！");
         }
     }
 
