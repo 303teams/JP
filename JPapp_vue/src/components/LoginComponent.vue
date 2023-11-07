@@ -189,7 +189,7 @@ export default {
       })
     },
 
-    //忘记密码
+    //弹出忘记密码窗口
     EmailVerify: function () {
       if(this.$refs.UserEmailVerifyRef !== undefined){
         this.$refs.UserEmailVerifyRef.resetFields();
@@ -207,6 +207,7 @@ export default {
       }
       //邮箱格式验证
       if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.UserEmailVerifyForm.email)){
+
         this.$message.warning("请输入正确的邮箱！");
         return;
       }
@@ -242,7 +243,7 @@ export default {
         }, 1000)
       }
     },
-    //邮箱身份验证
+    //邮箱验证后
     confirmEmail: function () {
       if(this.$refs.ResetPasswordRef !== undefined){
         this.$refs.ResetPasswordRef.resetFields();

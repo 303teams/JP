@@ -61,6 +61,7 @@ public class UserController {
         } catch (Exception e) {
             return RspObject.fail("验证码未发送至您的邮箱");
         }
+
     }
 
     @PostMapping("/verify")
