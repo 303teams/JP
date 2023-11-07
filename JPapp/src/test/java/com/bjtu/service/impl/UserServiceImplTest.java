@@ -2,7 +2,6 @@ package com.bjtu.service.impl;
 
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.User;
-import com.bjtu.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserServiceImplTest {
 
-    @Autowired
-    UserService userService;
+//    @Autowired
+//    UserService userService;
 
 //    @Test
 //    void login() {

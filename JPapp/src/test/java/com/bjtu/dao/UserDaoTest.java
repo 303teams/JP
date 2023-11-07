@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserDaoTest {
 
-    @Autowired
-    UserDao userDao;
+//    @Autowired
+//    UserDao userDao;
 
 //    @Test
 //    void insert() {

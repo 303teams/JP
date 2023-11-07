@@ -2,9 +2,8 @@ package com.bjtu.config;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.METHOD})
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AuthAccess {
-
 }

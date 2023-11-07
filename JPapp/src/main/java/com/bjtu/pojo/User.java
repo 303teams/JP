@@ -1,53 +1,33 @@
 package com.bjtu.pojo;
 
 
-import javax.persistence.*;
+import lombok.Data;
 
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    private String username;
-    private String password;
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Data
+//@Entity
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+public class User implements Serializable {
+    //    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
+    public String password;
+    public String name;
+    public String email;
 
     public User() {
     }
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(String id, String username, String password) {
+    public User(Integer id, String password, String name,String email) {
         this.id = id;
-        this.username = username;
         this.password = password;
+        this.email = email;
+        this.name = name;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
 }
+
+
