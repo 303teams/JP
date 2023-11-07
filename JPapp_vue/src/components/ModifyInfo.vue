@@ -59,7 +59,7 @@
       <template #footer>
           <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="submit">提 交</el-button>
+          <el-button type="primary">提 交</el-button>
           </span>
       </template>
     </el-dialog>

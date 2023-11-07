@@ -36,28 +36,6 @@
           </template>
           {{ email }}
         </el-descriptions-item>
-        <el-descriptions-item>
-          <template v-slot:label>
-            <i class="el-icon-location-outline"></i>
-            地区
-          </template>
-          {{ area }}
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template v-slot:label>
-            <i class="el-icon-office-building"></i>
-            职业
-          </template>
-          {{ work }}
-        </el-descriptions-item>
-
-        <el-descriptions-item>
-          <template v-slot:label>
-            <i class="el-icon-basketball"></i>
-            兴趣爱好
-          </template>
-          {{ hobby }}
-        </el-descriptions-item>
       </el-descriptions>
     </el-card>
   </div>
@@ -69,16 +47,12 @@ export default {
 
   data() {
     return {
-      avatar: String,
-      account: String,
+      id: Number,
+      username: String,
       age: Number,
       email: String,
       mobilePhoneNumber: String,
-      area: String,
-      nickname: String,
       sex: String,
-      work: String,
-      hobby: String,
     };
   },
   mounted() {

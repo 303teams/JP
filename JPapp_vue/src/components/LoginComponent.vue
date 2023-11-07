@@ -14,9 +14,9 @@
               <el-input type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-radio-group v-model="user.role" @change = "clickChange">
-              <el-radio label="1">管理员</el-radio>
-              <el-radio label="2">学生</el-radio>
-              <el-radio label="3">老师</el-radio>
+              <el-radio label="admin">管理员</el-radio>
+              <el-radio label="student">学生</el-radio>
+              <el-radio label="teacher">老师</el-radio>
             </el-radio-group>
             <el-button type="primary" style = "width: 80%; margin: 15px" @click="login">登录</el-button>
             <div style="flex: 1; font-size: 12px;">
@@ -95,7 +95,7 @@ export default {
       user: {              // 登录表单
         username: '',
         password: '',
-        role: '2',
+        role: 'student',
       },
       EmailVerifyDialogVis: false,
       UserEmailVerifyForm: {     // 忘记密码表单
@@ -165,20 +165,16 @@ export default {
               'password': vm.user.password,
               'role': vm.user.role
             },
-            // transformResquest: [function (data) {
-            //     return qs.stringify(data);
-            //   }],
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
-              // 'Content-Type': 'application/json'
             }
           }).then(res => {
             // 登录成功
-            console.log(111);
             console.log(res.data);
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.$router.push('/home');
+                this.$router.push('/studentHome');
+                localStorage.setItem("token",res.data.token);
               }, 1000)
             } else {
               // 登录不成功 提示错误信息
