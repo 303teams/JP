@@ -1,10 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mybatistest
+    url: jdbc:mysql://localhost:3306/jp
     username: root
-<<<<<<< HEAD
-
     password: Lizhichao12
 
 mybatis:
@@ -40,9 +38,6 @@ mybatis:
             required: false
           #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
         debug: true
-=======
-    password: Lizhichao12
->>>>>>> main
 
 
 server:
