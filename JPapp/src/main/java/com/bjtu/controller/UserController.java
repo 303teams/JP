@@ -68,7 +68,6 @@ public class UserController {
     }
 
 
-
     @PostMapping("email")
     public RspObject<Object> register(HttpServletRequest request,@RequestParam String username,@RequestParam String email) {
         try {

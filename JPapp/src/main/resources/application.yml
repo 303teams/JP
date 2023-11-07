@@ -6,13 +6,11 @@ spring:
 
     password: Lizhichao12
 
-
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.bjtu.pojo
-
 
   #邮箱基本配置
   mail:
