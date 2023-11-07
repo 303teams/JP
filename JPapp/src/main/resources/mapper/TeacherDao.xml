@@ -19,7 +19,7 @@
     </select>
 
     <select id="findByNum" resultType="Teacher">
-        select * from tb_user where id = #{num}
+        select * from teacher where id = #{num}
     </select>
 
     <!--    <select id="findByStudentNum" resultType="student">-->

@@ -11,8 +11,6 @@ import com.bjtu.pojo.User;
 import com.bjtu.util.TokenUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,13 +40,13 @@ public class JwtInterceptor implements HandlerInterceptor {
             userId = JWT.decode(token).getAudience().get(0);
         } catch (JWTDecodeException j) {
             System.out.println("拦截第二步，无法获取userId");
-            throw new ServiceException(401, "请登录");
+            throw new ServiceException(401, "token失效，请重新登录");
         }
         // 根据token中的userid查询数据库
         User user = TokenUtils.getCurrentUser();
         if (user == null) {
             System.out.println("3");
-            throw new ServiceException(401, "请登录");
+            throw new ServiceException(401, "无法获取用户信息");
         }
         // 用户密码加签验证 token
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
@@ -56,7 +54,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             jwtVerifier.verify(token); // 验证token
         } catch (JWTVerificationException e) {
             System.out.println("4");
-            throw new ServiceException(401, "请登录");
+            throw new ServiceException(401, "用户状态异常");
         }
         return true;
     }

@@ -8,6 +8,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.service.impl.EmailService;
 
+import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -48,7 +49,6 @@ public class UserController {
         Assert.hasLength(password,"密码不能为空！");
 
         Integer id = Integer.parseInt(username);
-
         if(role.equals("1")){
             return adminService.login(id,password);
         }else if(role.equals("2")){
@@ -56,7 +56,7 @@ public class UserController {
         }else if(role.equals("3")) {
             return teacherService.login(id, password);
         }else{
-            return RspObject.fail("账户不存在！");
+            return RspObject.fail("登录失败！");
         }
     }
 
