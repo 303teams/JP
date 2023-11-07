@@ -1,9 +1,13 @@
 package com.bjtu.controller;
 
+import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.User;
-import com.bjtu.service.EmailService;
-import com.bjtu.service.UserService;
+import com.bjtu.service.AdminService;
+import com.bjtu.service.StudentService;
+import com.bjtu.service.TeacherService;
+import com.bjtu.service.impl.EmailService;
+
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -12,57 +16,66 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import com.bjtu.exception.ServiceException;
 
 @RestController
 @RequestMapping("user")
 public class UserController {
 
     @Autowired
-    UserService userService;
+    StudentService studentService;
+    @Autowired
+    TeacherService teacherService;
+    @Autowired
+    AdminService adminService;
 
     @Autowired
     EmailService emailService;
 
     @Autowired
     private HttpSession session;
+
+    @AuthAccess
     @PostMapping("login")
-    public RspObject<User> login( String username,  String password, String role){
+    public RspObject<User> login(String username, String password, String role){
         System.out.println(username+" "+password+" "+role);
 
+//        异常捕获
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(password,"密码不能为空！");
 
+        Integer id = Integer.parseInt(username);
+
         if(role.equals("1")){
-            return userService.AdminLogin(username,password);
+            return adminService.login(id,password);
         }else if(role.equals("2")){
-            return userService.StudentLogin(username,password);
+            return studentService.login(id,password);
         }else if(role.equals("3")) {
-            return userService.TeacherLogin(username, password);
+            return teacherService.login(id, password);
         }else{
-            return RspObject.fail("角色不存在！");
+            return RspObject.fail("账户不存在！");
         }
     }
 
+    @AuthAccess
     @PostMapping("email")
-    public RspObject<Object> register(HttpServletRequest request,@RequestParam String email) {
+    public RspObject<Object> email(String email) {
         try {
             // 生成验证码
             String code = Utils.generateVerificationCode();
-
             session.setAttribute("vcode",code);
-            System.out.println(session.getAttribute("vcode"));
-            System.out.println(1);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
-            System.out.println(2);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
-            return RspObject.fail("验证码未发送至您的邮箱");
+//            return RspObject.fail("验证码未发送至您的邮箱");
+            throw new ServiceException("验证码未发送至您的邮箱");
         }
     }
 
+    @AuthAccess
     @PostMapping("/verify")
     public RspObject<Object> verify(HttpServletRequest request, String code){
         System.out.println(session.getAttribute("vcode"));
