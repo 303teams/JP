@@ -7,7 +7,7 @@
       <!--下拉菜单-->
       <el-dropdown class="el-dropdown">
             <span class="el-dropdown-link">
-              <el-avatar :size="40" src="src/assets/头像.jpg"/>
+              <el-avatar :size="40" :src="sex === '男' ? male : female"/>
               <el-icon class="el-icon--right">
                 <arrow-down/>
               </el-icon>
@@ -25,7 +25,22 @@
 </template>
 
 <script>
+import male from "@/assets/male.png";
+import female from "@/assets/female.png";
+import {mapState} from "vuex";
 
+export default {
+  data(){
+    return{
+      male:male,
+      female:female
+    }
+  },
+
+  computed:{
+    ...mapState(['sex'])
+  }
+}
 </script>
 
 <style scoped>
