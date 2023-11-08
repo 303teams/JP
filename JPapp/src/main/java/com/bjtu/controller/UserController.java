@@ -49,11 +49,11 @@ public class UserController {
         Assert.hasLength(password,"密码不能为空！");
 
         Integer id = Integer.parseInt(username);
-        if(role.equals("1")){
+        if(role.equals("admin")){
             return adminService.login(id,password);
-        }else if(role.equals("2")){
+        }else if(role.equals("student")){
             return studentService.login(id,password);
-        }else if(role.equals("3")) {
+        }else if(role.equals("teacher")) {
             return teacherService.login(id, password);
         }else{
             return RspObject.fail("登录失败！");
