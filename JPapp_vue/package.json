@@ -16,7 +16,7 @@
     "js-cookie": "^3.0.5",
     "lib-flexible": "^0.3.2",
     "lib-flexible-computer": "^1.0.2",
-    "postcss-px2rem": "^0.3.0",
+    "postcss-pxtorem": "^6.0.0",
     "qs": "^6.11.2",
     "vue": "^3.3.7",
     "vue-axios": "^3.5.2",
