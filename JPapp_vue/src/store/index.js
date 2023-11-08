@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'; // 使用createStore来创建Vuex store
+import createPersistedState from "vuex-persistedstate"
 
 const store = createStore({
     state: {
@@ -6,6 +7,7 @@ const store = createStore({
         sex: "",
     },
 
+    getters: {},
     mutations: {
         setRole(state, value) {
             state.role = value;
@@ -24,9 +26,11 @@ const store = createStore({
         },
     },
 
+    modules: {},
 
-
-    modules: {}
+    plugins: [
+        createPersistedState()
+    ]
 });
 
 export default store;

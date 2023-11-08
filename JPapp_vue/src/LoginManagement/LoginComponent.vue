@@ -170,8 +170,16 @@ export default {
             console.log(res.data);
             if (res.data.code === 200) {
               setTimeout(() => {
-                this.$router.push('/studentHome');
-                localStorage.setItem("token",res.data.token);
+                localStorage.setItem("token",res.data.data.token);
+                this.$store.commit('setRole', this.user.role);
+                this.$store.commit('setSex', res.data.data.sex);
+                if(this.user.role === "student"){
+                  this.$router.push('/studentHome');
+                }else if(this.user.role === "teacher"){
+                  this.$router.push('/teacherHome');
+                }else{
+                  this.$router.push('/adminHome');
+                }
               }, 1000)
             } else {
               // 登录不成功 提示错误信息
@@ -211,7 +219,6 @@ export default {
 
       let vm = this;
       //发送验证码
-
       this.axios.post('http://localhost:8081/user/email',
           {
             'username': vm.UserEmailVerifyForm.username,
