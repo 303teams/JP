@@ -1,32 +1,29 @@
 <template>
-  <div class = "login" style = "height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #2c3e50">
-    <div style = "display: flex; background-color: white; height:50%; width: 50%; border-radius: 5px; box-shadow: 10px 10px 5px #888888; overflow: hidden">
-      <div style= "flex: 1; display: flex; align-items: center">
-        <img src="@/assets/sanguosha.png" alt="" style="width: 100%">
-      </div>
-        <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-          <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
-            <h3>欢迎登录!</h3>
-            <el-form-item label="用户名:" label-width="5em" prop="username">
-              <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
-            </el-form-item>
-            <el-form-item label="密 码:" label-width="5em" prop="password">
-              <el-input type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
-            </el-form-item>
-            <el-radio-group v-model="user.role" @change = "clickChange">
-              <el-radio label="admin">管理员</el-radio>
-              <el-radio label="student">学生</el-radio>
-              <el-radio label="teacher">老师</el-radio>
-            </el-radio-group>
-            <el-button type="primary" style = "width: 80%; margin: 15px" @click="login">登录</el-button>
-            <div style="flex: 1; font-size: 12px;">
-              <span style="letter-spacing: 2px;">密码忘记了？点此处</span>
-              <span style="color: #4682B4; cursor: pointer" @click="EmailVerify">
+  <div class = "background">
+    <div class = "login">
+      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+        <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
+          <h3 style="color:white">欢迎登录!</h3>
+          <el-form-item label="用户名:" label-width="5em" prop="username">
+            <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="密 码:" label-width="5em" prop="password">
+            <el-input type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-radio-group v-model="user.role" @change = "clickChange">
+            <el-radio label="admin">管理员</el-radio>
+            <el-radio label="student">学生</el-radio>
+            <el-radio label="teacher">老师</el-radio>
+          </el-radio-group>
+          <el-button type="primary" style = "width: 80%; margin: 15px" @click="login">登录</el-button>
+          <div style="flex: 1; font-size: 12px;">
+            <span style="letter-spacing: 2px;color:white">密码忘记了？点此处</span>
+            <span style="color: #4682B4; cursor: pointer" @click="EmailVerify">
               找回密码
             </span>
-            </div>
-          </el-form>
-        </div>
+          </div>
+        </el-form>
+      </div>
     </div>
 
     <!--输入用户名、邮箱和验证码的对话框-->
@@ -69,8 +66,8 @@
             <el-input v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码" type="password"></el-input>
           </el-form-item>
         </el-form>
-        </div>
-        <span class="dialog-footer">
+      </div>
+      <span class="dialog-footer">
         <el-button @click="resetPasswordDialogVis = false">取消</el-button>
         <el-button type="primary" @click="changePassword">确认</el-button>
         </span>
@@ -214,7 +211,11 @@ export default {
 
       let vm = this;
       //发送验证码
-     this.axios.post('http://localhost:8081/user/email', {'email': vm.UserEmailVerifyForm.email},
+     this.axios.post('http://localhost:8081/user/email',
+         {
+           'username': vm.UserEmailVerifyForm.username,
+           'email': vm.UserEmailVerifyForm.email
+         },
          {headers: {
              'Content-Type': 'application/x-www-form-urlencoded'
            }}).then(res => {
@@ -270,7 +271,27 @@ export default {
 </script>
 
 <style scoped>
+
+/*背景图片*/
+.background{
+  background:url("../assets/background.jpg");
+  width:100%;
+  height:100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position:fixed;
+  background-size:100% 100%;
+}
+
 .login {
+  display: flex;
+  background-color:rgba(29,45,59,0.7);
+  height:50%;
+  width: 50%;
+  border-radius: 5px;
+  box-shadow: 10px 10px 5px #888888;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   border: 0

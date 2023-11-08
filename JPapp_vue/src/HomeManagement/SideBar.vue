@@ -2,7 +2,7 @@
   <div class="common-layout">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
-        <el-menu-item index="info" :route="{ name: 'InfoPage' }">
+        <el-menu-item index="/studenthome" :route="{ name: 'StudentInfoPage' }">
           <template #title>
             <el-icon><user /></el-icon>个人信息
           </template>
@@ -42,7 +42,7 @@ export default {
 .el-side {
   background-color: #2c3e50;
   height: 100vh;
-  width: 2000px;
+  width: 200px;
 }
 
 /*侧边菜单背景颜色*/

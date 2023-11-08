@@ -31,7 +31,7 @@
 <style scoped>
 .header-container {
   background-color: #000000;
-  height: 700px;
+  height: 80px;
   display: flex; /* 使用 Flexbox 布局 */
   justify-content: space-between; /* 将 "l-content" 和 "r-content" 分散对齐 */
 }

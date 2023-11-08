@@ -33,7 +33,7 @@
 <!--              </el-dropdown-menu>-->
 <!--            </template>-->
 <!--          </el-dropdown>-->
-        <el-main>
+        <el-main class = "main_page">
           <router-view></router-view>
         </el-main>
       </el-container>
@@ -43,7 +43,7 @@
 <script>
 
 import SideBar from "./SideBar.vue";
-import HeaderComponent from "@/components/HeaderComponent.vue";
+import HeaderComponent from "@/HomeManagement/HeaderComponent.vue";
 export default {
   components: { SideBar , HeaderComponent},
   data() {
@@ -71,6 +71,12 @@ export default {
   height: 100%;
 }
 
-
+.main_page{
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  height: 100%;
+  width: 100%;
+}
 
 </style>
