@@ -48,11 +48,11 @@ export default {
 
 <style scoped>
 .box-card {
-    width: 1200px; /* 卡片宽度占满父元素(main) */
-    height: 700px; /* 卡片高度占满父元素(main) */
-    background-color: #f0f0f0; /* 卡片背景颜色 */
-    padding: 20px; /* 可以根据需要设置内边距 */
-    box-sizing: border-box; /* 内边距和边框不会增加卡片的实际宽度 */
+  width: 1200px; /* 卡片宽度占满父元素(main) */
+  height: 700px; /* 卡片高度占满父元素(main) */
+  background-color: #f0f0f0; /* 卡片背景颜色 */
+  padding: 20px; /* 可以根据需要设置内边距 */
+  box-sizing: border-box; /* 内边距和边框不会增加卡片的实际宽度 */
 }
 
 </style>

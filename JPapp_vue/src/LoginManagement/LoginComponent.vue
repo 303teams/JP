@@ -211,14 +211,15 @@ export default {
 
       let vm = this;
       //发送验证码
-     this.axios.post('http://localhost:8081/user/email',
-         {
-           'username': vm.UserEmailVerifyForm.username,
-           'email': vm.UserEmailVerifyForm.email
-         },
-         {headers: {
-             'Content-Type': 'application/x-www-form-urlencoded'
-           }}).then(res => {
+
+      this.axios.post('http://localhost:8081/user/email',
+          {
+            'username': vm.UserEmailVerifyForm.username,
+            'email': vm.UserEmailVerifyForm.email
+          },
+          {headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }}).then(res => {
         if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
         } else {
