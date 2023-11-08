@@ -1,9 +1,9 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import LoginComponent from "@/components/LoginComponent";
-import HomePage from "@/components/HomePage.vue";
+import LoginComponent from "@/LoginManagement/LoginComponent.vue";
+import HomePage from "@/HomeManagement/HomePage.vue";
 // import StudentPage from "@/components/StudentPage.vue";
 // import TeacherPage from "@/components/TeacherPage.vue";
-//import AdminPage from "@/components/AdminPage.vue";
+import AdminPage from "@/components/AdminPage.vue";
 import InfoPage from "@/components/InfoPage.vue";
 const routerHistory = createWebHistory();
 
@@ -16,9 +16,9 @@ const router = createRouter({
             redirect: '/login'
         },
         {
-          path: "/login",
-          name: "Login",
-          component: LoginComponent
+            path: "/login",
+            name: "Login",
+            component: LoginComponent
         },
 
         {
@@ -27,8 +27,8 @@ const router = createRouter({
             component:HomePage,
             children: [
                 {
-                    path: 'info',
-                    name:'InfoPage',
+                    path: '',
+                    name:'StudentInfoPage',
                     component: InfoPage
                 },
             ]
@@ -41,7 +41,7 @@ const router = createRouter({
             children: [
                 {
                     path: 'info',
-                    name:'InfoPage',
+                    name:'TeacherInfoPage',
                     component: InfoPage
                 },
             ]
@@ -50,19 +50,18 @@ const router = createRouter({
         {
             path: '/adminHome',
             name: 'adminHome',
-            component: HomePage,
-            children: [
-                {
-                    path: 'info',
-                    name:'InfoPage',
-                    component: InfoPage
-                },
-            ]
+            component: AdminPage,
+            // children: [
+            //     {
+            //         path: 'info',
+            //         name:'AdminInfoPage',
+            //         component: InfoPage
+            //     },
+            // ]
         }
 
     ],
     // mode: history
-
 
 })
 

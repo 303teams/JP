@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import PersonalDia from "./ModifyInfo.vue";
-import HeaderComponent from "./HeaderComponent.vue"
+import PersonalDia from "@/HomeManagement/ModifyInfo.vue";
+import HeaderComponent from "@/HomeManagement/HeaderComponent.vue"
 export default {
   components: { PersonalDia,HeaderComponent },
   name: "StudentPage",

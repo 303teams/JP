@@ -1,17 +1,19 @@
 import { createStore } from 'vuex'; // 使用createStore来创建Vuex store
+import createPersistedState from "vuex-persistedstate"
 
 const store = createStore({
     state: {
         role: "",
-        token: "",
+        sex: "",
     },
 
+    getters: {},
     mutations: {
         setRole(state, value) {
             state.role = value;
         },
-        setToken(state, value) {
-            state.token = value;
+        setSex(state, value) {
+            state.sex = value;
         },
     },
 
@@ -19,14 +21,16 @@ const store = createStore({
         setRole(context, value) {
             context.commit('setRole', value);
         },
-        setToken(context, value) {
-            context.commit('setToken', value);
+        setSex(context, value) {
+            context.commit('setSex', value);
         },
     },
 
+    modules: {},
 
-
-    modules: {}
+    plugins: [
+        createPersistedState()
+    ]
 });
 
 export default store;

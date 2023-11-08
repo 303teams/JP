@@ -7,7 +7,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import * as ElIconModules from '@element-plus/icons'
 import store from '@/store'
-
+import "lib-flexible-computer";
 
 const app = createApp(App)
 //  统一注册el-icon图标
@@ -20,7 +20,7 @@ for(let iconName in ElIconModules){
 //     if (!token && to.name !== 'Login'){
 //         next({ name: 'Login'})
 //     }else if(token && to.name == 'Login'){
-//         next({ name: 'student'})
+//         next({ name: 'studentHome'})
 //     }else{
 //         next()
 //     }
