@@ -20,7 +20,7 @@ for(let iconName in ElIconModules){
 //     if (!token && to.name !== 'Login'){
 //         next({ name: 'Login'})
 //     }else if(token && to.name == 'Login'){
-//         next({ name: 'student'})
+//         next({ name: 'studentHome'})
 //     }else{
 //         next()
 //     }

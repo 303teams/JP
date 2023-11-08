@@ -10,8 +10,8 @@ import javax.persistence.Entity;
 @Data
 public class Student extends User {
 
-    public String sex;
-    public Integer age;
+    private String sex;
+    private Integer age;
 
 }
 

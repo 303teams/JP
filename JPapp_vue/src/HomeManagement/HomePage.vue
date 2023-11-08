@@ -8,6 +8,7 @@
           <header-component></header-component>
         </el-header>
         <!--头部-->
+
         <!--面包屑-->
         <!--          <el-breadcrumb separator="/">-->
         <!--            <el-breadcrumb-item v-show="role === 'administrator'" :to="{ path: '/adminHome' }">管理员首页</el-breadcrumb-item>-->
@@ -33,6 +34,7 @@
         <!--              </el-dropdown-menu>-->
         <!--            </template>-->
         <!--          </el-dropdown>-->
+
         <el-main class = "main_page">
           <router-view></router-view>
         </el-main>
@@ -78,5 +80,6 @@ export default {
   height: 100%;
   width: 100%;
 }
+
 
 </style>

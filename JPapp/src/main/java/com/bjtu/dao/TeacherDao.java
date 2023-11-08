@@ -1,5 +1,6 @@
 package com.bjtu.dao;
 
+import com.bjtu.pojo.Teacher;
 import com.bjtu.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,7 +14,7 @@ public interface TeacherDao{
 
     //    查询
     public List<User> findAll();
-    public User findByNum(Integer num);
+    public Teacher findByNum(Integer num);
     public void deleteByNum(Integer num);
 
 }

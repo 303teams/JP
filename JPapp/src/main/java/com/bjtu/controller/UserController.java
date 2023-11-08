@@ -8,6 +8,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.service.impl.EmailService;
 
+import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -48,29 +49,38 @@ public class UserController {
         Assert.hasLength(password,"密码不能为空！");
 
         Integer id = Integer.parseInt(username);
-
-        if(role.equals("1")){
+        if(role.equals("admin")){
             return adminService.login(id,password);
-        }else if(role.equals("2")){
+        }else if(role.equals("student")){
             return studentService.login(id,password);
-        }else if(role.equals("3")) {
+        }else if(role.equals("teacher")) {
             return teacherService.login(id, password);
         }else{
-            return RspObject.fail("账户不存在！");
+            return RspObject.fail("登录失败！");
         }
     }
 
     @AuthAccess
     @PostMapping("email")
-    public RspObject<Object> email(String email) {
-        try {
+    public RspObject<Object> email(String username,String email) {
+
+        Assert.hasLength(username,"用户名不能为空！");
+        Assert.hasLength(email,"邮箱不能为空！");
+
+        Integer id = Integer.parseInt(username);
+        System.out.println(id+" "+email);
+        if(!Utils.isMatchEmail(id,email)){
+            System.out.println("用户账号与邮箱不匹配！");
+            throw new ServiceException(500,"用户账号与邮箱不匹配！");
+        }
+
+        try{
             // 生成验证码
             String code = Utils.generateVerificationCode();
             session.setAttribute("vcode",code);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
-//            return RspObject.fail("验证码未发送至您的邮箱");
             throw new ServiceException("验证码未发送至您的邮箱");
         }
 

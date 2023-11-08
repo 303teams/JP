@@ -211,6 +211,7 @@ export default {
 
       let vm = this;
       //发送验证码
+
       this.axios.post('http://localhost:8081/user/email',
           {
             'username': vm.UserEmailVerifyForm.username,

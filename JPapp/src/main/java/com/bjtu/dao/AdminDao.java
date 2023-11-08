@@ -13,6 +13,6 @@ public interface AdminDao{
     public void insert(Admin admin);
     //    查询
     public List<User> findAll();
-    public User findByNum(Integer num);
+    public Admin findByNum(Integer num);
     public void deleteByNum(Integer num);
 }

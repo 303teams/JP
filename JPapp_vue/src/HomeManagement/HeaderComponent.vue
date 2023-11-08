@@ -44,5 +44,5 @@
   /* 样式 "r-content"，并使其靠在右侧 */
   display: flex;
   align-items: center; /* 垂直居中 */
-}
+
 </style>

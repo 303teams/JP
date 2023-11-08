@@ -13,10 +13,12 @@ import java.io.Serializable;
 public class User implements Serializable {
     //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
-    public String password;
-    public String name;
-    public String email;
+    private Integer id;
+    private String password;
+    private String name;
+    private String email;
+    private String token;
+
 
     public User() {
     }

@@ -66,4 +66,5 @@ export default {
 .el-menu-item el-icon {
   color: white; /* 设置图标颜色为白色 */
 }
+
 </style>
