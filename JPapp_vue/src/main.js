@@ -15,22 +15,22 @@ for(let iconName in ElIconModules){
     app.component(iconName,ElIconModules[iconName])
 }
 
-router.beforeEach((to, from, next) => {
-    const role = localStorage.getItem('role')
-    const token = localStorage.getItem('token')
-    if (!token && to.name !== 'Login'){
-        next({ name: 'Login'})
-    }else if(token && to.name === 'Login'){
-        if(role === 'student')
-            next({ name: 'StudentInfoPage'})
-        else if(role === 'teacher')
-            next({ name: 'TeacherInfoPage'})
-        else
-            next({ name: 'StudentInfoPage'})
-    }else{
-        next()
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     const role = localStorage.getItem('role')
+//     const token = localStorage.getItem('token')
+//     if (!token && to.name !== 'Login'){
+//         next({ name: 'Login'})
+//     }else if(token && to.name === 'Login'){
+//         if(role === 'student')
+//             next({ name: 'StudentInfoPage'})
+//         else if(role === 'teacher')
+//             next({ name: 'TeacherInfoPage'})
+//         else
+//             next({ name: 'StudentInfoPage'})
+//     }else{
+//         next()
+//     }
+// })
 
 app.use(router);
 app.use(ElementUI)
