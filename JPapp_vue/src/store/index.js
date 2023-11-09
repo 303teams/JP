@@ -1,6 +1,17 @@
 import { createStore } from 'vuex'; // 使用createStore来创建Vuex store
 import createPersistedState from "vuex-persistedstate"
 
+const getDefaultState = () => {
+    return {
+        role: "",
+        id: "",
+        name: "",
+        sex: "",
+        email: "",
+        age: "",
+    }
+}
+
 const store = createStore({
     state: {
         role: "",
@@ -38,7 +49,11 @@ const store = createStore({
             state.sex = payload.sex;
             state.email = payload.email;
             state.age = payload.age;
-        }
+        },
+        RESET_STATE: (state) => {
+            Object.assign(state, getDefaultState())
+        },
+
     },
 
     actions: {

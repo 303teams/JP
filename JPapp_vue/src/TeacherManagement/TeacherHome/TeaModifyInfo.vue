@@ -1,25 +1,24 @@
 <template>
   <div>
-    <el-dialog title="修改个人信息" v-model="dialogVisible" width="60%" :before-close="handleClose">
-      <el-form :model="form" :rules="rules" ref="form" label-width="150px">
-        <div class="updateinfo">
-          <el-form-item label="名字" prop="name">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" prop="sex">
-            <el-radio-group v-model="form.sex">
-              <el-radio label="男">男</el-radio>
-              <el-radio label="女">女</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-          <el-form-item label="年龄" prop="age">
-            <el-input v-model="form.age"></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
+    <el-dialog title="修改个人信息" :close-on-click-modal="false" v-model="dialogVisible" width="60%" :before-close="handleClose">
+      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+        <el-form :model="form" :rules="rules" ref="form" label-width="150px">
+          <div class="updateinfo">
+            <el-form-item label="名字" prop="name">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="性别" prop="sex">
+              <el-radio-group v-model="form.sex">
+                <el-radio label="男">男</el-radio>
+                <el-radio label="女">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="年龄" prop="age">
+              <el-input v-model="form.age"></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
 
       <template #footer>
       <span class="dialog-footer">
@@ -44,7 +43,6 @@ export default {
         id: Number,
         name: "",
         sex: "",
-        email: "",
         age: Number,
       },
       rules: {
@@ -53,9 +51,6 @@ export default {
         ],
         sex: [
           { required: true, message: "性别不能为空", trigger: "blur" },
-        ],
-        email: [
-          { required: true, type: 'email', message: "请填写正确的邮箱地址", trigger: "blur" },
         ],
         age: [
           { required: true, message: "年龄不能为空", trigger: "blur" },
@@ -124,14 +119,13 @@ export default {
   },
 
   computed:{
-    ...mapState([ 'id', 'name', 'sex', 'email', 'age'])
+    ...mapState([ 'id', 'name', 'sex', 'age'])
   },
 };
 </script>
 
 <style scoped>
 .updateinfo {
-  height: 350px;
   overflow: auto;
 }
 

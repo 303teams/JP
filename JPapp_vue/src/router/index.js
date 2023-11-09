@@ -1,10 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import LoginComponent from "@/LoginManagement/LoginComponent.vue";
-import HomePage from "@/HomeManagement/HomePage.vue";
-// import StudentPage from "@/components/StudentPage.vue";
-// import TeacherPage from "@/components/TeacherPage.vue";
-import AdminPage from "@/components/AdminPage.vue";
-import InfoPage from "@/components/InfoPage.vue";
+import LoginComponent from "@/LoginManagement/LoginPage.vue";
+import HomePage from "@/components/HomePage.vue";
+import InfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
 const routerHistory = createWebHistory();
 
 
@@ -47,18 +44,18 @@ const router = createRouter({
             ]
         },
 
-        {
-            path: '/adminHome',
-            name: 'adminHome',
-            component: AdminPage,
-            // children: [
-            //     {
-            //         path: 'info',
-            //         name:'AdminInfoPage',
-            //         component: InfoPage
-            //     },
-            // ]
-        }
+        // {
+        //     path: '/adminHome',
+        //     name: 'adminHome',
+        //     component: AdminPage,
+        //     // children: [
+        //     //     {
+        //     //         path: 'info',
+        //     //         name:'AdminInfoPage',
+        //     //         component: InfoPage
+        //     //     },
+        //     // ]
+        // }
 
     ],
     // mode: history

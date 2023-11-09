@@ -15,16 +15,16 @@ for(let iconName in ElIconModules){
     app.component(iconName,ElIconModules[iconName])
 }
 
-// router.beforeEach((to, from, next) => {
-//     const token = localStorage.getItem('token')
-//     if (!token && to.name !== 'Login'){
-//         next({ name: 'Login'})
-//     }else if(token && to.name == 'Login'){
-//         next({ name: 'studentHome'})
-//     }else{
-//         next()
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token')
+    if (!token && to.name !== 'Login'){
+        next({ name: 'Login'})
+    }else if(token && to.name == 'Login'){
+        next({ name: 'studentHome'})
+    }else{
+        next()
+    }
+})
 
 app.use(router);
 app.use(ElementUI)
