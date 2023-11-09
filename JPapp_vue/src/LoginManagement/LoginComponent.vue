@@ -89,7 +89,7 @@ export default {
       if (value === "") {
         // 验证第二次是否输入密码
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.password) {
+      } else if (value !== this.resetPasswordForm.newPassword) {
         // 验证两次密码是否一致
         callback(new Error("两次输入密码不一致!"));
       } else {
@@ -256,7 +256,7 @@ export default {
             }}).then(res => {
         if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
-          const TIME_COUNT = 60;
+          const TIME_COUNT = 2;
           if (!this.timer) {
             this.count = TIME_COUNT;
             this.codeShow = false;
