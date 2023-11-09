@@ -76,9 +76,6 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           let vm = this;
-          // 从localStorage中获取token
-          let token = localStorage.getItem('token');
-          console.log(token);
           // 把form对象的数据转换成URL编码的格式
           let data = qs.stringify(vm.form);
           this.axios({

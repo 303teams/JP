@@ -37,7 +37,7 @@ const router = createRouter({
             component: HomePage,
             children: [
                 {
-                    path: 'info',
+                    path: '',
                     name:'TeacherInfoPage',
                     component: InfoPage
                 },

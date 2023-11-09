@@ -19,8 +19,13 @@ router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token')
     if (!token && to.name !== 'Login'){
         next({ name: 'Login'})
-    }else if(token && to.name == 'Login'){
-        next({ name: 'studentHome'})
+    }else if(token && to.name === 'Login'){
+        if(this.$store.getRole === 'student')
+            next({ name: 'StudentInfoPage'})
+        else if(this.$store.getRole === 'teacher')
+            next({ name: 'TeacherInfoPage'})
+        else
+            next({ name: 'AdminHome'})
     }else{
         next()
     }

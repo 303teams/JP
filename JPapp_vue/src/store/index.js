@@ -22,7 +22,9 @@ const store = createStore({
         age: "",
     },
 
-    getters: {},
+    getters: {
+        getRole: state => state.role
+    },
     mutations: {
         setRole(state, value) {
             state.role = value;

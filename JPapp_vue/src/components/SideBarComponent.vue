@@ -36,6 +36,7 @@
   <div v-show="role === 'teacher'" class="teacher">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
+        <h1 class="header_1">简评</h1>
         <el-menu-item index="/studentHome" :route="{ name: 'StudentInfoPage' }">
           <template #title>
           <el-icon><user /></el-icon>个人信息
@@ -68,6 +69,7 @@
   <div v-show="role === 'admin'" class="admin">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
+        <h1 class="header_1">简评</h1>
         <el-menu-item>
           <template #title>
           <el-icon><message /></el-icon>学生管理

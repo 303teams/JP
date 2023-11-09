@@ -46,7 +46,7 @@ export default {
     },
 
     LeaveSystem(){
-      localStorage.clear();
+      localStorage.removeItem('token');
       this.$store.commit('RESET_STATE');
       this.$router.push('/login');
     }
