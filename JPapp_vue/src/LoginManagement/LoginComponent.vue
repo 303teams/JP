@@ -256,7 +256,9 @@ export default {
             }}).then(res => {
         if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
+
           const TIME_COUNT = 2;
+
           if (!this.timer) {
             this.count = TIME_COUNT;
             this.codeShow = false;
