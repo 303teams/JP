@@ -14,13 +14,13 @@ public interface TeacherDao{
 
     //    查询
     public List<User> findAll();
-    public Teacher findByNum(Integer num);
-    public void deleteByNum(Integer num);
+    public Teacher findByNum(String num);
+    public void deleteByNum(String num);
 
     public void updateInfo(Teacher teacher);
 
-    public void updatePassword(Integer id, String password);
+    public void updatePassword(String id, String password);
 
-    public void updateEmail(Integer id, String email);
+    public void updateEmail(String id, String email);
 
 }

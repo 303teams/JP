@@ -11,11 +11,11 @@ public interface StudentDao {
     public void insert(Student student);
     //    查询
     public List<Student> findAll();
-    public Student findByNum(Integer id);
-    public void deleteByNum(Integer id);
+    public Student findByNum(String id);
+    public void deleteByNum(String id);
     public void updateInfo(Student student);
 
-    public void updatePassword(Integer id, String password);
+    public void updatePassword(String id, String password);
 
-    public void updateEmail(Integer id, String email);
+    public void updateEmail(String id, String email);
 }

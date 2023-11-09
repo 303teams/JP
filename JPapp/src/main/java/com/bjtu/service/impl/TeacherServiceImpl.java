@@ -23,7 +23,7 @@ public class TeacherServiceImpl implements TeacherService {
     TeacherDao teacherDao;
 
     @Override
-    public RspObject<User> login(Integer id, String password) {
+    public RspObject<User> login(String id, String password) {
         System.out.println(id + " " + password);
         Teacher teacher = teacherDao.findByNum(id);
 //        System.out.println(student);
@@ -49,7 +49,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<Boolean> deleteOne(Integer id) {
+    public RspObject<Boolean> deleteOne(String id) {
         return null;
     }
 
@@ -78,7 +78,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<String> modifyPassword(Integer id, String password) {
+    public RspObject<String> changePassword(String id, String password) {
         Teacher teacher = teacherDao.findByNum(id);
         if(teacher == null){
             throw new ServiceException(500,"用户不存在！");

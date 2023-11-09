@@ -17,7 +17,7 @@ public class AdminServiceImpl implements AdminService {
     AdminDao adminDao;
 
     @Override
-    public RspObject<User> login(Integer id, String password) {
+    public RspObject<User> login(String id, String password) {
         System.out.println(id + " " + password);
         Admin admin = adminDao.findByNum(id);
 //        System.out.println(student);
@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<Boolean> deleteOne(Integer id) {
+    public RspObject<Boolean> deleteOne(String id) {
         return null;
     }
 
@@ -59,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<String> modifyPassword(Integer id, String password) {
+    public RspObject<String> changePassword(String id, String password) {
         Admin admin = adminDao.findByNum(id);
         if(admin == null){
             throw new ServiceException(500,"用户不存在！");

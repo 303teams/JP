@@ -63,12 +63,12 @@ public class TokenUtils {
             if (StrUtil.isNotBlank(token)) {
                 String userId = JWT.decode(token).getAudience().get(0);
                 System.out.println(userId);
-                if( staticStudentDao.findByNum(Integer.parseInt(userId)) != null)
-                    return staticStudentDao.findByNum(Integer.parseInt(userId));
-                else if( staticTeachertDao.findByNum(Integer.parseInt(userId)) != null)
-                    return staticTeachertDao.findByNum(Integer.parseInt(userId));
-                else if( staticAdminDao.findByNum(Integer.parseInt(userId)) != null)
-                    return staticAdminDao.findByNum(Integer.parseInt(userId));
+                if( staticStudentDao.findByNum(userId) != null)
+                    return staticStudentDao.findByNum(userId);
+                else if( staticTeachertDao.findByNum(userId) != null)
+                    return staticTeachertDao.findByNum(userId);
+                else if( staticAdminDao.findByNum(userId) != null)
+                    return staticAdminDao.findByNum(userId);
                 else return null;
             }
         } catch (Exception e) {

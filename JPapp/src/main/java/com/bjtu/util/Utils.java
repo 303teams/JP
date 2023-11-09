@@ -41,7 +41,7 @@ public class Utils {
     }
 
 //    验证邮箱是否与账户名匹配
-    public static boolean isMatchEmail(Integer id,String email){
+    public static boolean isMatchEmail(String id,String email){
         Student student = staticStudentDao.findByNum(id);
         Teacher teacher = staticTeachertDao.findByNum(id);
         Admin admin = staticAdminDao.findByNum(id);
@@ -56,7 +56,7 @@ public class Utils {
         }
     }
 
-    public static String getUserType(Integer id){
+    public static String getUserType(String id){
         Student student = staticStudentDao.findByNum(id);
         Teacher teacher = staticTeachertDao.findByNum(id);
         Admin admin = staticAdminDao.findByNum(id);

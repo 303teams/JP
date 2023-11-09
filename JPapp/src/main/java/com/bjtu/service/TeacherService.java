@@ -9,19 +9,19 @@ import java.util.List;
 
 public interface TeacherService {
 
-    public RspObject<User> login(Integer id, String password);
+    public RspObject<User> login(String id, String password);
 
     public RspObject<Boolean> insert(Teacher teacher);
 
     public RspObject<List<Teacher>> searchAll();
 
-    public RspObject<Boolean> deleteOne(Integer id);
+    public RspObject<Boolean> deleteOne(String id);
 
     public RspObject<String> modifyEmail(String email);
 
     public RspObject<String> modifyPassword(String newPassword,String oldPassword);
 
-    public RspObject<String> modifyPassword(Integer id,String password);
+    public RspObject<String> changePassword(String id,String password);
 
     public RspObject<String> modifyInfo(Teacher teacher);
 

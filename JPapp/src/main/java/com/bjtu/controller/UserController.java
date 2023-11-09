@@ -44,13 +44,12 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(password,"密码不能为空！");
 
-        Integer id = Integer.parseInt(username);
         if(role.equals("admin")){
-            return adminService.login(id,password);
+            return adminService.login(username,password);
         }else if(role.equals("student")){
-            return studentService.login(id,password);
+            return studentService.login(username,password);
         }else if(role.equals("teacher")) {
-            return teacherService.login(id, password);
+            return teacherService.login(username, password);
         }else{
             return RspObject.fail("登录失败！");
         }
@@ -63,16 +62,14 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(email,"邮箱不能为空！");
 
-        Integer id = Integer.parseInt(username);
-        System.out.println(id+" "+email);
-        if(!Utils.isMatchEmail(id,email)){
+        if(!Utils.isMatchEmail(username,email)){
             System.out.println("用户账号与邮箱不匹配！");
             throw new ServiceException(500,"用户账号与邮箱不匹配！");
         }
         try{
             // 生成验证码
             String code = Utils.generateVerificationCode();
-            session.setAttribute("id",id);
+            session.setAttribute("id",username);
             session.setAttribute("vcode",code);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
@@ -99,14 +96,14 @@ public class UserController {
     @AuthAccess
     @PostMapping("/change")
     public RspObject<String> change(String password){
-        Integer id = Integer.parseInt(session.getAttribute("id").toString());
+        String id = session.getAttribute("id").toString();
         String role = Utils.getUserType(id);
         if(role.equals("admin")){
-            return adminService.modifyPassword(id,password);
+            return adminService.changePassword(id,password);
         }else if(role.equals("student")){
-            return studentService.modifyPassword(id,password);
+            return studentService.changePassword(id,password);
         }else if(role.equals("teacher")) {
-            return teacherService.modifyPassword(id, password);
+            return teacherService.changePassword(id, password);
         }else{
             return RspObject.fail("修改失败！");
         }
@@ -114,7 +111,7 @@ public class UserController {
 
     @PostMapping("/modifyPassword")
     public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-        Integer id = Integer.parseInt(session.getAttribute("id").toString());
+        String id = session.getAttribute("id").toString();
         String role = Utils.getUserType(id);
         if(role.equals("admin")){
             return adminService.modifyPassword(newPassword,oldPassword);
@@ -129,7 +126,7 @@ public class UserController {
 
     @PostMapping("/modifyEmail")
     public RspObject<String> modifyEmail(String email){
-        Integer id = Integer.parseInt(session.getAttribute("id").toString());
+        String id = session.getAttribute("id").toString();
         String role = Utils.getUserType(id);
         if(role.equals("admin")){
             return adminService.modifyEmail(email);
