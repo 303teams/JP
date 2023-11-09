@@ -89,7 +89,7 @@ export default {
       if (value === "") {
         // 验证第二次是否输入密码
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.password) {
+      } else if (value !== this.resetPasswordForm.newPassword) {
         // 验证两次密码是否一致
         callback(new Error("两次输入密码不一致!"));
       } else {
@@ -139,7 +139,7 @@ export default {
       passwordResetRules: {
         newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
         confirmPassword: [
-          { required: true, validator: validatePass2, message: '请输入确认密码', trigger: 'blur' },
+          { required: true, validator: validatePass2, trigger: 'blur' },
         ],
       },
     }

@@ -2,10 +2,7 @@ package com.bjtu.service.impl;
 
 import com.bjtu.dao.AdminDao;
 import com.bjtu.exception.ServiceException;
-import com.bjtu.pojo.Admin;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +48,36 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<String> modifyEmail(Integer id, String email) {
-        return null;
+    public RspObject<String> modifyEmail(String email) {
+        Admin admin = (Admin) TokenUtils.getCurrentUser();
+        if(admin == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            adminDao.updateEmail(admin.getId(),email);
+            return RspObject.success("密码修改成功！");
+        }
     }
 
     @Override
     public RspObject<String> modifyPassword(Integer id, String password) {
-        return null;
+        Admin admin = adminDao.findByNum(id);
+        if(admin == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            adminDao.updatePassword(id,password);
+            return RspObject.success("密码修改成功！");
+        }
+    }
+
+    @Override
+    public RspObject<String> modifyPassword(String password) {
+        Admin admin = (Admin) TokenUtils.getCurrentUser();
+        if(admin == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            adminDao.updatePassword(admin.getId(),password);
+            return RspObject.success("密码修改成功！");
+        }
     }
 
 }

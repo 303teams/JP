@@ -17,8 +17,12 @@ public interface TeacherService {
 
     public RspObject<Boolean> deleteOne(Integer id);
 
-    public RspObject<String> modifyEmail(Integer id, String email);
+    public RspObject<String> modifyEmail(String email);
 
-    public RspObject<String> modifyPassword(Integer id, String password);
+    public RspObject<String> modifyPassword(String password);
+
+    public RspObject<String> modifyPassword(Integer id,String password);
+
+    public RspObject<String> modifyInfo(Teacher teacher);
 
 }

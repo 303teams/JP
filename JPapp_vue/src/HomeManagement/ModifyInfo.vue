@@ -83,6 +83,7 @@ export default {
           let vm = this;
           // 从localStorage中获取token
           let token = localStorage.getItem('token');
+          console.log(token);
           // 把form对象的数据转换成URL编码的格式
           let data = qs.stringify(vm.form);
           this.axios({
@@ -91,7 +92,7 @@ export default {
             data: data,
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization': `Bearer ${token}` // 添加token到请求头中
+              'token': localStorage.getItem('token') // 添加token到请求头中
             }
           }).then(res => {
             // 根据返回的数据来判断请求的结果
@@ -106,7 +107,7 @@ export default {
               this.handleClose()
             } else {
               // 修改失败，显示失败提示信息
-              this.$message.error('修改失败：' + res.data.message);
+              this.$message.error('修改失败：' + res.data.msg);
             }
           }).catch(err => {
             // 发生未知错误，显示错误提示信息

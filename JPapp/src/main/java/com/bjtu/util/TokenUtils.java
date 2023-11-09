@@ -62,6 +62,7 @@ public class TokenUtils {
             String token = request.getHeader("token");
             if (StrUtil.isNotBlank(token)) {
                 String userId = JWT.decode(token).getAudience().get(0);
+                System.out.println(userId);
                 if( staticStudentDao.findByNum(Integer.parseInt(userId)) != null)
                     return staticStudentDao.findByNum(Integer.parseInt(userId));
                 else if( staticTeachertDao.findByNum(Integer.parseInt(userId)) != null)

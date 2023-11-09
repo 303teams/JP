@@ -54,14 +54,24 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<String> modifyEmail(Integer id, String email) {
-        Teacher teacher = teacherDao.findByNum(id);
+    public RspObject<String> modifyEmail(String email) {
+        Teacher teacher = (Teacher) TokenUtils.getCurrentUser();
         if(teacher == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-            teacher.setEmail(email);
-            teacherDao.updateRecord(teacher);
+            teacherDao.updateEmail(teacher.getId(),email);
             return RspObject.success("邮箱修改成功！新邮箱为："+ email);
+        }
+    }
+
+    @Override
+    public RspObject<String> modifyPassword(String password) {
+        Teacher teacher = (Teacher) TokenUtils.getCurrentUser();
+        if(teacher == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            teacherDao.updatePassword(teacher.getId(),password);
+            return RspObject.success("密码修改成功！");
         }
     }
 
@@ -71,8 +81,18 @@ public class TeacherServiceImpl implements TeacherService {
         if(teacher == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-            teacher.setPassword(password);
-            teacherDao.updateRecord(teacher);
+            teacherDao.updatePassword(id,password);
+            return RspObject.success("密码修改成功！");
+        }
+    }
+
+    @Override
+    public RspObject<String> modifyInfo(Teacher teacher) {
+        Teacher teacher1 = teacherDao.findByNum(teacher.getId());
+        if(teacher == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            teacherDao.updateInfo(teacher1);
             return RspObject.success("密码修改成功！");
         }
     }

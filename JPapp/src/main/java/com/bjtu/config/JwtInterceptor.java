@@ -22,6 +22,9 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StrUtil.isBlank(token)) {
             token = request.getParameter("token");
         }
+
+//        System.out.println(StrUtil.isBlank(request.getHeader("token")));
+
         // 如果不是映射到方法直接通过
         if (handler instanceof HandlerMethod) {
             AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);
@@ -38,17 +41,21 @@ public class JwtInterceptor implements HandlerInterceptor {
         String userId;
         try {
             userId = JWT.decode(token).getAudience().get(0);
+            System.out.println("当前用户为："+ userId);
         } catch (JWTDecodeException j) {
             System.out.println("拦截第二步，无法获取userId");
             throw new ServiceException(401, "token失效，请重新登录");
         }
         // 根据token中的userid查询数据库
         User user = TokenUtils.getCurrentUser();
-//        if (user == null) {
-//            System.out.println("3");
-//            throw new ServiceException(401, "无法获取用户信息");
-//        }
-        // 用户密码加签验证 token
+        if (user == null) {
+            System.out.println("3");
+            throw new ServiceException(401, "无法获取用户信息");
+        }
+//         用户密码加签验证 token
+
+        System.out.println(user);
+
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
         try {
             jwtVerifier.verify(token); // 验证token

@@ -30,10 +30,8 @@ public class EmailService {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.qq.com");
         mailSender.setPort(587);
-
         mailSender.setUsername("247492078@qq.com");
         mailSender.setPassword("ozkrrntfwnqxbgff");
-
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");

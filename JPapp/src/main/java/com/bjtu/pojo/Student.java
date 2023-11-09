@@ -13,6 +13,17 @@ public class Student extends User {
     private String sex;
     private Integer age;
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + super.getId() +
+                ", name='" + super.getName() + "\'" +
+                "，sex='" + sex + "\'" +
+                ",email='" + super.getEmail() + "\'" +
+                ", age=" + age +
+                "，password='" + super.getPassword() + "\'" +
+                '}';
+    }
 }
 
 

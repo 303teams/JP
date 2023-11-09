@@ -20,11 +20,11 @@ class StudentServiceImplTest {
 
     @Test
     void modifyEmail() {
-        System.out.println(studentService.modifyEmail(111,"21301044@bjtu.edu.cn"));
+        System.out.println(studentService.modifyEmail("21301044@bjtu.edu.cn"));
     }
 
     @Test
     void modifyPassword() {
-        System.out.println(studentService.modifyPassword(111,"111"));
+        System.out.println(studentService.modifyPassword("111"));
     }
 }

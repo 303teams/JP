@@ -16,5 +16,7 @@ public interface AdminDao{
     public Admin findByNum(Integer num);
     public void deleteByNum(Integer num);
 
-    public void updateRecord(Admin admin);
+    public void updatePassword(Integer id,String password);
+
+    public void updateEmail(Integer id, String email);
 }

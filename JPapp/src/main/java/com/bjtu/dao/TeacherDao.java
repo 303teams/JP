@@ -17,6 +17,10 @@ public interface TeacherDao{
     public Teacher findByNum(Integer num);
     public void deleteByNum(Integer num);
 
-    public void updateRecord(Teacher teacher);
+    public void updateInfo(Teacher teacher);
+
+    public void updatePassword(Integer id, String password);
+
+    public void updateEmail(Integer id, String email);
 
 }
