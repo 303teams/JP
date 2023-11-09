@@ -82,7 +82,6 @@ import {right} from "core-js/internals/array-reduce";
 // import axios from "axios";
 
 export default {
-
   name: "LoginComponent",
   data() {
     const validatePass2 = (rule, value, callback) => {
@@ -150,6 +149,7 @@ export default {
       console.log(this.role);
     },
 
+    //验证码倒计时
     CountDown: function () {
       const TIME_COUNT = 2;
 
