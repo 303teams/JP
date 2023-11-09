@@ -5,7 +5,7 @@
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="modifyEmailForm" ref="ModifyEmailRef" label-width="80px" :rules="rules">
           <el-form-item label="新邮箱" prop="email">
-            <el-input show-password v-model="modifyEmailForm.email" style="width: 200px" placeholder="请输入邮箱"></el-input>
+            <el-input  v-model="modifyEmailForm.email" style="width: 200px" placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
