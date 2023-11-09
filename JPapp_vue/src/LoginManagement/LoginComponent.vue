@@ -85,6 +85,18 @@ export default {
 
   name: "LoginComponent",
   data() {
+    const validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        // 验证第二次是否输入密码
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.password) {
+        // 验证两次密码是否一致
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       codeShow: true,
       timer: null,
@@ -127,17 +139,7 @@ export default {
       passwordResetRules: {
         newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
         confirmPassword: [
-          { required: true, message: '请输入确认密码', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (value !== this.resetPasswordForm.newPassword) {
-                callback(new Error('两次密码输入不一致'));
-              } else {
-                callback();
-              }
-            },
-            trigger: 'blur',
-          },
+          { required: true, validator: validatePass2, message: '请输入确认密码', trigger: 'blur' },
         ],
       },
     }
@@ -172,8 +174,12 @@ export default {
               setTimeout(() => {
                 localStorage.setItem("token",res.data.data.token);
                 this.$store.commit('setRole', this.user.role);
-                this.$store.commit('setSex', res.data.data.sex);
+                this.$store.commit('setId', res.data.data.id);
+                this.$store.commit('setName', res.data.data.name);
+                this.$store.commit('setEmail', res.data.data.email);
+                this.$store.commit('setAge', res.data.data.age);
                 if(this.user.role === "student"){
+                  this.$store.commit('setSex', res.data.data.sex);
                   this.$router.push('/studentHome');
                 }else if(this.user.role === "teacher"){
                   this.$router.push('/teacherHome');
@@ -203,6 +209,28 @@ export default {
     },
     //修改密码
     changePassword: function () {
+      this.$refs.ResetPasswordRef.validate((valid) => {
+        if (valid) {
+          let vm = this;
+          this.axios.post('http://localhost:8081/user/change',
+              {
+                'password': vm.resetPasswordForm.newPassword
+              },
+              {headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }}).then(res => {
+            if (res.data.code === 200) {
+              this.$message.success("密码修改成功！");
+              this.resetPasswordDialogVis = false;
+            } else {
+              this.$message.warning("密码修改失败:" + res.data.msg)
+            }
+          }).catch(err => {
+            this.$message.error("发生未知错误！");
+            console.log(err);
+          });
+        }
+      })
     },
     //发送验证码
     sendVerificationCode: function () {
@@ -229,6 +257,20 @@ export default {
             }}).then(res => {
         if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
+          const TIME_COUNT = 60;
+          if (!this.timer) {
+            this.count = TIME_COUNT;
+            this.codeShow = false;
+            this.timer = setInterval(() => {
+              if (this.count > 0 && this.count <= TIME_COUNT) {
+                this.count--;
+              } else {
+                this.codeShow = true;
+                clearInterval(this.timer);
+                this.timer = null;
+              }
+            }, 1000)
+          }
         } else {
           this.$message.warning("验证码发送失败:" + res.data.msg)
         }
@@ -237,20 +279,6 @@ export default {
         console.log(err);
       });
 
-      const TIME_COUNT = 60;
-      if (!this.timer) {
-        this.count = TIME_COUNT;
-        this.codeShow = false;
-        this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= TIME_COUNT) {
-            this.count--;
-          } else {
-            this.codeShow = true;
-            clearInterval(this.timer);
-            this.timer = null;
-          }
-        }, 1000)
-      }
     },
     //邮箱验证后
     confirmEmail: function () {
@@ -298,7 +326,7 @@ export default {
   height:50%;
   width: 50%;
   border-radius: 5px;
-  box-shadow: 10px 10px 5px #888888;
+  box-shadow: 5px 5px 5px rgb(99,122,119);
   overflow: hidden;
   margin: 0;
   padding: 0;
