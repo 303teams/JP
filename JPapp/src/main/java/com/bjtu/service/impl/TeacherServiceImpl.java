@@ -65,12 +65,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<String> modifyPassword(String password) {
+    public RspObject<String> modifyPassword(String newPassword,String oldPassword) {
         Teacher teacher = (Teacher) TokenUtils.getCurrentUser();
         if(teacher == null){
             throw new ServiceException(500,"用户不存在！");
+        }else if(!teacher.getPassword().equals(oldPassword)){
+            throw new ServiceException(500,"原密码错误！");
         }else{
-            teacherDao.updatePassword(teacher.getId(),password);
+            teacherDao.updatePassword(teacher.getId(),newPassword);
             return RspObject.success("密码修改成功！");
         }
     }

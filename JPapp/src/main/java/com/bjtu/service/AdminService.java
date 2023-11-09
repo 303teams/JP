@@ -21,6 +21,6 @@ public interface AdminService {
 
     public RspObject<String> modifyPassword(Integer id, String password);
 
-    public RspObject<String> modifyPassword(String password);
+    public RspObject<String> modifyPassword(String newPassword,String oldPassword);
 
 }

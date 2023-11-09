@@ -19,7 +19,7 @@ public interface TeacherService {
 
     public RspObject<String> modifyEmail(String email);
 
-    public RspObject<String> modifyPassword(String password);
+    public RspObject<String> modifyPassword(String newPassword,String oldPassword);
 
     public RspObject<String> modifyPassword(Integer id,String password);
 

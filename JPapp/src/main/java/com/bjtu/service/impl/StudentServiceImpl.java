@@ -67,13 +67,16 @@ public class StudentServiceImpl implements StudentService  {
     }
 
     @Override
-    public RspObject<String> modifyPassword(String password) {
+    public RspObject<String> modifyPassword(String newPassword, String oldPassword) {
 //        根据请求上下文获取用户对象信息
         Student student = (Student) TokenUtils.getCurrentUser();
         if(student == null){
             throw new ServiceException(500,"用户不存在！");
+        }else if(!student.getPassword().equals(oldPassword)) {
+//            旧密码与新密码不一致
+            throw new ServiceException(500,"原密码错误！");
         }else{
-            studentDao.updatePassword(student.getId(),password);
+            studentDao.updatePassword(student.getId(),newPassword);
             return RspObject.success("密码修改成功!");
         }
     }

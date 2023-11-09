@@ -112,4 +112,37 @@ public class UserController {
         }
     }
 
+    @PostMapping("/modifyPassword")
+    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
+        Integer id = Integer.parseInt(session.getAttribute("id").toString());
+        String role = Utils.getUserType(id);
+        if(role.equals("admin")){
+            return adminService.modifyPassword(newPassword,oldPassword);
+        }else if(role.equals("student")){
+            return studentService.modifyPassword(newPassword,oldPassword);
+        }else if(role.equals("teacher")) {
+            return teacherService.modifyPassword(newPassword, oldPassword);
+        }else{
+            return RspObject.fail("修改密码失败！");
+        }
+    }
+
+    @PostMapping("/modifyEmail")
+    public RspObject<String> modifyEmail(String email){
+        Integer id = Integer.parseInt(session.getAttribute("id").toString());
+        String role = Utils.getUserType(id);
+        if(role.equals("admin")){
+            return adminService.modifyEmail(email);
+        }else if(role.equals("student")){
+            return studentService.modifyEmail(email);
+        }else if(role.equals("teacher")) {
+            return teacherService.modifyEmail(email);
+        }else{
+            return RspObject.fail("修改邮箱失败！");
+        }
+    }
+
+
+
+
 }

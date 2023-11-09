@@ -17,15 +17,15 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
-    @PostMapping("modifyEmail")
-    public RspObject<String> modifyEmail(String email){
-        return teacherService.modifyEmail(email);
-    }
-
-    @PostMapping("modifyPassword")
-    public RspObject<String> modifyPassword(String Password){
-        return teacherService.modifyPassword(Password);
-    }
+//    @PostMapping("modifyEmail")
+//    public RspObject<String> modifyEmail(String email){
+//        return teacherService.modifyEmail(email);
+//    }
+//
+//    @PostMapping("modifyPassword")
+//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
+//        return teacherService.modifyPassword(newPassword,oldPassword);
+//    }
 
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){

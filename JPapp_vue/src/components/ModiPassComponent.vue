@@ -87,7 +87,7 @@ export default {
           // 把form对象的数据转换成URL编码的格式
           let data = qs.stringify(vm.modifyPasswordForm);
           this.axios({
-            url: 'http://localhost:8081/student/modifypassword',
+            url: 'http://localhost:8081/student/modifyPassword',
             method: 'post',
             data: data,
             headers: {

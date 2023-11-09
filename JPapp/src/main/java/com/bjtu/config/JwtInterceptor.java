@@ -41,7 +41,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         String userId;
         try {
             userId = JWT.decode(token).getAudience().get(0);
-            System.out.println("当前用户为："+ userId);
+//            System.out.println("当前用户为："+ userId);
         } catch (JWTDecodeException j) {
             System.out.println("拦截第二步，无法获取userId");
             throw new ServiceException(401, "token失效，请重新登录");
@@ -54,7 +54,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 //         用户密码加签验证 token
 
-        System.out.println(user);
+//        System.out.println(user);
 
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
         try {

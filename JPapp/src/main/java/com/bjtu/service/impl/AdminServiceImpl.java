@@ -70,12 +70,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<String> modifyPassword(String password) {
+    public RspObject<String> modifyPassword(String newPassword,String oldPassword) {
         Admin admin = (Admin) TokenUtils.getCurrentUser();
         if(admin == null){
             throw new ServiceException(500,"用户不存在！");
+        }else if(!admin.getPassword().equals(oldPassword)){
+            throw new ServiceException(500,"原密码错误！");
         }else{
-            adminDao.updatePassword(admin.getId(),password);
+            adminDao.updatePassword(admin.getId(),newPassword);
             return RspObject.success("密码修改成功！");
         }
     }

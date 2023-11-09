@@ -20,6 +20,6 @@ class TeacherServiceImplTest {
 
     @Test
     void modifyPassword() {
-        System.out.println(teacherService.modifyPassword("333"));
+        System.out.println(teacherService.modifyPassword("","333"));
     }
 }

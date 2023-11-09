@@ -16,15 +16,15 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @PostMapping("modifyEmail")
-    public RspObject<String> modifyEmail(String email){
-        return adminService.modifyEmail(email);
-    }
+//    @PostMapping("modifyEmail")
+//    public RspObject<String> modifyEmail(String email){
+//        return adminService.modifyEmail(email);
+//    }
 
-    @PostMapping("modifyPassword")
-    public RspObject<String> modifyPassword(String password){
-        return adminService.modifyPassword(password);
-    }
+//    @PostMapping("modifyPassword")
+//    public RspObject<String> modifyPassword(String password){
+//        return adminService.modifyPassword(password);
+//    }
 
 
 }
