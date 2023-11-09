@@ -34,7 +34,7 @@ public class TeacherServiceImpl implements TeacherService {
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
             teacher.setToken(token);
-            return RspObject.success(teacher);
+            return RspObject.success("登录成功！",teacher);
         }
     }
 
@@ -51,5 +51,29 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public RspObject<Boolean> deleteOne(Integer id) {
         return null;
+    }
+
+    @Override
+    public RspObject<String> modifyEmail(Integer id, String email) {
+        Teacher teacher = teacherDao.findByNum(id);
+        if(teacher == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            teacher.setEmail(email);
+            teacherDao.updateRecord(teacher);
+            return RspObject.success("邮箱修改成功！新邮箱为："+ email);
+        }
+    }
+
+    @Override
+    public RspObject<String> modifyPassword(Integer id, String password) {
+        Teacher teacher = teacherDao.findByNum(id);
+        if(teacher == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            teacher.setPassword(password);
+            teacherDao.updateRecord(teacher);
+            return RspObject.success("密码修改成功！");
+        }
     }
 }

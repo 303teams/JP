@@ -22,6 +22,11 @@
         select * from student where id = #{id}
     </select>
 
+    <update id="updateRecord" parameterType="Student">
+        update student set name = #{name},age = #{age},password = #{password},
+        email = #{email},sex = #{sex} where id = #{id}
+    </update>
+
     <!--    <select id="findByStudentNum" resultType="student">-->
     <!--        select * from student where sno = #{sno}-->
     <!--    </select>-->

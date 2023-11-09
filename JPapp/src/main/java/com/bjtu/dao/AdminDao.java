@@ -15,4 +15,6 @@ public interface AdminDao{
     public List<User> findAll();
     public Admin findByNum(Integer num);
     public void deleteByNum(Integer num);
+
+    public void updateRecord(Admin admin);
 }

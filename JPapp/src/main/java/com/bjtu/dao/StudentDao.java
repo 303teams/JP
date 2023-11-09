@@ -13,4 +13,5 @@ public interface StudentDao {
     public List<Student> findAll();
     public Student findByNum(Integer id);
     public void deleteByNum(Integer id);
+    public void updateRecord(Student student);
 }

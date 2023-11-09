@@ -17,4 +17,6 @@ public interface TeacherDao{
     public Teacher findByNum(Integer num);
     public void deleteByNum(Integer num);
 
+    public void updateRecord(Teacher teacher);
+
 }

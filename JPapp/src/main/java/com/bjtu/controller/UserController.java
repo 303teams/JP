@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.bjtu.exception.ServiceException;
 
@@ -70,27 +69,46 @@ public class UserController {
             System.out.println("用户账号与邮箱不匹配！");
             throw new ServiceException(500,"用户账号与邮箱不匹配！");
         }
-
         try{
             // 生成验证码
             String code = Utils.generateVerificationCode();
+            session.setAttribute("id",id);
             session.setAttribute("vcode",code);
             emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
             throw new ServiceException("验证码未发送至您的邮箱");
         }
-
     }
 
     @AuthAccess
     @PostMapping("/verify")
-    public RspObject<Object> verify(HttpServletRequest request, String code){
-        System.out.println(session.getAttribute("vcode"));
+    public RspObject<Object> verify(String code){
+//        System.out.println(session);
+//        System.out.println(session.getAttribute("vcode"));
         if(session.getAttribute("vcode").toString().equals(code)){
+            System.out.println("验证码正确！");
             return RspObject.success("验证码正确！");
         }else{
+            System.out.println("验证码错误！");
             return RspObject.fail("验证码错误！");
+        }
+    }
+
+
+    @AuthAccess
+    @PostMapping("/change")
+    public RspObject<String> change(String password){
+        Integer id = Integer.parseInt(session.getAttribute("id").toString());
+        String role = Utils.getUserType(id);
+        if(role.equals("admin")){
+            return adminService.modifyPassword(id,password);
+        }else if(role.equals("student")){
+            return studentService.modifyPassword(id,password);
+        }else if(role.equals("teacher")) {
+            return teacherService.modifyPassword(id, password);
+        }else{
+            return RspObject.fail("修改失败！");
         }
     }
 

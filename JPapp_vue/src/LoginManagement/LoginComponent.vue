@@ -203,6 +203,31 @@ export default {
     },
     //修改密码
     changePassword: function () {
+      let vm = this;
+      this.$refs.UserEmailVerifyRef.validate((valid) => {
+        if(valid){
+          this.axios.post('http://localhost:8081/user/change', {
+                'password': vm.resetPasswordForm.newPassword
+              }, {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
+              }
+          ).then(res => {
+            if (res.data.code === 200) {
+              this.$message.success(res.data.msg)
+            } else {
+              this.$message.error(res.data.msg)
+              console.log(res.data)
+            }
+            this.disableSend = false
+          }).catch(error => {
+            console.log(error)
+            this.$message.error('密码修改失败！')
+            this.disableSend = false
+          })
+        }
+    })
     },
     //发送验证码
     sendVerificationCode: function () {
@@ -216,7 +241,6 @@ export default {
         this.$message.warning("请输入正确的邮箱！");
         return;
       }
-
       let vm = this;
       //发送验证码
       this.axios.post('http://localhost:8081/user/email',
@@ -237,7 +261,7 @@ export default {
         console.log(err);
       });
 
-      const TIME_COUNT = 60;
+      const TIME_COUNT = 1;
       if (!this.timer) {
         this.count = TIME_COUNT;
         this.codeShow = false;
@@ -263,10 +287,11 @@ export default {
               'Content-Type': 'application/x-www-form-urlencoded'
             }}).then(res => {
         if (res.data.code === 200) {
-          this.EmailVerifyDialogVis = false;
-          this.resetPasswordDialogVis = true;
+          vm.EmailVerifyDialogVis = false;
+          vm.resetPasswordDialogVis = true;
+          vm.$message.success("验证成功！");
         } else {
-          this.$message.warning("验证失败:" + res.data.msg)
+          vm.$message.warning("验证失败:" + res.data.msg)
         }
       }).catch(err => {
         this.$message.error("发生未知错误！");

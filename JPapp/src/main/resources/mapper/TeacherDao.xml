@@ -7,20 +7,25 @@
 
 
     <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into tb_user(id,name,age,email,password) values (#{id}, #{name},#{age},#{email},#{password})
+        insert into teacher(id,name,age,email,password) values (#{id}, #{name},#{age},#{email},#{password})
     </insert>
 
     <delete id="deleteByNum" parameterType="string">
-        delete from tb_user where id = #{num}
+        delete from teacher where id = #{num}
     </delete>
 
     <select id="findAll" resultType="Teacher">
-        select * from tb_user
+        select * from teacher
     </select>
 
     <select id="findByNum" resultType="Teacher">
         select * from teacher where id = #{num}
     </select>
+
+    <update id="updateRecord" parameterType="Teacher">
+        update teacher set name = #{name},age = #{age},email = #{email},
+        password = #{password} where id = #{id}
+    </update>
 
     <!--    <select id="findByStudentNum" resultType="student">-->
     <!--        select * from student where sno = #{sno}-->

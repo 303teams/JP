@@ -44,10 +44,10 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         // 根据token中的userid查询数据库
         User user = TokenUtils.getCurrentUser();
-        if (user == null) {
-            System.out.println("3");
-            throw new ServiceException(401, "无法获取用户信息");
-        }
+//        if (user == null) {
+//            System.out.println("3");
+//            throw new ServiceException(401, "无法获取用户信息");
+//        }
         // 用户密码加签验证 token
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
         try {

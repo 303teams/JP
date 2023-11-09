@@ -31,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
             admin.setToken(token);
-            return RspObject.success(admin);
+            return RspObject.success("登录成功！",admin);
         }
     }
 
@@ -47,6 +47,16 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public RspObject<Boolean> deleteOne(Integer id) {
+        return null;
+    }
+
+    @Override
+    public RspObject<String> modifyEmail(Integer id, String email) {
+        return null;
+    }
+
+    @Override
+    public RspObject<String> modifyPassword(Integer id, String password) {
         return null;
     }
 

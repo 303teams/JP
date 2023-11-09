@@ -10,6 +10,7 @@ import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service("studentService")
@@ -30,7 +31,7 @@ public class StudentServiceImpl implements StudentService  {
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
-            return RspObject.success(student);
+            return RspObject.success("登录成功！",student);
         }
     }
 
@@ -40,7 +41,7 @@ public class StudentServiceImpl implements StudentService  {
             return RspObject.fail("user already exist!",Boolean.FALSE);
         }else{
             studentDao.insert(student);
-            return RspObject.success(Boolean.TRUE);
+            return RspObject.success("插入成功",Boolean.TRUE);
         }
     }
 
@@ -52,6 +53,30 @@ public class StudentServiceImpl implements StudentService  {
     @Override
     public RspObject<Boolean> deleteOne(Integer id) {
         return null;
+    }
+
+    @Override
+    public RspObject<String> modifyEmail(Integer id, String email) {
+        Student student = studentDao.findByNum(id);
+        if(student == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            student.setEmail(email);
+            studentDao.updateRecord(student);
+            return RspObject.success("邮箱修改成功！新邮箱为："+ email);
+        }
+    }
+
+    @Override
+    public RspObject<String> modifyPassword(Integer id, String password) {
+        Student student = studentDao.findByNum(id);
+        if(student == null){
+            throw new ServiceException(500,"用户不存在！");
+        }else{
+            student.setPassword(password);
+            studentDao.updateRecord(student);
+            return RspObject.success("密码修改成功!");
+        }
     }
 
 

@@ -55,4 +55,19 @@ public class Utils {
             throw new ServiceException(500,"该用户不存在!");
         }
     }
+
+    public static String getUserType(Integer id){
+        Student student = staticStudentDao.findByNum(id);
+        Teacher teacher = staticTeachertDao.findByNum(id);
+        Admin admin = staticAdminDao.findByNum(id);
+        if(student != null){
+            return "student";
+        }else if(teacher != null){
+            return "teacher";
+        }else if(admin != null){
+            return "admin";
+        }else{
+            throw new ServiceException(500,"该用户不存在!");
+        }
+    }
 }

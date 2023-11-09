@@ -31,5 +31,6 @@ app.use(ElementUI)
 app.use(VueAxios,axios)
 app.use(store)
 app.mount('#app');
+axios.defaults.withCredentials = true
 
 

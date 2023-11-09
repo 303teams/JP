@@ -15,8 +15,12 @@ public class RspObject<T> {
         this.data = data;
     }
 
-    public static <T> RspObject<T> success(T data){
-        return new RspObject<T>(200,"success",data);
+    public static <T> RspObject<T> success(String msg,T data){
+        return new RspObject<T>(200,msg,data);
+    }
+
+    public static <T> RspObject<T> success(String msg){
+        return success(msg,null);
     }
 
     public static RspObject success(){
