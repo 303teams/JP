@@ -30,7 +30,6 @@ const router = createRouter({
                 },
             ]
         },
-
         {
             path: '/teacherHome',
             name: 'teacherHome',
