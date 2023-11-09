@@ -3,63 +3,28 @@
     <el-dialog title="修改个人信息" v-model="dialogVisible" width="60%" :before-close="handleClose">
       <el-form :model="form" :rules="rules" ref="form" label-width="150px">
         <div class="updateinfo">
-          <div class="left">
-            <el-form-item label="头像" prop="avatar">
-              <img style="width:150px;height:110px" :src="form.avatar">
-            </el-form-item>
-            <el-form-item label="账号密码" prop="password">
-              <el-input v-model="form.password"></el-input>
-            </el-form-item>
-            <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="form.nickname"></el-input>
-            </el-form-item>
-            <el-form-item label="年龄" prop="age">
-              <el-input v-model="form.age"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" prop="sex">
-              <el-switch v-model="form.sex"
-                         active-color="#13ce66"
-                         inactive-color="#ff4949"
-                         active-text="男"
-                         inactive-text="女"
-                         :active-value= "1"
-                         :inactive-value= "0">
-              </el-switch>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email"></el-input>
-            </el-form-item>
-          </div>
-          <div class="right">
-            <el-form-item label="用户编号" prop="id">
-              <el-input v-model="form.id" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="账号" prop="account">
-              <el-input v-model="form.account" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="地区" prop="area">
-              <el-input v-model="form.area"></el-input>
-            </el-form-item>
-            <el-form-item label="兴趣爱好" prop="hobby">
-              <el-input v-model="form.hobby"></el-input>
-            </el-form-item>
-            <el-form-item label="职业" prop="work">
-              <el-input v-model="form.work"></el-input>
-            </el-form-item>
-            <el-form-item label="个性签名" prop="design">
-              <el-input v-model="form.design"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号码" prop="mobilePhoneNumber">
-              <el-input v-model="form.mobilePhoneNumber"></el-input>
-            </el-form-item>
-          </div>
+          <el-form-item label="名字" prop="name">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+          <el-form-item label="性别" prop="sex">
+            <el-radio-group v-model="form.sex">
+              <el-radio label="男">男</el-radio>
+              <el-radio label="女">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email"></el-input>
+          </el-form-item>
+          <el-form-item label="年龄" prop="age">
+            <el-input v-model="form.age"></el-input>
+          </el-form-item>
         </div>
       </el-form>
 
       <template #footer>
-          <span class="dialog-footer">
+      <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary">提 交</el-button>
+          <el-button type="primary" @click="submitForm">提 交</el-button>
           </span>
       </template>
     </el-dialog>
@@ -68,44 +33,97 @@
 
 <script>
 
+import qs from 'qs';
+import {mapState} from "vuex";
+
 export default {
-  name: "PersonalDia",
   data() {
     return {
       dialogVisible: false,
       form: {
-        avatar: "",
-        password: "",
-        nickname: "",
-        age: Number,
-        email: "",
-        mobilePhoneNumber: "",
-        sex: Number,
         id: Number,
-        account: "",
-        area: "",
-        hobby: "",
-        work: "",
-        design: "",
+        name: "",
+        sex: "",
+        email: "",
+        age: Number,
       },
       rules: {
-        nickname: [
-          { required: true, message: "昵称不能为空", trigger: "blur" },
+        name: [
+          { required: true, message: "名字不能为空", trigger: "blur" },
         ],
-        password: [
-          { required: true, message: "账号密码不能为空", trigger: "blur" },
+        sex: [
+          { required: true, message: "性别不能为空", trigger: "blur" },
+        ],
+        email: [
+          { required: true, type: 'email', message: "请填写正确的邮箱地址", trigger: "blur" },
+        ],
+        age: [
+          { required: true, message: "年龄不能为空", trigger: "blur" },
         ],
       },
     };
   },
   methods: {
+    load(){
+      Object.assign(this.form, this.$store.state)
+    },
     open() {
       this.dialogVisible = true;
+      this.load()
     },
     handleClose() {
       this.dialogVisible = false;
       this.$emit("flesh");
     },
+
+    submitForm() {
+      // 验证表单是否合法
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          let vm = this;
+          // 从localStorage中获取token
+          let token = localStorage.getItem('token');
+          // 把form对象的数据转换成URL编码的格式
+          let data = qs.stringify(vm.form);
+          this.axios({
+            url: 'http://localhost:8081/student/modifyInfo',
+            method: 'post',
+            data: data,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Authorization': `Bearer ${token}` // 添加token到请求头中
+            }
+          }).then(res => {
+            // 根据返回的数据来判断请求的结果
+            if (res.data.code === 200) {
+              // 修改成功，显示成功提示信息
+              this.$message.success('修改成功');
+              // 使用Object.assign来复制form对象的值到Vuex的状态上
+              Object.assign(this.$store.state, this.form)
+              // 调用mutation来更新状态
+              this.$store.commit('updateInfo', this.$store.state)
+              // 关闭对话框
+              this.handleClose()
+            } else {
+              // 修改失败，显示失败提示信息
+              this.$message.error('修改失败：' + res.data.message);
+            }
+          }).catch(err => {
+            // 发生未知错误，显示错误提示信息
+            this.$message.error("发生未知错误！");
+            console.log(err);
+          })
+        } else {
+          // 表单不合法，提示错误
+          this.$message.error('请检查表单是否填写正确')
+          return false;
+        }
+      });
+    }
+  },
+
+  computed:{
+    ...mapState([ 'id', 'name', 'sex', 'email', 'age'])
   },
 };
 </script>
@@ -115,11 +133,5 @@ export default {
   height: 350px;
   overflow: auto;
 }
-.left {
-  /* width: 330px; */
-  float: left;
-}
-.right {
-  overflow: hidden;
-}
+
 </style>
