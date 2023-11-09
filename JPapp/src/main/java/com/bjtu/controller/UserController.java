@@ -1,13 +1,13 @@
 package com.bjtu.controller;
 
 import com.bjtu.config.AuthAccess;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
 import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.service.impl.EmailService;
 
+import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -43,6 +43,9 @@ public class UserController {
 //        异常捕获
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(password,"密码不能为空！");
+
+//        后端存储用户id
+        session.setAttribute("id",username);
 
         if(role.equals("admin")){
             return adminService.login(username,password);
@@ -111,17 +114,30 @@ public class UserController {
 
     @PostMapping("/modifyPassword")
     public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-        String id = session.getAttribute("id").toString();
-        String role = Utils.getUserType(id);
-        if(role.equals("admin")){
-            return adminService.modifyPassword(newPassword,oldPassword);
-        }else if(role.equals("student")){
+        User user = TokenUtils.getCurrentUser();
+        if(user.getClass() == Student.class){
             return studentService.modifyPassword(newPassword,oldPassword);
-        }else if(role.equals("teacher")) {
-            return teacherService.modifyPassword(newPassword, oldPassword);
+        }else if(user.getClass() == Admin.class){
+            return teacherService.modifyPassword(newPassword,oldPassword);
+        }else if(user.getClass() == Teacher.class){
+            return adminService.modifyPassword(newPassword,oldPassword);
         }else{
             return RspObject.fail("修改密码失败！");
         }
+//        String id = session.getAttribute("id").toString();
+//        System.out.println("当前用户："+id);
+//        String role = Utils.getUserType(id);
+//        if(role.equals("admin")){
+//            return adminService.modifyPassword(newPassword,oldPassword);
+//        }else if(role.equals("student")){
+//            return studentService.modifyPassword(newPassword,oldPassword);
+//        }else if(role.equals("teacher")) {
+//            return teacherService.modifyPassword(newPassword, oldPassword);
+//        }else{
+//            return RspObject.fail("修改密码失败！");
+//        }
+
+
     }
 
     @PostMapping("/modifyEmail")

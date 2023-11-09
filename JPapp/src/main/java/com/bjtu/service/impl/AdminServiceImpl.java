@@ -75,6 +75,7 @@ public class AdminServiceImpl implements AdminService {
         if(admin == null){
             throw new ServiceException(500,"用户不存在！");
         }else if(!admin.getPassword().equals(oldPassword)){
+            System.out.println("原密码错误！");
             throw new ServiceException(500,"原密码错误！");
         }else{
             adminDao.updatePassword(admin.getId(),newPassword);

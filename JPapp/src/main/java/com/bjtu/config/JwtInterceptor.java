@@ -50,6 +50,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         User user = TokenUtils.getCurrentUser();
         if (user == null) {
             System.out.println("3");
+            System.out.println("拦截第三步，无法获取用户信息");
             throw new ServiceException(401, "无法获取用户信息");
         }
 //         用户密码加签验证 token
@@ -61,6 +62,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             jwtVerifier.verify(token); // 验证token
         } catch (JWTVerificationException e) {
             System.out.println("4");
+            System.out.println("拦截第四步，用户状态异常");
             throw new ServiceException(401, "用户状态异常");
         }
         return true;

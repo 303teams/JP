@@ -110,7 +110,7 @@ export default {
               this.LeaveSystem()
             } else {
               // 修改失败，显示失败提示信息
-              this.$message.error('修改失败：' + res.data.message);
+              this.$message.error('修改失败：' + res.data.msg);
             }
           }).catch(err => {
             // 发生未知错误，显示错误提示信息

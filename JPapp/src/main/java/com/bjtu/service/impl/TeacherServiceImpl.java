@@ -26,7 +26,6 @@ public class TeacherServiceImpl implements TeacherService {
     public RspObject<User> login(String id, String password) {
         System.out.println(id + " " + password);
         Teacher teacher = teacherDao.findByNum(id);
-//        System.out.println(student);
         if (teacher == null) {
             return RspObject.fail("该教师不存在!");
         } else if (!teacher.getPassword().equals(password)) {

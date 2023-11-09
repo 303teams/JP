@@ -151,7 +151,7 @@ export default {
 
     //验证码倒计时
     CountDown: function () {
-      const TIME_COUNT = 2;
+      const TIME_COUNT = 60;
 
       if (!this.timer) {
         this.count = TIME_COUNT;
