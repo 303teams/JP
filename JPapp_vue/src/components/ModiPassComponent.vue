@@ -72,6 +72,12 @@ export default {
       this.$emit("flesh");
     },
 
+    LeaveSystem(){
+      localStorage.removeItem('token');
+      this.$store.commit('RESET_STATE');
+      this.$router.push('/login');
+    },
+
     submitForm() {
       if(this.modifyPasswordForm.newPassword === this.modifyPasswordForm.oldPassword){
         this.$message.error('新密码不能与旧密码相同');
@@ -101,6 +107,7 @@ export default {
               this.$message.success('修改成功');
               // 关闭对话框
               this.handleClose()
+              this.LeaveSystem()
             } else {
               // 修改失败，显示失败提示信息
               this.$message.error('修改失败：' + res.data.message);
