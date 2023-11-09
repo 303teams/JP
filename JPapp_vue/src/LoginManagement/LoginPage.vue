@@ -8,7 +8,7 @@
             <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密 码:" label-width="5em" prop="password">
-            <el-input type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
+            <el-input show-password type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
           </el-form-item>
           <el-radio-group v-model="user.role" @change = "clickChange">
             <el-radio label="admin">管理员</el-radio>
@@ -27,7 +27,7 @@
     </div>
 
     <!--输入用户名、邮箱和验证码的对话框-->
-    <el-dialog title = "忘记密码" v-model = "EmailVerifyDialogVis" :width="'40%'">
+    <el-dialog title = "忘记密码" :close-on-click-modal="false" v-model = "EmailVerifyDialogVis" :width="'40%'">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="UserEmailVerifyRef" label-width="80px" style = "padding-right: 20px" :model="UserEmailVerifyForm" :rules="EmailRules">
           <el-form-item label="用户名" prop="username">
@@ -56,14 +56,14 @@
     </el-dialog>
 
     <!--修改密码的对话框-->
-    <el-dialog title="修改密码" v-model="resetPasswordDialogVis" :width="'40%'">
+    <el-dialog title="修改密码" :close-on-click-modal="false" v-model="resetPasswordDialogVis" :width="'40%'">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="resetPasswordForm" ref="ResetPasswordRef" label-width="80px" :rules="passwordResetRules">
           <el-form-item label="新密码" prop="newPassword">
-            <el-input v-model="resetPasswordForm.newPassword" placeholder="请输入新密码" type="password"></el-input>
+            <el-input show-password v-model="resetPasswordForm.newPassword" style="width: 200px" placeholder="请输入新密码" type="password"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码" type="password"></el-input>
+            <el-input show-password v-model="resetPasswordForm.confirmPassword" style="width: 200px" placeholder="确认新密码" type="password"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -139,7 +139,7 @@ export default {
       passwordResetRules: {
         newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
         confirmPassword: [
-          { required: true, validator: validatePass2, message: '请输入确认密码', trigger: 'blur' },
+          { required: true, validator: validatePass2, trigger: 'blur' },
         ],
       },
     }
@@ -148,6 +148,24 @@ export default {
     right,
     clickChange: function () {
       console.log(this.role);
+    },
+
+    CountDown: function () {
+      const TIME_COUNT = 2;
+
+      if (!this.timer) {
+        this.count = TIME_COUNT;
+        this.codeShow = false;
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--;
+          } else {
+            this.codeShow = true;
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        }, 1000)
+      }
     },
     //登录
     login: function () {
@@ -256,22 +274,7 @@ export default {
             }}).then(res => {
         if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
-
-          const TIME_COUNT = 2;
-
-          if (!this.timer) {
-            this.count = TIME_COUNT;
-            this.codeShow = false;
-            this.timer = setInterval(() => {
-              if (this.count > 0 && this.count <= TIME_COUNT) {
-                this.count--;
-              } else {
-                this.codeShow = true;
-                clearInterval(this.timer);
-                this.timer = null;
-              }
-            }, 1000)
-          }
+          this.CountDown();
         } else {
           this.$message.warning("验证码发送失败:" + res.data.msg)
         }

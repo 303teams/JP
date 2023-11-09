@@ -14,14 +14,14 @@
         </el-col>
       </el-row>
     </el-card>
-    <ModifyInfo  ref="dia" @flesh="reload"></ModifyInfo>
+    <ModifyInfo ref="dia" @flesh="reload"></ModifyInfo>
   </div>
 </template>
 
 
 <script>
 import {mapState} from "vuex";
-import ModifyInfo from "@/HomeManagement/ModifyInfo.vue";
+import ModifyInfo from "@/StudentManagement/StudentHome/StuModifyInfo.vue";
 
 export default {
   components: {ModifyInfo},

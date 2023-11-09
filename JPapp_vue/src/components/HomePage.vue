@@ -44,8 +44,8 @@
 </template>
 <script>
 
-import SideBar from "./SideBar.vue";
-import HeaderComponent from "@/HomeManagement/HeaderComponent.vue";
+import SideBar from "./SideBarComponent.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue";
 export default {
   components: { SideBar , HeaderComponent},
   data() {

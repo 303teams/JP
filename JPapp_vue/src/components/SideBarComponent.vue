@@ -3,6 +3,7 @@
   <div v-show="role === 'student'" class="student">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
+        <h1 class="header_1">简评</h1>
         <el-menu-item index="/studentHome" :route="{ name: 'StudentInfoPage' }">
           <template #title>
             <el-icon><user /></el-icon>个人信息
@@ -135,4 +136,24 @@ export default {
   color: white; /* 设置图标颜色为白色 */
 }
 
+.header_1{
+  width: 100%;
+  height: 50px;
+  margin-top: 25px;
+  font-size: 22px;
+  border-bottom: 1px solid #f0f0f0;
+  background-image: -webkit-linear-gradient(
+      left,
+      rgb(42, 134, 141),
+      #e9e625dc 20%,
+      #3498db 40%,
+      #e74c3c 60%,
+      #09ff009a 80%,
+      rgba(82, 196, 204, 0.281) 100%
+  );
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-background-size: 200% 100%;
+  -webkit-animation: masked-animation 4s linear infinite;
+}
 </style>
