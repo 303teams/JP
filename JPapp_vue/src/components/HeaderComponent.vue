@@ -14,8 +14,8 @@
             </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="Modifyinfo">修改密码</el-dropdown-item>
-            <el-dropdown-item >注销账号</el-dropdown-item>
+            <el-dropdown-item @click="ModifyPass">修改密码</el-dropdown-item>
+            <el-dropdown-item @click="ModifyEmail">修改邮箱</el-dropdown-item>
             <el-dropdown-item @click="LeaveSystem">退出系统</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -23,16 +23,18 @@
     </div>
   </div>
   <ModifyPassword ref="dia" @flesh="reload"></ModifyPassword>
+  <ModifyEmail ref="dia" @flesh="reload"></ModifyEmail>
 </template>
 
 <script>
 import male from "@/assets/male.png";
 import female from "@/assets/female.png";
 import ModifyPassword from "@/components/ModiPassComponent.vue";
+import ModifyEmail from "@/components/ModiEmailComponent.vue";
 import {mapState} from "vuex";
 
 export default {
-  components: { ModifyPassword},
+  components: { ModifyPassword, ModifyEmail},
   data(){
     return{
       male:male,
@@ -41,7 +43,11 @@ export default {
   },
 
   methods: {
-    Modifyinfo() {
+    ModifyPass() {
+      this.$refs.dia.open();
+    },
+
+    ModifyEmail() {
       this.$refs.dia.open();
     },
 

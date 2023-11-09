@@ -62,8 +62,8 @@ export default {
   methods: {
     right,
     open() {
-      if(this.$refs.ResetPasswordRef !== undefined){
-        this.$refs.ResetPasswordRef.resetFields();
+      if(this.$refs.ModifyPasswordRef !== undefined){
+        this.$refs.ModifyPasswordRef.resetFields();
       }
       this.modifyPasswordDialogVis = true;
     },
@@ -87,7 +87,7 @@ export default {
           // 把form对象的数据转换成URL编码的格式
           let data = qs.stringify(vm.modifyPasswordForm);
           this.axios({
-            url: 'http://localhost:8081/student/modifyPassword',
+            url: 'http://localhost:8081/user/modifyPassword',
             method: 'post',
             data: data,
             headers: {
