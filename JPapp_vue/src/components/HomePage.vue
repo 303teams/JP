@@ -76,7 +76,6 @@ export default {
 .main_page{
   display: flex;
   justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
   height: 100%;
   width: 100%;
 }

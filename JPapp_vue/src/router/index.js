@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import LoginComponent from "@/LoginManagement/LoginPage.vue";
 import HomePage from "@/components/HomePage.vue";
 import InfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
+import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
 const routerHistory = createWebHistory();
 
 
@@ -28,6 +29,12 @@ const router = createRouter({
                     name:'StudentInfoPage',
                     component: InfoPage
                 },
+
+                {
+                    path: 'viewHomework',
+                    name:'ViewHomework',
+                    component: HomeworkList
+                }
             ]
         },
         {
@@ -42,6 +49,12 @@ const router = createRouter({
                 },
             ]
         },
+
+        {
+            path: '/hh',
+            name: 'hh',
+            component: HomeworkList,
+        }
 
         // {
         //     path: '/adminHome',
