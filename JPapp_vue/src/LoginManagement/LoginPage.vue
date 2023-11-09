@@ -191,6 +191,7 @@ export default {
             if (res.data.code === 200) {
               setTimeout(() => {
                 localStorage.setItem("token",res.data.data.token);
+                localStorage.setItem("role",res.data.data.role);
                 this.$store.commit('setRole', this.user.role);
                 this.$store.commit('setId', res.data.data.id);
                 this.$store.commit('setName', res.data.data.name);
