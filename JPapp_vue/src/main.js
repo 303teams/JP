@@ -16,16 +16,17 @@ for(let iconName in ElIconModules){
 }
 
 router.beforeEach((to, from, next) => {
+    const role = localStorage.getItem('role')
     const token = localStorage.getItem('token')
     if (!token && to.name !== 'Login'){
         next({ name: 'Login'})
     }else if(token && to.name === 'Login'){
-        if(this.$store.getRole === 'student')
+        if(role === 'student')
             next({ name: 'StudentInfoPage'})
-        else if(this.$store.getRole === 'teacher')
+        else if(role === 'teacher')
             next({ name: 'TeacherInfoPage'})
         else
-            next({ name: 'AdminHome'})
+            next({ name: 'StudentInfoPage'})
     }else{
         next()
     }
