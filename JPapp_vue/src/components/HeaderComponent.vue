@@ -22,8 +22,8 @@
       </el-dropdown>
     </div>
   </div>
-  <ModifyPassword ref="dia" @flesh="reload"></ModifyPassword>
-  <ModifyEmail ref="dia" @flesh="reload"></ModifyEmail>
+  <ModifyPassword ref="dia1" @flesh="reload"></ModifyPassword>
+  <ModifyEmail ref="dia2" @flesh="reload"></ModifyEmail>
 </template>
 
 <script>
@@ -44,11 +44,11 @@ export default {
 
   methods: {
     ModifyPass() {
-      this.$refs.dia.open();
+      this.$refs.dia1.open();
     },
 
     ModifyEmail() {
-      this.$refs.dia.open();
+      this.$refs.dia2.open();
     },
 
     LeaveSystem(){
