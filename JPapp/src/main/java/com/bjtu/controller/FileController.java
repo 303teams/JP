@@ -1,6 +1,5 @@
 package com.bjtu.controller;
 
-
 import cn.hutool.core.io.FileUtil;
 import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.RspObject;
@@ -47,7 +46,9 @@ public class FileController {
         }
 
         file.transferTo(saveFile);
-        String url = "http://localhost:8081/file/download/"+originalFilename;
+        String url = "http://localhost:8081/file/download"+originalFilename;
+
+        System.out.println("url:"+url);
 
         User user = TokenUtils.getCurrentUser();
         if(homeworkService.submitHomework(user.getId(),homeworkId,cno,url).getData()==Boolean.TRUE){
@@ -56,10 +57,9 @@ public class FileController {
             return RspObject.fail("上传失败！");
         }
 
-
     }
 
-@AuthAccess
+//@AuthAccess
 @GetMapping("/download/{fileName}")
 public void download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
 //    response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileFullName, "UTF-8"));  // 附件下载
