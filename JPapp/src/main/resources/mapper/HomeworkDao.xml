@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjtu.dao.HomeworkDao">
+
+
+
+
+    <select id="findAll" resultType="Homework">
+        select * from homework
+    </select>
+
+
+
+    <select id="findById" resultType="Homework" parameterType="string">
+        SELECT homework.*
+        FROM student
+        JOIN sc ON student.id = sc.sno
+        JOIN homework ON sc.cno = homework.cno
+        WHERE student.id = #{id}
+    </select>
+
+    <resultMap id="homeworkResultMap" type="Homework">
+        <id property="id" column="homework_id" />
+        <result property="hname" column="homework_name" />
+    </resultMap>
+
+<!--    <select id="findByNum" resultType="Student">-->
+<!--        select * from student where id = #{id}-->
+<!--    </select>-->
+
+
+
+
+</mapper>

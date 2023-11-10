@@ -2,6 +2,8 @@ package com.bjtu.pojo;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class RspObject<T> {
 
@@ -47,4 +49,7 @@ public class RspObject<T> {
 //        System.out.println(success(new User("lzc","11","男","")));
     }
 
+//    public static RspObject<List<String>> success(String msg, List<Student> all) {
+//
+//    }
 }
