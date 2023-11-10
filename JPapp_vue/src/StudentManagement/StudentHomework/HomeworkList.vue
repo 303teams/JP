@@ -31,13 +31,20 @@ const handleEdit = (index, row) => {
   console.log(index, row)
 }
 
-const fetchData = async () => { // 定义fetchData函数，用于向后端发送请求，并将返回的数据赋值给tableData变量
-   try {
-     const response = await axios.get('/api/homework') // 你可以根据你的后端接口的具体情况，修改请求的URL和参数
-      tableData.value = response.data
-   } catch (error) {
-     console.error(error)
-   }
+const fetchData = async () => {
+  try {
+    // 修改为 POST 请求，并设置请求头
+    const response = await axios.post('http://localhost:8081/homework/findById', null, {
+      headers: {
+        Authorization: localStorage.getItem('token'), // 将 yourToken 替换为实际的 Token
+        'Content-Type': 'application/json', // 根据你的后端接口要求设置合适的 Content-Type
+      },
+    })
+
+    tableData.value = response.data
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 fetchData() // 在<script>标签的最后，调用fetchData函数，以便在进入页面时自动获取数据
