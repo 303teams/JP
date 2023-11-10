@@ -16,17 +16,17 @@
     </delete>
 
     <select id="findAll" resultType="Student">
-        select name from student
+        select * from student
     </select>
 
     <select id="findByNum" resultType="Student">
         select * from student where id = #{id}
     </select>
 
-<!--    <update id="updatePassword">-->
-<!--        update student set password = #{password}-->
-<!--        where id = #{id}-->
-<!--    </update>-->
+    <update id="updatePassword">
+        update student set password = #{password}
+        where id = #{id}
+    </update>
 
     <update id="updateEmail">
         update student set email = #{email}

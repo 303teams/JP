@@ -82,9 +82,11 @@ public class TeacherServiceImpl implements TeacherService {
             throw new ServiceException(500,"原密码错误！");
         }else{
 //            teacherDao.updatePassword(teacher.getId(),newPassword);
-            teacherDao.deleteByNum(teacher.getId());
+//            teacherDao.deleteByNum(teacher.getId());
+//            teacher.setPassword(newPassword);
+//            teacherDao.insert(teacher);
             teacher.setPassword(newPassword);
-            teacherDao.insert(teacher);
+            teacherDao.updatePassword(teacher);
             return RspObject.success("密码修改成功！");
         }
     }
@@ -96,9 +98,11 @@ public class TeacherServiceImpl implements TeacherService {
             throw new ServiceException(500,"用户不存在！");
         }else{
 //            teacherDao.updatePassword(id,password);
-            teacherDao.deleteByNum(teacher.getId());
+//            teacherDao.deleteByNum(teacher.getId());
+//            teacher.setPassword(password);
+//            teacherDao.insert(teacher);
             teacher.setPassword(password);
-            teacherDao.insert(teacher);
+            teacherDao.updatePassword(teacher);
             return RspObject.success("密码修改成功！");
 
         }

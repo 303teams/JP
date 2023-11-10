@@ -84,10 +84,12 @@ public class StudentServiceImpl implements StudentService  {
 //            旧密码与新密码不一致
             throw new ServiceException(500,"原密码错误！");
         }else{
-//            studentDao.updatePassword(student.getId(),newPassword);
-            studentDao.deleteByNum(student.getId());
             student.setPassword(newPassword);
-            studentDao.insert(student);
+            studentDao.updatePassword(student);
+//            studentDao.updatePassword(student.getId(),newPassword);
+//            studentDao.deleteByNum(student.getId());
+//            student.setPassword(newPassword);
+//            studentDao.insert(student);
             return RspObject.success("密码修改成功!");
         }
     }
@@ -98,10 +100,12 @@ public class StudentServiceImpl implements StudentService  {
         if(student == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-//            studentDao.updatePassword(id,password);
-            studentDao.deleteByNum(student.getId());
             student.setPassword(password);
-            studentDao.insert(student);
+            studentDao.updatePassword(student);
+//            studentDao.updatePassword(id,password);
+//            studentDao.deleteByNum(student.getId());
+//            student.setPassword(password);
+//            studentDao.insert(student);
             return RspObject.success("密码修改成功!");
         }
     }
@@ -117,9 +121,9 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
-    @Override
-    public RspObject<List<String>> findAll(){
-        return RspObject.success("查询成功！",studentDao.findAll());
-    }
+//    @Override
+//    public RspObject<List<Student>> findAll(){
+//        return RspObject.success("查询成功！",studentDao.findAll());
+//    }
 
 }

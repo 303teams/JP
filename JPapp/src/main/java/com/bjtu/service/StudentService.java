@@ -24,5 +24,5 @@ public interface StudentService {
 
     public RspObject<String> modifyInfo(Student student);
 
-    RspObject<List<String>> findAll();
+//    RspObject<List<Student>> findAll();
 }

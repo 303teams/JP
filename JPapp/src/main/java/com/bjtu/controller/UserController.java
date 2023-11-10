@@ -152,6 +152,7 @@ public class UserController {
             session.setAttribute("vcode",null);
             return RspObject.fail("验证码错误！");
         }
+
         User user = TokenUtils.getCurrentUser();
         if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
@@ -177,29 +178,13 @@ public class UserController {
         }
     }
 
-    @AuthAccess
-    @PostMapping ("/findAll")
-    public RspObject<List<String>> findAllStudentsList() {
+//    @AuthAccess
+//    @PostMapping ("/findAll")
+//    public RspObject<List<String>> findAllStudentsList() {
+//
+//        return studentService.findAll();
+//    }
 
-        return studentService.findAll();
-    }
-
-
-    @AuthAccess
-    @PostMapping("/show")
-    public RspObject<String> show(String password){
-        String id = session.getAttribute("id").toString();
-        String role = Utils.getUserType(id);
-        if(role.equals("admin")){
-            return adminService.changePassword(id,password);
-        }else if(role.equals("student")){
-            return studentService.changePassword(id,password);
-        }else if(role.equals("teacher")) {
-            return teacherService.changePassword(id, password);
-        }else{
-            return RspObject.fail("修改失败！");
-        }
-    }
 
 
 
