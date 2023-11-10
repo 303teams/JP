@@ -39,14 +39,14 @@
 
     </el-upload>
 
-    <el-button
-        type="primary"
-        :loading="uploading"
-        style="margin-top: 10px;"
-        @click="submitUpload"
-    >
-      确认
-    </el-button>
+<!--    <el-button-->
+<!--        type="primary"-->
+<!--        :loading="uploading"-->
+<!--        style="margin-top: 10px;"-->
+<!--        @click="submitUpload"-->
+<!--    >-->
+<!--      确认-->
+<!--    </el-button>-->
   </el-dialog>
 </template>
 
