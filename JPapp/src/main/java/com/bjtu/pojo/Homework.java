@@ -3,8 +3,6 @@ package com.bjtu.pojo;
 
 import lombok.Data;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 import java.util.Date;
 
 
