@@ -38,7 +38,7 @@ public class UserController {
     @AuthAccess
     @PostMapping("login")
     public RspObject<User> login(String username, String password, String role){
-        System.out.println(username+" "+password+" "+role);
+//        System.out.println(username+" "+password+" "+role);
 
 //        异常捕获
         Assert.hasLength(username,"用户名不能为空！");
@@ -74,7 +74,7 @@ public class UserController {
             String code = Utils.generateVerificationCode();
             session.setAttribute("id",username);
             session.setAttribute("vcode",code);
-            emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
+            emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
             throw new ServiceException("验证码未发送至您的邮箱");
@@ -88,9 +88,11 @@ public class UserController {
 //        System.out.println(session.getAttribute("vcode"));
         if(session.getAttribute("vcode").toString().equals(code)){
             System.out.println("验证码正确！");
+            session.setAttribute("vcode",null);
             return RspObject.success("验证码正确！");
         }else{
             System.out.println("验证码错误！");
+            session.setAttribute("vcode",null);
             return RspObject.fail("验证码错误！");
         }
     }
@@ -141,19 +143,37 @@ public class UserController {
     }
 
     @PostMapping("/modifyEmail")
-    public RspObject<String> modifyEmail(String email){
-        String id = session.getAttribute("id").toString();
-        String role = Utils.getUserType(id);
-        if(role.equals("admin")){
-            return adminService.modifyEmail(email);
-        }else if(role.equals("student")){
+    public RspObject<String> modifyEmail(String code,String email){
+
+        if(!session.getAttribute("vcode").toString().equals(code)){
+            session.setAttribute("vcode",null);
+            return RspObject.fail("验证码错误！");
+        }
+        User user = TokenUtils.getCurrentUser();
+        if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
-        }else if(role.equals("teacher")) {
+        }else if(user.getClass() == Admin.class){
             return teacherService.modifyEmail(email);
+        }else if(user.getClass() == Teacher.class){
+            return adminService.modifyEmail(email);
         }else{
             return RspObject.fail("修改邮箱失败！");
         }
     }
+
+    @PostMapping("sendEmail")
+    public RspObject<String> sendEmail(String email){
+        try{
+            // 生成验证码
+            String code = Utils.generateVerificationCode();
+            session.setAttribute("vcode",code);
+            emailService.sendSimpleMessage(email, "绑定邮箱验证码", "您的验证码是：" + code);
+            return RspObject.success("验证码已发送至您的邮箱");
+        } catch (Exception e) {
+            throw new ServiceException("验证码未发送至您的邮箱");
+        }
+    }
+
 
 
 

@@ -1,6 +1,7 @@
 package com.bjtu.service.impl;
 
 import com.bjtu.JPappApplication;
+import com.bjtu.pojo.Student;
 import com.bjtu.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -26,5 +27,21 @@ class StudentServiceImplTest {
     @Test
     void modifyPassword() {
         System.out.println(studentService.modifyPassword("","111"));
+    }
+
+    @Test
+    void insert() {
+        System.out.println(studentService.insert(
+                new Student("444","444","lzc","2461172547@qq.com","男",21)));
+    }
+
+    @Test
+    void deleteOne() {
+        System.out.println(studentService.deleteOne("666"));
+    }
+
+    @Test
+    void changePassword() {
+        System.out.println(studentService.changePassword("222","222"));
     }
 }

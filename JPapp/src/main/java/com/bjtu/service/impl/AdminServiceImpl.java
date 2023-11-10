@@ -5,6 +5,7 @@ import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
 import com.bjtu.util.TokenUtils;
+import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public RspObject<Boolean> insert(Admin admin) {
-        return null;
+        if(Utils.userIsExist(admin.getId())){
+            return RspObject.fail("用户已存在!",Boolean.FALSE);
+        }else{
+            adminDao.insert(admin);
+            return RspObject.success("插入成功",Boolean.TRUE);
+        }
     }
 
     @Override
@@ -64,7 +70,10 @@ public class AdminServiceImpl implements AdminService {
         if(admin == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-            adminDao.updatePassword(id,password);
+//            adminDao.updatePassword(id,password);
+            adminDao.deleteByNum(admin.getId());
+            admin.setPassword(password);
+            adminDao.insert(admin);
             return RspObject.success("密码修改成功！");
         }
     }
@@ -78,8 +87,12 @@ public class AdminServiceImpl implements AdminService {
             System.out.println("原密码错误！");
             throw new ServiceException(500,"原密码错误！");
         }else{
-            adminDao.updatePassword(admin.getId(),newPassword);
+//            adminDao.updatePassword(admin.getId(),newPassword);
+            adminDao.deleteByNum(admin.getId());
+            admin.setPassword(newPassword);
+            adminDao.insert(admin);
             return RspObject.success("密码修改成功！");
+
         }
     }
 

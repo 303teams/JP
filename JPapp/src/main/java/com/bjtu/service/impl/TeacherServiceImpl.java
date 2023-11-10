@@ -11,6 +11,7 @@ import com.bjtu.pojo.User;
 import com.bjtu.service.AdminService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.util.TokenUtils;
+import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public RspObject<User> login(String id, String password) {
-        System.out.println(id + " " + password);
         Teacher teacher = teacherDao.findByNum(id);
         if (teacher == null) {
             return RspObject.fail("该教师不存在!");
@@ -39,17 +39,27 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public RspObject<Boolean> insert(Teacher teacher) {
-        return null;
+        if(Utils.userIsExist(teacher.getId())){
+            return RspObject.fail("用户已存在!",Boolean.FALSE);
+        }else{
+            teacherDao.insert(teacher);
+            return RspObject.success("插入成功",Boolean.TRUE);
+        }
     }
 
     @Override
     public RspObject<List<Teacher>> searchAll() {
-        return null;
+        return RspObject.success("查询成功！",teacherDao.findAll());
     }
 
     @Override
     public RspObject<Boolean> deleteOne(String id) {
-        return null;
+        if(teacherDao.findByNum(id) == null){
+            return RspObject.fail("用户不存在!",Boolean.FALSE);
+        }else{
+            teacherDao.deleteByNum(id);
+            return RspObject.success("删除成功！",Boolean.TRUE);
+        }
     }
 
     @Override
@@ -71,7 +81,10 @@ public class TeacherServiceImpl implements TeacherService {
         }else if(!teacher.getPassword().equals(oldPassword)){
             throw new ServiceException(500,"原密码错误！");
         }else{
-            teacherDao.updatePassword(teacher.getId(),newPassword);
+//            teacherDao.updatePassword(teacher.getId(),newPassword);
+            teacherDao.deleteByNum(teacher.getId());
+            teacher.setPassword(newPassword);
+            teacherDao.insert(teacher);
             return RspObject.success("密码修改成功！");
         }
     }
@@ -82,8 +95,12 @@ public class TeacherServiceImpl implements TeacherService {
         if(teacher == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-            teacherDao.updatePassword(id,password);
+//            teacherDao.updatePassword(id,password);
+            teacherDao.deleteByNum(teacher.getId());
+            teacher.setPassword(password);
+            teacherDao.insert(teacher);
             return RspObject.success("密码修改成功！");
+
         }
     }
 

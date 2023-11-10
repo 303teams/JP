@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import LoginComponent from "@/LoginManagement/LoginPage.vue";
 import HomePage from "@/components/HomePage.vue";
-import InfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
+import StuInfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
+import TeaInfoPage from "@/TeacherManagement/TeacherHome/TeaInfoPage.vue";
 import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
 const routerHistory = createWebHistory();
 
@@ -27,7 +28,7 @@ const router = createRouter({
                 {
                     path: '',
                     name:'StudentInfoPage',
-                    component: InfoPage
+                    component: StuInfoPage
                 },
 
                 {
@@ -45,7 +46,7 @@ const router = createRouter({
                 {
                     path: '',
                     name:'TeacherInfoPage',
-                    component: InfoPage
+                    component: TeaInfoPage
                 },
             ]
         },

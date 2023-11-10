@@ -79,7 +79,7 @@ export default {
           // 把form对象的数据转换成URL编码的格式
           let data = qs.stringify(vm.form);
           this.axios({
-            url: 'http://localhost:8081/student/modifyInfo',
+            url: 'http://localhost:8081/teacher/modifyInfo',
             method: 'post',
             data: data,
             headers: {

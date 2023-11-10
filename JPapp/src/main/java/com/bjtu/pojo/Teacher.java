@@ -10,4 +10,26 @@ import javax.persistence.Entity;
 @Data
 public class Teacher extends User {
     private Integer age;
+    private String sex;
+
+    public Teacher() {
+    }
+
+    public Teacher(String id, String password, String name, String email, String sex, Integer age) {
+        super(id, password, name, email);
+        this.sex = sex;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + super.getId() +
+                ", name='" + super.getName() + "\'" +
+                "，sex='" + sex + "\'" +
+                ",email='" + super.getEmail() + "\'" +
+                ", age=" + age +
+                "，password='" + super.getPassword() + "\'" +
+                '}';
+    }
 }

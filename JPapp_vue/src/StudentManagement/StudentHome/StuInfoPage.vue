@@ -10,17 +10,17 @@
       </el-descriptions>
       <el-button style="margin-top: 100px" type="primary" size="large" @click="Modifyinfo">修改</el-button>
     </el-card>
-    <ModifyInfo ref="dia" @flesh="reload"></ModifyInfo>
+    <StuModifyInfo ref="dia" @flesh="reload"></StuModifyInfo>
   </div>
 </template>
 
 
 <script>
 import {mapState} from "vuex";
-import ModifyInfo from "@/StudentManagement/StudentHome/StuModifyInfo.vue";
+import StuModifyInfo from "@/StudentManagement/StudentHome/StuModifyInfo.vue";
 
 export default {
-  components: {ModifyInfo},
+  components: {StuModifyInfo},
   name: "InfoPage",
 
   data() {

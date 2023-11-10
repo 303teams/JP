@@ -13,6 +13,15 @@ public class Student extends User {
     private String sex;
     private Integer age;
 
+    public Student() {
+    }
+
+    public Student(String id, String password, String name, String email, String sex, Integer age) {
+        super(id, password, name, email);
+        this.sex = sex;
+        this.age = age;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
