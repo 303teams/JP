@@ -45,7 +45,7 @@ export default {
       },
       rules: {
         email: [{ required: true, type: "email", trigger: 'blur' }],
-        code: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
       },
     };
   },
@@ -135,6 +135,7 @@ export default {
             if (res.data.code === 200) {
               // 修改成功，显示成功提示信息
               this.$message.success('修改成功');
+              this.$store.commit('setEmail', this.modifyEmailForm.email)
               // 关闭对话框
               this.handleClose()
             } else {
@@ -156,7 +157,7 @@ export default {
   },
 
   computed:{
-    ...mapState([ 'id', 'name', 'sex', 'email', 'age'])
+    ...mapState(['email'])
   },
 };
 </script>

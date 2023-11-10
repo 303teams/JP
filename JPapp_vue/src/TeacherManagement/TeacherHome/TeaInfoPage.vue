@@ -8,11 +8,7 @@
         <el-descriptions-item label="邮箱">{{ email }}</el-descriptions-item>
         <el-descriptions-item label="年龄">{{ age }}</el-descriptions-item>
       </el-descriptions>
-      <el-row class="button-row">
-        <el-col :span="24">
-          <el-button style="margin-top: 100px" type="primary" size="large" @click="Modifyinfo">修改</el-button>
-        </el-col>
-      </el-row>
+      <el-button style="margin-top: 100px" type="primary" size="large" @click="Modifyinfo">修改</el-button>
     </el-card>
     <TeaModifyInfo ref="dia" @flesh="reload"></TeaModifyInfo>
   </div>

@@ -3,7 +3,10 @@
   <div v-show="role === 'student'" class="student">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
-        <h1 class="header_1">简评</h1>
+        <a class="logo">
+          <img :src="logo" alt="logo" class="image">
+          <h1 class="header_1">简评</h1>
+        </a>
         <el-menu-item index="/studentHome" :route="{ name: 'StudentInfoPage' }">
           <template #title>
             <el-icon><user /></el-icon>个人信息
@@ -36,7 +39,10 @@
   <div v-show="role === 'teacher'" class="teacher">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
-        <h1 class="header_1">简评</h1>
+        <a class="logo">
+          <img :src="logo" alt="logo" class="image">
+          <h1 class="header_1">简评</h1>
+        </a>
         <el-menu-item index="/teacherHome" :route="{ name: 'TeacherInfoPage' }">
           <template #title>
           <el-icon><user /></el-icon>个人信息
@@ -69,7 +75,10 @@
   <div v-show="role === 'admin'" class="admin">
     <el-aside class="el-side" width="200px">
       <el-menu router active-text-color="#00c3ff" class="el-menu-vertical-demo" >
-        <h1 class="header_1">简评</h1>
+        <a class="logo">
+          <img :src="logo" alt="logo" class="image">
+          <h1 class="header_1">简评</h1>
+        </a>
         <el-menu-item>
           <template #title>
           <el-icon><message /></el-icon>学生管理
@@ -96,9 +105,14 @@
 
 <script>
 import {mapState} from "vuex";
+import logo from "@/assets/logo.png";
 
 export default {
-  props: ['isCollapse'],
+  data(){
+    return{
+      logo:logo
+    }
+  },
 
   computed:{
     ...mapState(['role'])
@@ -106,25 +120,26 @@ export default {
 }
 
 
+
 </script>
 
 <style scoped>
 /*整个侧边栏背景颜色*/
 .el-side {
-  background-color: #2c3e50;
+  background-color: rgba(101, 75, 65, 0.86);
   height: 100vh;
   width: 200px;
 }
 
 /*侧边菜单背景颜色*/
 .el-menu {
-  background-color: #2c3e50;
+  background-color: rgba(194, 193, 145, 0.87);
   width: auto;
 }
 
 /*侧边栏菜单项的背景颜色和字体颜色*/
 .el-menu-item {
-  background-color: #2c3e50;
+  background-color: rgba(101, 75, 65, 0.86);
   color: white; /* 设置字体颜色为白色 */
 }
 
@@ -139,15 +154,13 @@ export default {
 }
 
 .header_1{
-  width: 100%;
   height: 50px;
   margin-top: 25px;
   font-size: 22px;
-  border-bottom: 1px solid #f0f0f0;
   background-image: -webkit-linear-gradient(
       left,
       rgb(42, 134, 141),
-      #e9e625dc 20%,
+      rgba(121, 120, 82, 0.86) 20%,
       #3498db 40%,
       #e74c3c 60%,
       #09ff009a 80%,
@@ -158,4 +171,18 @@ export default {
   -webkit-background-size: 200% 100%;
   -webkit-animation: masked-animation 4s linear infinite;
 }
+
+.logo {
+  display: flex;
+  justify-content: center; /* 新添加的属性，水平方向居中对齐 */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.image {
+  width: 50px; /* 根据实际Logo尺寸调整 */
+  height: 50px; /* 保持宽高比例 */
+  margin-top: 17px;
+  margin-right: 10px; /* 调整Logo和文字之间的间距 */
+}
+
 </style>
