@@ -1,5 +1,6 @@
 package com.bjtu.service.impl;
 
+import com.bjtu.pojo.Teacher;
 import com.bjtu.service.TeacherService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ class TeacherServiceImplTest {
 
     @Test
     void modifyPassword() {
-        System.out.println(teacherService.modifyPassword("","333"));
+        System.out.println(teacherService.changePassword("777","777"));
+    }
+
+    @Test
+    void insert(){
+        System.out.println(teacherService.insert(new Teacher("777","666","lzq","12345","男",35)));
     }
 }

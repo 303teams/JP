@@ -15,7 +15,7 @@ public interface StudentDao {
     public void deleteByNum(String id);
     public void updateInfo(Student student);
 
-    public void updatePassword(String id, String password);
+//    public void updatePassword(String id, String password);
 
     public void updateEmail(String id, String email);
 }

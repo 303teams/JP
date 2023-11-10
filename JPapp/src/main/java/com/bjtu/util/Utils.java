@@ -70,4 +70,16 @@ public class Utils {
             throw new ServiceException(500,"该用户不存在!");
         }
     }
+
+    public static boolean userIsExist(String id){
+        if(staticStudentDao.findByNum(id) != null){
+            return true;
+        }else if(staticTeachertDao.findByNum(id) != null){
+            return true;
+        }else if(staticAdminDao.findByNum(id) != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

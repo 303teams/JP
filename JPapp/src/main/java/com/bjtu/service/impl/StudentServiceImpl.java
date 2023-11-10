@@ -7,6 +7,7 @@ import com.bjtu.pojo.Student;
 import com.bjtu.pojo.User;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
+import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ public class StudentServiceImpl implements StudentService  {
         if (student == null) {
             return RspObject.fail("该学生不存在!");
         } else if (!student.getPassword().equals(password)) {
+            System.out.println(student.getPassword());
+            System.out.println(password);
             return RspObject.fail("密码错误!");
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
@@ -37,8 +40,8 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<Boolean> insert(Student student) {
-        if(studentDao.findByNum(student.getId()) != null){
-            return RspObject.fail("user already exist!",Boolean.FALSE);
+        if(Utils.userIsExist(student.getId())){
+            return RspObject.fail("用户已存在!",Boolean.FALSE);
         }else{
             studentDao.insert(student);
             return RspObject.success("插入成功",Boolean.TRUE);
@@ -46,13 +49,18 @@ public class StudentServiceImpl implements StudentService  {
     }
 
     @Override
-    public RspObject<List<User>> searchAll() {
-        return null;
+    public RspObject<List<Student>> searchAll() {
+        return RspObject.success("查询成功！",studentDao.findAll());
     }
 
     @Override
     public RspObject<Boolean> deleteOne(String id) {
-        return null;
+        if(studentDao.findByNum(id) == null){
+            return RspObject.fail("用户不存在!",Boolean.FALSE);
+        }else{
+            studentDao.deleteByNum(id);
+            return RspObject.success("删除成功！",Boolean.TRUE);
+        }
     }
 
     @Override
@@ -76,7 +84,10 @@ public class StudentServiceImpl implements StudentService  {
 //            旧密码与新密码不一致
             throw new ServiceException(500,"原密码错误！");
         }else{
-            studentDao.updatePassword(student.getId(),newPassword);
+//            studentDao.updatePassword(student.getId(),newPassword);
+            studentDao.deleteByNum(student.getId());
+            student.setPassword(newPassword);
+            studentDao.insert(student);
             return RspObject.success("密码修改成功!");
         }
     }
@@ -87,7 +98,10 @@ public class StudentServiceImpl implements StudentService  {
         if(student == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-            studentDao.updatePassword(id,password);
+//            studentDao.updatePassword(id,password);
+            studentDao.deleteByNum(student.getId());
+            student.setPassword(password);
+            studentDao.insert(student);
             return RspObject.success("密码修改成功!");
         }
     }

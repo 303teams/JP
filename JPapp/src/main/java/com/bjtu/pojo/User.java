@@ -1,6 +1,7 @@
 package com.bjtu.pojo;
 
 
+import cn.zhz.privacy.annotation.FieldEncrypt;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,7 +15,10 @@ public class User implements Serializable {
     //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @FieldEncrypt
     private String password;
+
     private String name;
     private String email;
     private String token;

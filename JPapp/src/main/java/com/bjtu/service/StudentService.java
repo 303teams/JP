@@ -12,7 +12,7 @@ public interface StudentService {
     public RspObject<User> login(String id, String password);
     public RspObject<Boolean> insert(Student student);
 
-    public RspObject<List<User>> searchAll();
+    public RspObject<List<Student>> searchAll();
 
     public RspObject<Boolean> deleteOne(String id);
 

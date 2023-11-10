@@ -38,7 +38,7 @@ public class UserController {
     @AuthAccess
     @PostMapping("login")
     public RspObject<User> login(String username, String password, String role){
-        System.out.println(username+" "+password+" "+role);
+//        System.out.println(username+" "+password+" "+role);
 
 //        异常捕获
         Assert.hasLength(username,"用户名不能为空！");
@@ -142,18 +142,34 @@ public class UserController {
 
     @PostMapping("/modifyEmail")
     public RspObject<String> modifyEmail(String email){
-        String id = session.getAttribute("id").toString();
-        String role = Utils.getUserType(id);
-        if(role.equals("admin")){
-            return adminService.modifyEmail(email);
-        }else if(role.equals("student")){
+//        String id = session.getAttribute("id").toString();
+//        String role = Utils.getUserType(id);
+//        if(role.equals("admin")){
+//            return adminService.modifyEmail(email);
+//        }else if(role.equals("student")){
+//            return studentService.modifyEmail(email);
+//        }else if(role.equals("teacher")) {
+//            return teacherService.modifyEmail(email);
+//        }else{
+//            return RspObject.fail("修改邮箱失败！");
+//        }
+        User user = TokenUtils.getCurrentUser();
+        if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
-        }else if(role.equals("teacher")) {
+        }else if(user.getClass() == Admin.class){
             return teacherService.modifyEmail(email);
+        }else if(user.getClass() == Teacher.class){
+            return adminService.modifyEmail(email);
         }else{
             return RspObject.fail("修改邮箱失败！");
         }
     }
+
+//    @PostMapping("sendEmail")
+//    public RspObject<String> sendEmail(){
+//
+//    }
+
 
 
 

@@ -92,10 +92,10 @@ export default {
       }
       let vm = this;
       //发送验证码
-      this.axios.post('http://localhost:8081/user/email',
+      this.axios.post('http://localhost:8081/user/sendEmail',
           {
-            'username': vm.UserEmailVerifyForm.username,
-            'email': vm.UserEmailVerifyForm.email
+            // 'username': vm.modifyEmailForm.username,
+            'email': vm.modifyEmailForm.email
           },
           {headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -123,7 +123,7 @@ export default {
           // 把form对象的数据转换成URL编码的格式
           let data = qs.stringify(vm.modifyEmailForm);
           this.axios({
-            url: 'http://localhost:8081/user/modifyPassword',
+            url: 'http://localhost:8081/user/modifyEmail',
             method: 'post',
             data: data,
             headers: {
