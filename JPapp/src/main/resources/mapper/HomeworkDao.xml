@@ -22,10 +22,15 @@
         WHERE student.id = #{id}
     </select>
 
-    <resultMap id="homeworkResultMap" type="Homework">
-        <id property="id" column="homework_id" />
-        <result property="hname" column="homework_name" />
-    </resultMap>
+    <insert id="addShOne">
+        INSERT INTO sh (sno, homeworkId, cno,url)
+        value (#{id},#{homeworkId},#{cno},#{url})
+    </insert>
+
+<!--    <resultMap id="homeworkResultMap" type="Homework">-->
+<!--        <id property="id" column="homework_id" />-->
+<!--        <result property="hname" column="homework_name" />-->
+<!--    </resultMap>-->
 
 <!--    <select id="findByNum" resultType="Student">-->
 <!--        select * from student where id = #{id}-->

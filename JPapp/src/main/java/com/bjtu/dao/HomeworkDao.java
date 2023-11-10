@@ -9,5 +9,6 @@ import java.util.List;
 public interface HomeworkDao {
     public List<Homework> findAll();
     public List<Homework> findById(String id);
+    public void addShOne (String id,String homeworkId,String cno,String url);
 
 }
