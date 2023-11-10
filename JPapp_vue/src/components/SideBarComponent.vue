@@ -156,7 +156,7 @@ export default {
 .header_1{
   height: 50px;
   margin-top: 25px;
-  font-size: 22px;
+  font-size: 35px;
   background-image: -webkit-linear-gradient(
       left,
       rgb(42, 134, 141),
@@ -179,8 +179,8 @@ export default {
 }
 
 .image {
-  width: 50px; /* 根据实际Logo尺寸调整 */
-  height: 50px; /* 保持宽高比例 */
+  width: 70px; /* 根据实际Logo尺寸调整 */
+  height: 70px; /* 保持宽高比例 */
   margin-top: 17px;
   margin-right: 10px; /* 调整Logo和文字之间的间距 */
 }

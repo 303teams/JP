@@ -1,9 +1,10 @@
 <template>
   <el-table :data="filterTableData" style="width: 100%">
-    <el-table-column label="发布时间" prop=“time” />
-    <el-table-column label="截止时间" prop=“deadline” />
-    <el-table-column label="课程名称" prop=“course” />
-    <el-table-column label="作业内容" prop=“content” />
+    <el-table-column label="id" prop="id" />
+    <el-table-column label="课程号" prop="cno" />
+    <el-table-column label="截止时间" prop="ddl" />
+    <el-table-column label="作业名称" prop="hname" />
+    <el-table-column label="作业内容" prop="content" />
     <el-table-column align="right">
       <template #header>
         <el-input v-model="search" size=“small” placeholder=“输入关键字搜索” />
@@ -16,29 +17,51 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import axios from 'axios'// 导入axios库
+import {ref, computed, reactive, onMounted} from 'vue'
+import axios from 'axios';
 
 const search = ref('')
-const tableData = ref([]) // 定义tableData变量，初始值为空数组
+const tableData = reactive({ data: [] })
+
 const filterTableData = computed(() =>
-    tableData.value.filter(
+    tableData.data.filter(
         (data) =>
             !search.value ||
-            data.course.toLowerCase().includes(search.value.toLowerCase()) ||
-            data.content.toLowerCase().includes(search.value.toLowerCase()) ) )
+            data.hname.toLowerCase().includes(search.value.toLowerCase()) ||
+            data.content.toLowerCase().includes(search.value.toLowerCase())
+    )
+)
+
 const handleEdit = (index, row) => {
   console.log(index, row)
 }
 
-const fetchData = async () => { // 定义fetchData函数，用于向后端发送请求，并将返回的数据赋值给tableData变量
-   try {
-     const response = await axios.get('/api/homework') // 你可以根据你的后端接口的具体情况，修改请求的URL和参数
-      tableData.value = response.data
-   } catch (error) {
-     console.error(error)
-   }
-}
-
-fetchData() // 在<script>标签的最后，调用fetchData函数，以便在进入页面时自动获取数据
+onMounted(() => {
+  axios
+      .post(
+          'http://localhost:8081/homework/findById',
+          null,
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'token': localStorage.getItem('token'),
+            },
+          }
+      )
+      .then((res) => {
+        if (res.data.code === 200) {
+          // 使用 .data 将数据保存在 tableData 的响应式属性中
+          tableData.data = res.data.data;
+        } else {
+          console.log(res.data.data + "hhh");
+          // 在 setup 中，直接使用提示函数，而不是 this.$message
+          window.alert("获取信息失败:" + res.data.msg);
+        }
+      })
+      .catch((err) => {
+        // 在 setup 中，直接使用 console.log
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+  })
 </script>
