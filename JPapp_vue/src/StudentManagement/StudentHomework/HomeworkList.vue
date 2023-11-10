@@ -7,13 +7,47 @@
     <el-table-column label="作业内容" prop="content" />
     <el-table-column align="right">
       <template #header>
-        <el-input v-model="search" size=“small” placeholder=“输入关键字搜索” />
+        <el-input v-model="search" size="small" placeholder="输入关键字搜索" />
       </template>
-      <template #default="scope">
-        <el-button size=“small” @click="handleEdit(scope.$index, scope.row)">提交</el-button >
-      </template>
+        <el-button size="small" @click="handleSubmit">提交</el-button >
     </el-table-column>
   </el-table>
+
+  <!-- 上传文件的弹出框 -->
+  <el-dialog
+      title="上传文件"
+      v-model="dialogTableVisible"
+      width="30%"
+      center
+  >
+    <el-upload
+    class="upload-demo"
+    drag
+    action="http://localhost:8081/file/upload"
+    :headers="{'token': token}"
+    multiple
+    >
+    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <div class="el-upload__text">
+      拖动文件到这或者 <em>点击上传</em>
+    </div>
+    <template #tip>
+    <div class="el-upload__tip">
+      文件不能大于5mb
+    </div>
+    </template>
+
+    </el-upload>
+
+<!--    <el-button-->
+<!--        type="primary"-->
+<!--        :loading="uploading"-->
+<!--        style="margin-top: 10px;"-->
+<!--        @click="submitUpload"-->
+<!--    >-->
+<!--      确认-->
+<!--    </el-button>-->
+  </el-dialog>
 </template>
 
 <script setup>
@@ -22,6 +56,8 @@ import axios from 'axios';
 
 const search = ref('')
 const tableData = reactive({ data: [] })
+const dialogTableVisible = ref(false);
+const token = localStorage.getItem('token')
 
 const filterTableData = computed(() =>
     tableData.data.filter(
@@ -32,9 +68,9 @@ const filterTableData = computed(() =>
     )
 )
 
-const handleEdit = (index, row) => {
-  console.log(index, row)
-}
+const handleSubmit = () => {
+  dialogTableVisible.value = true;
+};
 
 onMounted(() => {
   axios
@@ -44,7 +80,7 @@ onMounted(() => {
           {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'token': localStorage.getItem('token'),
+              'token': token
             },
           }
       )
@@ -65,3 +101,6 @@ onMounted(() => {
       });
   })
 </script>
+
+<style scoped>
+</style>
