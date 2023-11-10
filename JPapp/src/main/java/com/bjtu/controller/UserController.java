@@ -74,7 +74,7 @@ public class UserController {
             String code = Utils.generateVerificationCode();
             session.setAttribute("id",username);
             session.setAttribute("vcode",code);
-            emailService.sendSimpleMessage(email, "注册验证码", "您的验证码是：" + code);
+            emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
             throw new ServiceException("验证码未发送至您的邮箱");
@@ -88,9 +88,11 @@ public class UserController {
 //        System.out.println(session.getAttribute("vcode"));
         if(session.getAttribute("vcode").toString().equals(code)){
             System.out.println("验证码正确！");
+            session.setAttribute("vcode",null);
             return RspObject.success("验证码正确！");
         }else{
             System.out.println("验证码错误！");
+            session.setAttribute("vcode",null);
             return RspObject.fail("验证码错误！");
         }
     }
@@ -141,18 +143,12 @@ public class UserController {
     }
 
     @PostMapping("/modifyEmail")
-    public RspObject<String> modifyEmail(String email){
-//        String id = session.getAttribute("id").toString();
-//        String role = Utils.getUserType(id);
-//        if(role.equals("admin")){
-//            return adminService.modifyEmail(email);
-//        }else if(role.equals("student")){
-//            return studentService.modifyEmail(email);
-//        }else if(role.equals("teacher")) {
-//            return teacherService.modifyEmail(email);
-//        }else{
-//            return RspObject.fail("修改邮箱失败！");
-//        }
+    public RspObject<String> modifyEmail(String code,String email){
+
+        if(!session.getAttribute("vcode").toString().equals(code)){
+            session.setAttribute("vcode",null);
+            return RspObject.fail("验证码错误！");
+        }
         User user = TokenUtils.getCurrentUser();
         if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
@@ -165,10 +161,18 @@ public class UserController {
         }
     }
 
-//    @PostMapping("sendEmail")
-//    public RspObject<String> sendEmail(){
-//
-//    }
+    @PostMapping("sendEmail")
+    public RspObject<String> sendEmail(String email){
+        try{
+            // 生成验证码
+            String code = Utils.generateVerificationCode();
+            session.setAttribute("vcode",code);
+            emailService.sendSimpleMessage(email, "绑定邮箱验证码", "您的验证码是：" + code);
+            return RspObject.success("验证码已发送至您的邮箱");
+        } catch (Exception e) {
+            throw new ServiceException("验证码未发送至您的邮箱");
+        }
+    }
 
 
 
