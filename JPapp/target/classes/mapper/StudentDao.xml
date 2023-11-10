@@ -7,7 +7,8 @@
 
 
     <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into student(sno,sname,ssex,semail,sage,spassword) values (#{id}, #{name},#{sex},#{email},#{age},#{password})
+        insert into student(id,name,sex,email,age,password)
+        values (#{id}, #{name},#{sex},#{email},#{age},#{password})
     </insert>
 
     <delete id="deleteByNum" parameterType="string">
@@ -22,10 +23,10 @@
         select * from student where id = #{id}
     </select>
 
-    <update id="updatePassword">
-        update student set password = #{password}
-        where id = #{id}
-    </update>
+<!--    <update id="updatePassword">-->
+<!--        update student set password = #{password}-->
+<!--        where id = #{id}-->
+<!--    </update>-->
 
     <update id="updateEmail">
         update student set email = #{email}

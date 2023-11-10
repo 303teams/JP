@@ -32,7 +32,7 @@ class StudentServiceImplTest {
     @Test
     void insert() {
         System.out.println(studentService.insert(
-                new Student("444","444","lzc","2461172547@qq.com","男",21)));
+                new Student("555","555","张三","2461172547@qq.com","男",21)));
     }
 
     @Test

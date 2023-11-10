@@ -7,7 +7,7 @@
 
 
     <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into teacher(id,name,age,email,password) values (#{id}, #{name},#{age},#{email},#{password})
+        insert into teacher(id,name,age,email,password,sex) values (#{id}, #{name},#{age},#{email},#{password},#{sex})
     </insert>
 
     <delete id="deleteByNum" parameterType="string">
@@ -19,18 +19,18 @@
     </select>
 
     <select id="findByNum" resultType="Teacher">
-        select * from teacher where id = #{num}
+        select * from teacher where id = #{id}
     </select>
 
     <update id="updateInfo" parameterType="Teacher">
-        update teacher set name = #{name},age = #{age}
+        update teacher set name = #{name},age = #{age},sex = #{sex}
         where id = #{id}
     </update>
 
-    <update id="updatePassword">
-        update teacher set password = #{password}
-        where id = #{id}
-    </update>
+<!--    <update id="updatePassword">-->
+<!--        update teacher set password = #{password}-->
+<!--        where id = #{id}-->
+<!--    </update>-->
 
     <update id="updateEmail">
         update teacher set email = #{email}
