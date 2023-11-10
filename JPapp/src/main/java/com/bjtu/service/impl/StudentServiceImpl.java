@@ -48,10 +48,10 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
-    @Override
-    public RspObject<List<Student>> searchAll() {
-        return RspObject.success("查询成功！",studentDao.findAll());
-    }
+//    @Override
+//    public RspObject<List<Student>> searchAll() {
+//        return RspObject.success("查询成功！",studentDao.findAll());
+//    }
 
     @Override
     public RspObject<Boolean> deleteOne(String id) {
@@ -117,5 +117,9 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+    @Override
+    public RspObject<List<String>> findAll(){
+        return RspObject.success("查询成功！",studentDao.findAll());
+    }
 
 }

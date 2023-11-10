@@ -16,7 +16,7 @@
     </delete>
 
     <select id="findAll" resultType="Student">
-        select * from student
+        select name from student
     </select>
 
     <select id="findByNum" resultType="Student">

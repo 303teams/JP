@@ -13,10 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import com.bjtu.exception.ServiceException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -174,7 +177,29 @@ public class UserController {
         }
     }
 
+    @AuthAccess
+    @PostMapping ("/findAll")
+    public RspObject<List<String>> findAllStudentsList() {
 
+        return studentService.findAll();
+    }
+
+
+    @AuthAccess
+    @PostMapping("/show")
+    public RspObject<String> show(String password){
+        String id = session.getAttribute("id").toString();
+        String role = Utils.getUserType(id);
+        if(role.equals("admin")){
+            return adminService.changePassword(id,password);
+        }else if(role.equals("student")){
+            return studentService.changePassword(id,password);
+        }else if(role.equals("teacher")) {
+            return teacherService.changePassword(id, password);
+        }else{
+            return RspObject.fail("修改失败！");
+        }
+    }
 
 
 
