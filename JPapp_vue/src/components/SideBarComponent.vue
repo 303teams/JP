@@ -12,9 +12,9 @@
             <el-icon><user /></el-icon>个人信息
           </template>
         </el-menu-item>
-        <el-menu-item index="/viewHomework" :route="{ name: 'ViewHomework' }">
+        <el-menu-item index="/viewCourse" :route="{ name: 'ViewCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>作业
+          <el-icon><message /></el-icon>课程
           </template>
         </el-menu-item>
         <el-menu-item>
@@ -133,6 +133,7 @@ export default {
 
 /*侧边菜单背景颜色*/
 .el-menu {
+  border-right: none;
   background-color: rgba(194, 193, 145, 0.87);
   width: auto;
 }

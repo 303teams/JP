@@ -45,20 +45,20 @@ public class FileController {
         return RspObject.success(url);//文件的下载地址
     }
 
-@AuthAccess
-@GetMapping("/download/{fileName}")
-public void download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
-//    response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileFullName, "UTF-8"));  // 附件下载
-    String filePath = ROOT_PATH  + File.separator + fileName;
-    if (!FileUtil.exist(filePath)) {
-        return;
+    @AuthAccess
+    @GetMapping("/download/{fileName}")
+    public void download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+    //    response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileFullName, "UTF-8"));  // 附件下载
+        String filePath = ROOT_PATH  + File.separator + fileName;
+        if (!FileUtil.exist(filePath)) {
+            return;
+        }
+        byte[] bytes = FileUtil.readBytes(filePath);
+        ServletOutputStream outputStream = response.getOutputStream();
+        outputStream.write(bytes);  // 数组是一个字节数组，也就是文件的字节流数组
+        outputStream.flush();
+        outputStream.close();
     }
-    byte[] bytes = FileUtil.readBytes(filePath);
-    ServletOutputStream outputStream = response.getOutputStream();
-    outputStream.write(bytes);  // 数组是一个字节数组，也就是文件的字节流数组
-    outputStream.flush();
-    outputStream.close();
-}
 
 
 }

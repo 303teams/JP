@@ -69,7 +69,7 @@ export default {
 <style scoped>
 .header-container {
   background-color: #442607;
-  height: 60px;
+  height: 70px;
   display: flex; /* 使用 Flexbox 布局 */
   justify-content: space-between; /* 将 "l-content" 和 "r-content" 分散对齐 */
 }

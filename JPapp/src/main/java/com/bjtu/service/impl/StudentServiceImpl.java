@@ -32,6 +32,7 @@ public class StudentServiceImpl implements StudentService  {
             System.out.println(password);
             return RspObject.fail("密码错误!");
         } else {
+            System.out.println(student.getPassword());
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);

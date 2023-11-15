@@ -13,7 +13,7 @@ public class Homework {
     private String cno;
     private String hname;
     private String content;
-    private Date ddl;
+    private String ddl;
 
 
 
