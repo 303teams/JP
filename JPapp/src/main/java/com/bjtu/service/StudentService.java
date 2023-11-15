@@ -1,9 +1,7 @@
 package com.bjtu.service;
 
 import com.bjtu.dao.StudentDao;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 
 import java.util.List;
 
@@ -24,5 +22,11 @@ public interface StudentService {
 
     public RspObject<String> modifyInfo(Student student);
 
+<<<<<<< Updated upstream
     RspObject<List<String>> findAll();
+=======
+    public RspObject<List<Course>> findCourse(String id);
+
+//    RspObject<List<Student>> findAll();
+>>>>>>> Stashed changes
 }

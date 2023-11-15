@@ -2,6 +2,7 @@ package com.bjtu.service.impl;
 
 import com.bjtu.dao.StudentDao;
 import com.bjtu.exception.ServiceException;
+import com.bjtu.pojo.Course;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.Student;
 import com.bjtu.pojo.User;
@@ -119,8 +120,19 @@ public class StudentServiceImpl implements StudentService  {
     }
 
     @Override
+<<<<<<< Updated upstream
     public RspObject<List<String>> findAll(){
         return RspObject.success("查询成功！",studentDao.findAll());
     }
+=======
+    public RspObject<List<Course>> findCourse(String id){
+        return RspObject.success("查询成功！",studentDao.findCourse(id));
+    }
+
+//    @Override
+//    public RspObject<List<Student>> findAll(){
+//        return RspObject.success("查询成功！",studentDao.findAll());
+//    }
+>>>>>>> Stashed changes
 
 }
