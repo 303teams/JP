@@ -1,5 +1,7 @@
 package com.bjtu.dao;
 
+import com.bjtu.pojo.Course;
+import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.Student;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,4 +19,6 @@ public interface StudentDao {
 
 //    public void updatePassword(String id, String password);
     public void updateEmail(String id, String email);
+
+    public List<Course> findCourse(String id);
 }

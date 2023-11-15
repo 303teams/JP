@@ -38,6 +38,14 @@
         sex = #{sex} where id = #{id}
     </update>
 
+    <select id="findCourse" resultType="Course" parameterType="string">
+        SELECT course.*
+        FROM student
+        JOIN sc ON student.id = sc.sno
+        JOIN course ON sc.cno = course.cno
+        WHERE student.id = #{id}
+    </select>
+
     <!--    <select id="findByStudentNum" resultType="student">-->
     <!--        select * from student where sno = #{sno}-->
     <!--    </select>-->

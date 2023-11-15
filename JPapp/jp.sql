@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : student
+ Source Server         : localhost_3306
  Source Server Type    : MySQL
  Source Server Version : 80032 (8.0.32)
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 10/11/2023 12:55:03
+ Date: 13/11/2023 19:12:43
 */
 
 SET NAMES utf8mb4;
@@ -37,20 +37,37 @@ INSERT INTO `admin` (`id`, `password`, `email`, `name`) VALUES ('555', '333', '2
 COMMIT;
 
 -- ----------------------------
--- Table structure for appeal
+-- Table structure for content
 -- ----------------------------
-DROP TABLE IF EXISTS `appeal`;
-CREATE TABLE `appeal` (
-                          `id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                          `sno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                          `homeworkId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          KEY `appeal_homeworkID` (`homeworkId`) USING BTREE,
-                          KEY `appeal_student_sno` (`sno`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+DROP TABLE IF EXISTS `content`;
+CREATE TABLE `content` (
+                           `contentID` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                           `cno` varchar(20) DEFAULT NULL,
+                           `sno` varchar(20) DEFAULT NULL,
+                           `homeworkID` varchar(20) DEFAULT NULL,
+                           `content` blob,
+                           `appeal_content` varchar(255) DEFAULT NULL,
+                           `times` int DEFAULT NULL,
+                           `score1` double DEFAULT NULL,
+                           `score2` double DEFAULT NULL,
+                           `score3` double DEFAULT NULL,
+                           `score4` double DEFAULT NULL,
+                           `score5` double DEFAULT NULL,
+                           `score6` double DEFAULT NULL,
+                           `score` double DEFAULT NULL,
+                           `sumit_time` datetime DEFAULT NULL,
+                           `is_submit` varchar(10) DEFAULT NULL,
+                           PRIMARY KEY (`contentID`) USING BTREE,
+                           KEY `content_cno` (`cno`),
+                           KEY `content_sno` (`sno`),
+                           KEY `content_homeworkID` (`homeworkID`),
+                           CONSTRAINT `content_cno` FOREIGN KEY (`cno`) REFERENCES `course` (`cno`),
+                           CONSTRAINT `content_homeworkID` FOREIGN KEY (`homeworkID`) REFERENCES `homework` (`homeworkID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+                           CONSTRAINT `content_sno` FOREIGN KEY (`sno`) REFERENCES `student` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
--- Records of appeal
+-- Records of content
 -- ----------------------------
 BEGIN;
 COMMIT;
@@ -83,31 +100,35 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `homework`;
 CREATE TABLE `homework` (
-                            `id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                            `cno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                            `hname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                            `ddl` date DEFAULT NULL,
-                            `content` varchar(255) DEFAULT NULL,
-                            PRIMARY KEY (`id`,`cno`) USING BTREE,
-                            KEY `homework_cno` (`cno`) USING BTREE,
-                            CONSTRAINT `cno` FOREIGN KEY (`cno`) REFERENCES `course` (`cno`)
+                            `homeworkID` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                            `cno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                            `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                            `submit_ddl` date DEFAULT NULL,
+                            `content` blob,
+                            `tno` varchar(20) DEFAULT NULL,
+                            `score_ddl` date DEFAULT NULL,
+                            PRIMARY KEY (`homeworkID`) USING BTREE,
+                            KEY `hoemwork_cno` (`cno`),
+                            KEY `homework_tno` (`tno`),
+                            CONSTRAINT `hoemwork_cno` FOREIGN KEY (`cno`) REFERENCES `course` (`cno`),
+                            CONSTRAINT `homework_tno` FOREIGN KEY (`tno`) REFERENCES `teacher` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of homework
 -- ----------------------------
 BEGIN;
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('1', '1001', '实验1', '2023-10-31', '做实验');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('1', '1002', '实验1', '2023-11-01', '做实验');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('1', '1003', '黑盒测试', '2023-10-28', '写测试报告');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('1', '1004', '课堂小测1', '2023-11-03', '若干道题');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('1', '1005', '实训', '2023-10-17', '提交报告');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('2', '1001', '实验2', '2023-11-04', '做实验');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('2', '1002', '感知机', '2023-11-07', '计算超平面');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('2', '1003', '测试', '2023-11-05', '写报告');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('2', '1004', '课堂小测2', '2023-11-10', '还是若干道题');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('2', '1005', '实训', '2023-10-31', '完成登陆功能');
-INSERT INTO `homework` (`id`, `cno`, `hname`, `ddl`, `content`) VALUES ('3', '1005', '实训', '2023-11-10', '完成提交作业功能');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10011', '1001', '实验1', '2023-10-31', 0x00, '21001001', '2023-11-02');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10012', '1001', '实验2', '2023-11-04', 0x00, '21001001', '2023-11-06');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10021', '1002', '实验1', '2023-11-01', 0x00, '21001002', '2023-11-03');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10022', '1002', '感知机', '2023-11-07', 0x00, '21001002', '2023-11-09');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10031', '1003', '黑盒测试', '2023-10-28', 0x00, '21001003', '2023-10-30');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10032', '1003', '测试', '2023-11-05', 0x00, '21001003', '2023-11-07');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10041', '1004', '课堂小测1', '2023-11-03', 0x00, '21001004', '2023-11-05');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10042', '1004', '课堂小测2', '2023-11-10', 0x00, '21001004', '2023-11-12');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10051', '1005', '实训', '2023-10-17', 0x00, '21001005', '2023-10-19');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10052', '1005', '实训', '2023-10-31', 0x00, '21001005', '2023-11-02');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10053', '1005', '实训', '2023-11-10', 0x00, '21001005', '2023-11-12');
 COMMIT;
 
 -- ----------------------------
@@ -162,19 +183,16 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `score`;
 CREATE TABLE `score` (
-                         `id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                         `sno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                         `homeworkId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                         `score` int DEFAULT NULL,
-                         `scored_sno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                         PRIMARY KEY (`id`) USING BTREE,
-                         KEY `homeworkId` (`homeworkId`) USING BTREE,
-                         KEY `student_sno` (`sno`) USING BTREE,
-                         KEY `student_sored_sno` (`scored_sno`) USING BTREE,
-                         CONSTRAINT `scored_homework_id` FOREIGN KEY (`homeworkId`) REFERENCES `homework` (`id`),
-                         CONSTRAINT `scored_student_id` FOREIGN KEY (`scored_sno`) REFERENCES `score` (`id`),
-                         CONSTRAINT `student_id` FOREIGN KEY (`sno`) REFERENCES `student` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+                         `sno` varchar(20) NOT NULL,
+                         `contentID` varchar(20) NOT NULL,
+                         `score` double DEFAULT NULL,
+                         `time` datetime DEFAULT NULL,
+                         `content` varchar(255) DEFAULT NULL,
+                         PRIMARY KEY (`sno`,`contentID`),
+                         KEY `score_contentID` (`contentID`),
+                         CONSTRAINT `score_contentID` FOREIGN KEY (`contentID`) REFERENCES `content` (`contentID`),
+                         CONSTRAINT `score_sno` FOREIGN KEY (`sno`) REFERENCES `student` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of score
@@ -209,28 +227,6 @@ INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES (
 INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301007', '刘备', '男', '2461172547@qq.com', 21, '9lhHnRulVWDxug4+Kk3TOg==');
 INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301008', '刘禅', '男', '2461172547@qq.com', 21, '3oQU+/y/hcVhXyAdBOPNKg==');
 INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301009', '诸葛瞻', '男', '2461172547@qq.com', 21, 'CVGFB6ku7R4SM0SpL7aBkw==');
-COMMIT;
-
--- ----------------------------
--- Table structure for submit
--- ----------------------------
-DROP TABLE IF EXISTS `submit`;
-CREATE TABLE `submit` (
-                          `id` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-                          `time` datetime DEFAULT NULL,
-                          `homeworkId` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                          `sno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-                          PRIMARY KEY (`id`) USING BTREE,
-                          KEY `submit_homeworkId` (`homeworkId`) USING BTREE,
-                          KEY `submit_sno` (`sno`) USING BTREE,
-                          CONSTRAINT `homework_id` FOREIGN KEY (`homeworkId`) REFERENCES `homework` (`id`),
-                          CONSTRAINT `sno` FOREIGN KEY (`sno`) REFERENCES `student` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
-
--- ----------------------------
--- Records of submit
--- ----------------------------
-BEGIN;
 COMMIT;
 
 -- ----------------------------
