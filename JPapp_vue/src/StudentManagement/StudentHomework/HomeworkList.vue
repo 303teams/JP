@@ -27,9 +27,9 @@
         <el-table-column label="课程名称" sortable prop="courseName" />
         <el-table-column label="发布人" sortable prop="teacherName" />
         <el-table-column label="截止时间" sortable prop="submitDdl" />
-        <el-table-column label="作业内容" prop="content" />
         <el-table-column align="right">
           <template v-slot="scope">
+          <el-button size="large" @click="downloadHomework(scope.row.homeworkID)">下载作业</el-button>
           <el-button size="large" @click="handleSubmit(scope.row.homeworkID)">提交</el-button>
           </template>
         </el-table-column>
@@ -100,6 +100,33 @@ const handleSubmit = (homeworkID) => {
   router.push(`/studentHome/HomeworkSubmit/${homeworkID}`);
 };
 
+const downloadHomework = (homeworkID) => {
+  axios
+      .post(
+          'http://localhost:8081/teacher/downloadHW',
+          {
+            homeworkID: homeworkID,
+          },
+
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'token': token,
+            },
+          }
+      )
+      .then((res) => {
+        if (res.data.code === 200) {
+          console.log(res)
+        } else {
+          window.alert("获取信息失败:" + res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+}
 
 const fetchData = () => {
   axios

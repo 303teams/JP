@@ -65,8 +65,8 @@ public class TeacherController {
 
 
     @AuthAccess
-    @GetMapping("/downloadHW/{homeworkID}")
-    public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
+    @PostMapping("/downloadHW")
+    public  RspObject<Object> downloadHW(String homeworkID, HttpServletResponse response){
         Homework homework = homeworkService.findHomeworkByThId(homeworkID);
         if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
             return RspObject.success("成功下载", homework);
