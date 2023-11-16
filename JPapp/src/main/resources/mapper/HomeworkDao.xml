@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.bjtu.dao.HomeworkDao">
+
+
+
+
+    <select id="findAll" resultType="Homework">
+        select * from homework
+    </select>
+
+    <select id="findHomeworkByThId" resultType="Homework">
+        SELECT *
+        FROM homework
+        WHERE homework.homeworkID = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
+        insert into homework(homeworkID,cno,name,content,tno)
+        values (#{homeworkID}, #{cno},#{name},#{content},#{tno})
+    </insert>
+
+    <select id="findById" resultType="Homework" parameterType="string">
+        SELECT homework.*,teacher.name as teacherName,course.cname as courseName
+        FROM student
+        JOIN sc ON student.id = sc.sno
+        JOIN homework ON sc.cno = homework.cno
+        JOIN teacher ON homework.tno = teacher.id
+        JOIN course ON homework.cno = course.cno
+        WHERE student.id = #{id} and course.cno = #{cno}
+    </select>
+
+    <resultMap id="homeworkResultMap" type="Homework">
+        <id property="id" column="homework_id" />
+        <result property="hname" column="homework_name" />
+    </resultMap>
+
+<!--    <select id="findByNum" resultType="Student">-->
+<!--        select * from student where id = #{id}-->
+<!--    </select>-->
+
+
+
+
+</mapper>
