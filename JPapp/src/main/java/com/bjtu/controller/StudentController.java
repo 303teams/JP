@@ -64,6 +64,7 @@ public class StudentController {
     public RspObject<Object> uploadCT(MultipartFile file, String Id) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
+        System.out.println("hh");
         content.setContent(file.getBytes())
                 .setContntID(Id)
                 .setSno(user.getId());
