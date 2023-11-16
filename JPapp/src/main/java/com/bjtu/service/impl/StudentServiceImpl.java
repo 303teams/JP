@@ -136,11 +136,9 @@ public class StudentServiceImpl implements StudentService  {
             if (courses.isEmpty()) {
                 return RspObject.fail("无课程信息！");
             }
-
             return RspObject.success("查询成功！",studentDao.findCourse(id));
         } catch (Exception e) {
-            e.printStackTrace(); // 记录异常
-            return RspObject.fail("查询失败！");
+            throw new ServiceException(500,e.getMessage());
         }
     }
 

@@ -3,6 +3,7 @@ package com.bjtu.dao;
 import com.bjtu.pojo.Course;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.Student;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -22,5 +23,6 @@ public interface StudentDao {
 
     public void updateEmail(String id, String email);
 
+//    @MapKey("cno")
     public List<Map<String, Object>> findCourse(String id);
 }

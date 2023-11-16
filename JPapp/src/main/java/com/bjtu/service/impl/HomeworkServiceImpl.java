@@ -31,7 +31,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     public RspObject<Boolean> submitHomework(String id, String homeworkId, String cno, String url) {
         try {
-            homeworkDao.addShOne(id, homeworkId, cno, url);
+//            homeworkDao.addShOne(id, homeworkId, cno, url);
             return RspObject.success("提交成功！", Boolean.TRUE);
         } catch (Exception e) {
             throw new ServiceException("提交失败！");
