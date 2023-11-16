@@ -68,7 +68,7 @@ public class FileController {
 
     @AuthAccess
     @PostMapping("/upload")
-    public RspObject<Object> uploadThWithThIdCno(MultipartFile file, String Id,String name) throws IOException {
+    public RspObject<Object> uploadThWithThIdCno(MultipartFile file, int Id,String name) throws IOException {
         Homework homework = new Homework();
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())

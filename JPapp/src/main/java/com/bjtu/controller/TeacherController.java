@@ -47,20 +47,19 @@ public class TeacherController {
 
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String Id, @RequestParam String name, @RequestParam String cno) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno) throws IOException {
         Homework homework = new Homework();
-        Date now = new Date(System.currentTimeMillis());
+        String name = file.getOriginalFilename();
 
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
-                .setHomeworkID(Id)
                 .setTno(user.getId())
                 .setName(name)
                 .setCno(cno);
 //                .setSubmitDdl(submit_ddl)
 //                .setScoreDdl(score_ddl)
         homeworkService.addHomework(homework);
-        return RspObject.success("上传成功，当前thId：" + Id , homework);
+        return RspObject.success("上传成功，当前thId："  , homework);
     }
 
 

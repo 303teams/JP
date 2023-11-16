@@ -23,8 +23,9 @@ public class StudentController {
 
     @Autowired
     StudentService studentService;
+    @Autowired
     HomeworkService homeworkService;
-
+    @Autowired
     ContentService contentService;
     @Resource
     FileUtils fileUtils;
@@ -61,17 +62,20 @@ public class StudentController {
     }
     @AuthAccess
     @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(MultipartFile file, String Id,String cno) throws IOException {
+    public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,String cno) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
         System.out.println("hh");
         content.setContent(file.getBytes())
-                .setContentID(Id)
-                .setSno(user.getId())
+                .setSno("21301001")
                 .setCno(cno)
+                .setHomeworkID(1)
                 .setCname("Math");
+        System.out.println(file.getBytes());
         contentService.addContent(content);
-        return RspObject.success("上传成功，当前thId：" + Id , content);
+        System.out.println(file.getBytes());
+
+        return RspObject.success("上传成功，当前thId：" + content.getContentID() , content);
     }
 
     @AuthAccess

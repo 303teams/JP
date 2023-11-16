@@ -13,12 +13,12 @@ import java.util.Date;
 @Accessors(chain = true)
 public class Homework {
 
-    private String homeworkID;
+    private int homeworkID;
     private String cno;
     private String name;
     private String tno;
     private byte[] content;
-    public Homework(String homeworkID,String cno,String name,byte[] content,String tno){
+    public Homework(int homeworkID,String cno,String name,byte[] content,String tno){
 
         this.homeworkID = homeworkID;
         this.cno = cno;
