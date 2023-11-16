@@ -61,13 +61,15 @@ public class StudentController {
     }
     @AuthAccess
     @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(MultipartFile file, String Id) throws IOException {
+    public RspObject<Object> uploadCT(MultipartFile file, String Id,String cno) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
         System.out.println("hh");
         content.setContent(file.getBytes())
-                .setContntID(Id)
-                .setSno(user.getId());
+                .setContentID(Id)
+                .setSno(user.getId())
+                .setCno(cno)
+                .setCname("Math");
         contentService.addContent(content);
         return RspObject.success("上传成功，当前thId：" + Id , content);
     }
