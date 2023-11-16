@@ -28,11 +28,12 @@ public class HomeworkController {
     }
 
 //    @AuthAccess
-    @PostMapping("/findById")
-    public RspObject<List<Homework>> ByIdList() {
-        User user = TokenUtils.getCurrentUser();
-        return homeworkService.findById(user.getId());
-    }
+        @PostMapping("/findById")
+        public RspObject<List<Homework>> ByIdList(String cno) {
+            System.out.println(cno);
+            User user = TokenUtils.getCurrentUser();
+            return homeworkService.findById(user.getId(),cno);
+        }
 
 
 }

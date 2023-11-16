@@ -197,8 +197,8 @@ export default {
                 this.$store.commit('setName', res.data.data.name);
                 this.$store.commit('setEmail', res.data.data.email);
                 this.$store.commit('setAge', res.data.data.age);
+                this.$store.commit('setSex', res.data.data.sex);
                 if(this.user.role === "student"){
-                  this.$store.commit('setSex', res.data.data.sex);
                   this.$router.push('/studentHome');
                 }else if(this.user.role === "teacher"){
                   this.$router.push('/teacherHome');

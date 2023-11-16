@@ -1,106 +1,217 @@
 <template>
-  <el-table :data="filterTableData" style="width: 100%">
-    <el-table-column label="id" prop="id" />
-    <el-table-column label="课程号" prop="cno" />
-    <el-table-column label="截止时间" prop="ddl" />
-    <el-table-column label="作业名称" prop="hname" />
-    <el-table-column label="作业内容" prop="content" />
-    <el-table-column align="right">
-      <template #header>
-        <el-input v-model="search" size="small" placeholder="输入关键字搜索" />
-      </template>
-        <el-button size="small" @click="handleSubmit">提交</el-button >
-    </el-table-column>
-  </el-table>
-
-  <!-- 上传文件的弹出框 -->
-  <el-dialog
-      title="上传文件"
-      v-model="dialogTableVisible"
-      width="30%"
-      center
-  >
-    <el-upload
-    class="upload-demo"
-    drag
-    action="http://localhost:8081/file/upload"
-    :headers="{'token': token}"
-    multiple
-    >
-    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-    <div class="el-upload__text">
-      拖动文件到这或者 <em>点击上传</em>
+  <div class="homeListMain" style="position: relative">
+    <div class="base_title">
+      <div class="title">课程作业</div>
     </div>
-    <template #tip>
-    <div class="el-upload__tip">
-      文件不能大于5mb
+    <div class="main">
+      <div class="search-container">
+        <div class="search_input">
+          <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
+        </div>
+        <el-button size="large" class="search_button" @click="clickSearch">
+          <el-icon style="vertical-align: middle">
+          <Search />
+        </el-icon>
+          <span style="vertical-align: middle"> 查询 </span>
+        </el-button>
+      </div>
+      <el-table :data="filterTableData"
+                class="HomeworkList"
+                size="large" column_width="60px"
+                stripe
+                :header-cell-style="{background:'#cde2ee',color:'#000'}">
+        <el-table-column label="id" align="center">
+          <template v-slot="{ $index }">{{ $index + 1 }}</template>
+        </el-table-column>
+        <el-table-column label="作业名称" sortable prop="name" />
+        <el-table-column label="课程名称" sortable prop="courseName" />
+        <el-table-column label="发布人" sortable prop="teacherName" />
+        <el-table-column label="截止时间" sortable prop="submitDdl" />
+        <el-table-column label="作业内容" prop="content" />
+        <el-table-column align="right">
+          <el-button size="large" @click="handleSubmit">提交</el-button>
+        </el-table-column>
+      </el-table>
+
+      <el-config-provider :locale="zhCn">
+        <div class="demo-pagination-block">
+          <el-pagination
+              v-model:current-page="currentPage"
+              v-model:page-size="pageSize"
+              :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
+              background
+              layout="total, sizes, prev, pager, next"
+              :total="filteredData.length"
+          />
+        </div>
+      </el-config-provider>
     </div>
-    </template>
 
-    </el-upload>
-
-<!--    <el-button-->
-<!--        type="primary"-->
-<!--        :loading="uploading"-->
-<!--        style="margin-top: 10px;"-->
-<!--        @click="submitUpload"-->
-<!--    >-->
-<!--      确认-->
-<!--    </el-button>-->
-  </el-dialog>
+    <!-- 上传文件的弹出框 -->
+    <el-dialog title="上传文件" v-model="dialogTableVisible" width="30%" center>
+      <el-upload
+          class="upload-demo"
+          drag
+          action="http://localhost:8081/file/upload"
+          :headers="{'token': token}"
+          multiple
+      >
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text">
+          拖动文件到这或者 <em>点击上传</em>
+        </div>
+        <template #tip>
+        <div class="el-upload__tip">
+          文件不能大于5mb
+        </div>
+        </template>
+      </el-upload>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
-import {ref, computed, reactive, onMounted} from 'vue'
+import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
+import { ElConfigProvider } from 'element-plus';
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
 
-const search = ref('')
-const tableData = reactive({ data: [] })
+const currentPage = ref(1); // 从第一页开始
+const pageSize = ref(10); //每页展示多少条数据
+const search = ref('');  // 搜索关键字
+const tableData = reactive({ data: [] });  //储存后端传来的数据
+const filteredData = ref([]); // 新的变量用于存储过滤后的数据
 const dialogTableVisible = ref(false);
-const token = localStorage.getItem('token')
+const token = localStorage.getItem('token');
+const props = defineProps(['cno']);
 
+// 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
-    tableData.data.filter(
-        (data) =>
-            !search.value ||
-            data.hname.toLowerCase().includes(search.value.toLowerCase()) ||
-            data.content.toLowerCase().includes(search.value.toLowerCase())
+    filteredData.value.slice(
+        (currentPage.value - 1) * pageSize.value,
+        currentPage.value * pageSize.value
     )
-)
+);
 
+//点击提交按钮
 const handleSubmit = () => {
   dialogTableVisible.value = true;
 };
 
-onMounted(() => {
+
+const fetchData = () => {
   axios
       .post(
           'http://localhost:8081/homework/findById',
-          null,
+          {
+            cno: props.cno,
+          },
+
           {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token
+              'token': token,
             },
           }
       )
       .then((res) => {
         if (res.data.code === 200) {
-          // 使用 .data 将数据保存在 tableData 的响应式属性中
+          console.log(props.cno);
           tableData.data = res.data.data;
+          console.log(res)
+          updateFilteredData(); // 更新过滤后的数据
         } else {
-          console.log(res.data.data + "hhh");
-          // 在 setup 中，直接使用提示函数，而不是 this.$message
           window.alert("获取信息失败:" + res.data.msg);
         }
       })
       .catch((err) => {
-        // 在 setup 中，直接使用 console.log
         console.error("发生未知错误！");
         console.log(err);
       });
-  })
+};
+
+const updateFilteredData = () => {
+  filteredData.value = tableData.data.filter(
+      (data) =>
+          !search.value ||
+          data.cno.toLowerCase().includes(search.value.toLowerCase())
+  );
+};
+
+const clickSearch = () => {
+  updateFilteredData();
+};
+
+onMounted(() => {
+  fetchData();
+});
+
+
 </script>
 
 <style scoped>
+.homeListMain{
+  margin-top: 50px;
+}
+
+
+.base_title {
+  position: absolute;
+  top: -40px;
+  left: 0;
+}
+
+.title {
+  position: relative;
+  padding-left: 13px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.title:before {
+  content: "";
+  background-color: #3796EC;
+  width: 4px;
+  height: 23px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -10px;
+}
+
+.search-container {
+  display: flex;
+  width: auto;
+  margin-bottom: 10px;
+}
+
+.search_input{
+  width: 350px;
+  margin-right: 10px;
+}
+
+.search_button{
+  color: #2176d7;
+  margin-left: 10px;
+}
+
+.demo-pagination-block{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  margin-top: 20px;
+  right: 0;
+}
+
+.main_page{
+  margin-top: 80px;
+}
+
+.HomeworkList{
+  width: 100vh;
+}
+
+
+
 </style>

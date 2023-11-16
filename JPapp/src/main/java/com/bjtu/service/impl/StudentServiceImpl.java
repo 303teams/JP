@@ -2,6 +2,7 @@ package com.bjtu.service.impl;
 
 import com.bjtu.dao.StudentDao;
 import com.bjtu.exception.ServiceException;
+import com.bjtu.pojo.Course;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.Student;
 import com.bjtu.pojo.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -32,6 +34,7 @@ public class StudentServiceImpl implements StudentService  {
             System.out.println(password);
             return RspObject.fail("密码错误!");
         } else {
+            System.out.println(student.getPassword());
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
@@ -118,6 +121,26 @@ public class StudentServiceImpl implements StudentService  {
         }else{
             studentDao.updateInfo(student);
             return RspObject.success("信息修改成功!");
+        }
+    }
+
+//    @Override
+//    public RspObject<List<Student>> findAll(){
+//        return RspObject.success("查询成功！",studentDao.findAll());
+//    }
+
+    public RspObject<List<Map<String, Object>>> findCourse(String id){
+        try {
+            List<Map<String, Object>> courses = studentDao.findCourse(id);
+
+            if (courses.isEmpty()) {
+                return RspObject.fail("无课程信息！");
+            }
+
+            return RspObject.success("查询成功！",studentDao.findCourse(id));
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
         }
     }
 

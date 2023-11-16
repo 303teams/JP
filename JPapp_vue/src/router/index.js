@@ -4,6 +4,7 @@ import HomePage from "@/components/HomePage.vue";
 import StuInfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
 import TeaInfoPage from "@/TeacherManagement/TeacherHome/TeaInfoPage.vue";
 import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
+import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
 const routerHistory = createWebHistory();
 
 
@@ -32,9 +33,17 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'viewHomework',
+                    path: 'viewCourse',
+                    name:'ViewCourse',
+                    component: CourseList,
+                    props: true,
+                },
+
+                {
+                    path: 'viewHomework/:cno',
                     name:'ViewHomework',
-                    component: HomeworkList
+                    component: HomeworkList,
+                    props: true,
                 }
             ]
         },
@@ -51,11 +60,6 @@ const router = createRouter({
             ]
         },
 
-        {
-            path: '/hh',
-            name: 'hh',
-            component: HomeworkList,
-        }
 
         // {
         //     path: '/adminHome',

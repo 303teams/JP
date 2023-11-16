@@ -25,6 +25,7 @@ public class RspObject<T> {
         return success(msg,null);
     }
 
+
     public static RspObject success(){
         return success(null);
     }

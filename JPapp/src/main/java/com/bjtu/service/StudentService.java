@@ -1,11 +1,10 @@
 package com.bjtu.service;
 
 import com.bjtu.dao.StudentDao;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StudentService {
 
@@ -23,6 +22,9 @@ public interface StudentService {
     public RspObject<String> changePassword(String id,String password);
 
     public RspObject<String> modifyInfo(Student student);
+
+    RspObject<List<String>> findAll();
+    public RspObject<List<Map<String, Object>>> findCourse(String id);
 
 //    RspObject<List<Student>> findAll();
 }

@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="com.bjtu.dao.HomeworkDao">
 
 
@@ -15,11 +16,13 @@
 
 
     <select id="findById" resultType="Homework" parameterType="string">
-        SELECT homework.*
+        SELECT homework.*,teacher.name as teacherName,course.cname as courseName
         FROM student
         JOIN sc ON student.id = sc.sno
         JOIN homework ON sc.cno = homework.cno
-        WHERE student.id = #{id}
+        JOIN teacher ON homework.tno = teacher.id
+        JOIN course ON homework.cno = course.cno
+        WHERE student.id = #{id} and course.cno = #{cno}
     </select>
 
     <insert id="addShOne">
