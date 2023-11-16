@@ -23,9 +23,10 @@
         <el-table-column label="id" align="center">
           <template v-slot="{ $index }">{{ $index + 1 }}</template>
         </el-table-column>
-        <el-table-column label="作业名称" sortable prop="hname" />
-        <el-table-column label="课程号" sortable prop="cno" />
-        <el-table-column label="截止时间" sortable prop="ddl" />
+        <el-table-column label="作业名称" sortable prop="name" />
+        <el-table-column label="课程名称" sortable prop="courseName" />
+        <el-table-column label="发布人" sortable prop="teacherName" />
+        <el-table-column label="截止时间" sortable prop="submitDdl" />
         <el-table-column label="作业内容" prop="content" />
         <el-table-column align="right">
           <el-button size="large" @click="handleSubmit">提交</el-button>
@@ -102,7 +103,10 @@ const fetchData = () => {
   axios
       .post(
           'http://localhost:8081/homework/findById',
-          null,
+          {
+            cno: props.cno,
+          },
+
           {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -114,6 +118,7 @@ const fetchData = () => {
         if (res.data.code === 200) {
           console.log(props.cno);
           tableData.data = res.data.data;
+          console.log(res)
           updateFilteredData(); // 更新过滤后的数据
         } else {
           window.alert("获取信息失败:" + res.data.msg);

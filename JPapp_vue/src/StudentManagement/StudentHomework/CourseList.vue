@@ -12,9 +12,9 @@
             @click="courseEnter(item.cno)"
         />
         <div class="info-content">
-          <span class="course_name" @click="courseEnter(item.cno)">课程名</span>
+          <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
           <span class="course_id">课程号: {{item.cno}}</span>
-          <span class="teacher_name">主讲教师： </span>
+          <span class="teacher_name">主讲教师：{{item.teacherName}}</span>
         </div>
 
         <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
@@ -42,7 +42,7 @@ const router = useRouter();
 const fetchData = async () => {
   axios
       .post(
-          'http://localhost:8081/homework/findById',
+          'http://localhost:8081/student/findCourse',
           null,
           {
             headers: {
@@ -54,6 +54,7 @@ const fetchData = async () => {
       .then((res) => {
         if (res.data.code === 200) {
           items.value = res.data.data;
+          console.log(res)
         } else {
           window.alert("获取信息失败:" + res.data.msg);
         }
@@ -65,7 +66,7 @@ const fetchData = async () => {
 };
 
 const courseEnter = (cno) => {
-    router.push(`/studentHome/viewHomework?cno=${cno}`);
+    router.push(`/studentHome/viewHomework/${cno}`);
 };
 
 onMounted(() => {

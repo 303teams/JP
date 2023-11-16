@@ -6,6 +6,7 @@ import com.bjtu.pojo.Student;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StudentDao {
@@ -20,5 +21,5 @@ public interface StudentDao {
 //    public void updatePassword(String id, String password);
     public void updateEmail(String id, String email);
 
-    public List<Course> findCourse(String id);
+    public List<Map<String, Object>> findCourse(String id);
 }

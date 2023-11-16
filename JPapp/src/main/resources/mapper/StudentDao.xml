@@ -38,11 +38,12 @@
         sex = #{sex} where id = #{id}
     </update>
 
-    <select id="findCourse" resultType="Course" parameterType="string">
-        SELECT course.*
+    <select id="findCourse" resultType="java.util.Map" parameterType="string">
+        SELECT course.*,teacher.name as teacherName
         FROM student
         JOIN sc ON student.id = sc.sno
         JOIN course ON sc.cno = course.cno
+        JOIN teacher ON course.tno = teacher.id
         WHERE student.id = #{id}
     </select>
 

@@ -12,7 +12,7 @@ public interface HomeworkService {
 
     RspObject<List<Homework>> findAll();
 
-    RspObject<List<Homework>> findById(String id);
+    RspObject<List<Homework>> findById(String id,String cno);
 //    public RspObject<User> login(String id, String password);
 //    public RspObject<Boolean> insert(Student student);
 //

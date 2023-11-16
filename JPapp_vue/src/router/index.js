@@ -40,7 +40,7 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'viewHomework',
+                    path: 'viewHomework/:cno',
                     name:'ViewHomework',
                     component: HomeworkList,
                     props: true,

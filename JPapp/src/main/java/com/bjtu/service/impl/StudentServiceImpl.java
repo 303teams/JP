@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -120,19 +121,28 @@ public class StudentServiceImpl implements StudentService  {
     }
 
     @Override
-<<<<<<< Updated upstream
     public RspObject<List<String>> findAll(){
         return RspObject.success("查询成功！",studentDao.findAll());
     }
-=======
-    public RspObject<List<Course>> findCourse(String id){
-        return RspObject.success("查询成功！",studentDao.findCourse(id));
+
+    public RspObject<List<Map<String, Object>>> findCourse(String id){
+        try {
+            List<Map<String, Object>> courses = studentDao.findCourse(id);
+
+            if (courses.isEmpty()) {
+                return RspObject.fail("无课程信息！");
+            }
+
+            return RspObject.success("查询成功！",studentDao.findCourse(id));
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
+        }
     }
 
 //    @Override
 //    public RspObject<List<Student>> findAll(){
 //        return RspObject.success("查询成功！",studentDao.findAll());
 //    }
->>>>>>> Stashed changes
 
 }

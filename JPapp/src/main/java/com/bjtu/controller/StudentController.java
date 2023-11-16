@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("student")
@@ -35,9 +36,9 @@ public class StudentController {
 
     @AuthAccess
     @PostMapping("/findCourse")
-    public RspObject<List<Course>> CourseList(String uu) {
-        //User user = TokenUtils.getCurrentUser();
-        return studentService.findCourse(uu);
+    public RspObject<List<Map<String, Object>>> CourseList() {
+        User user = TokenUtils.getCurrentUser();
+        return studentService.findCourse(user.getId());
     }
 
 }
