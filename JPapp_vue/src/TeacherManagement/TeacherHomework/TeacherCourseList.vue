@@ -50,7 +50,8 @@ const fetchData = async () => {
               'token': token,
             },
           }
-      ).then((res) => {
+      )
+      .then((res) => {
         if (res.data.code === 200) {
           items.value = res.data.data;
           console.log(res)

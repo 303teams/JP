@@ -72,7 +72,7 @@ export default {
             formData.set('id', props.id)
 
             let result = await axios.post(
-                'http://localhost:8081/student/uploadCT',
+                'http://localhost:8081/teacher/uploadHW',
                 formData,
                 {
                   headers: {
@@ -95,22 +95,34 @@ export default {
             }
             const formData = new FormData();
             formData.set('file', file)
+            formData.set('Id', "10000")
+            formData.set('name', "qq")
+            formData.set('cno', "1001")
+
             console.log(formData)
             try {
-              const res = await axios.post(
-                  'http://localhost:8081/student/uploadCT',
-                  {
-                    file:file,
-                    Id: "10011"
-                  },
+              await axios.post(
+                  'http://localhost:8081/teacher/uploadHW',
+                  formData,
                   {
                     headers: {
                       'Content-Type': 'application/x-www-form-urlencoded',
                       'token': localStorage.getItem('token')
                     },
                   }
-              );
-              insertFn(res.data.url, res.data.name);
+              ).then((res) =>{
+                if (res.data.code === 200) {
+                  insertFn(res.data.url, res.data.name);
+                  console.log(res)
+                } else {
+                  window.alert("获取信息失败:" + res.data.msg);
+                  console.log(res)
+                }
+              }).catch((err) => {
+                console.error("发生未知错误！");
+                console.log(err);
+              });
+              console.log("hh")
             } catch (error) {
               console.error(error);
             }
