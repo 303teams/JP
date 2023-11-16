@@ -13,7 +13,16 @@
         select * from homework
     </select>
 
+    <select id="findHomeworkByThId" resultType="Homework">
+        SELECT *
+        FROM homework
+        WHERE homework.homeworkID = #{id}
+    </select>
 
+    <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
+        insert into homework(homeworkID,cno,name,content,tno)
+        values (#{homeworkID}, #{cno},#{name},#{content},#{tno})
+    </insert>
 
     <select id="findById" resultType="Homework" parameterType="string">
         SELECT homework.*,teacher.name as teacherName,course.cname as courseName
