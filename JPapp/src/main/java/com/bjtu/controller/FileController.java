@@ -22,44 +22,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
 @RestController
 @RequestMapping("/file")
 public class FileController {
     private static final String ROOT_PATH =  System.getProperty("user.dir") + File.separator + "files";
 
-
-//    @AuthAccess
-//    @PostMapping("/up")
-//    public RspObject<Object> up(File file) throws IOException{
-//
-//        //connection=connectionManager.getconn();//连接数据库的操作,这里自己连接自己的数据库
-//
-//        try {
-//            //File file=new File("D:\\1.jpg");//要转换的文件
-//            FileInputStream inputStream=new FileInputStream(file);
-//            String sql="insert into save_image(images) values(?)";//存入数据库的SQL语句在执行的时候一定要用prepareStatement
-//            statement=connection.prepareStatement(sql);
-//            statement.setBinaryStream(1, inputStream,(int)file.length());
-//            statement.executeUpdate();
-//
-//        } catch (FileNotFoundException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (SQLException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//    }
     @Resource
     FileUtils fileUtils;
     @Resource
     HomeworkService homeworkService;
 
     @AuthAccess
-    @GetMapping("/tHomework/{thId}")
-    public  RspObject<Object> downloadThWithThId(@PathVariable String thId, HttpServletResponse response){
+    @PostMapping("/tHomework")
+    public  RspObject<Object> downloadThWithThId( String thId, HttpServletResponse response){
         Homework homework = homeworkService.findHomeworkByThId(thId);
         if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
             return RspObject.success("成功下载", homework);
@@ -101,20 +76,20 @@ public class FileController {
 //        return RspObject.success(url);//文件的下载地址
     }
 
-    @AuthAccess
-    @GetMapping("/download/{fileName}")
-    public void download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
-    //    response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileFullName, "UTF-8"));  // 附件下载
-        String filePath = ROOT_PATH  + File.separator + fileName;
-        if (!FileUtil.exist(filePath)) {
-            return;
-        }
-        byte[] bytes = FileUtil.readBytes(filePath);
-        ServletOutputStream outputStream = response.getOutputStream();
-        outputStream.write(bytes);  // 数组是一个字节数组，也就是文件的字节流数组
-        outputStream.flush();
-        outputStream.close();
-    }
+//    @AuthAccess
+//    @GetMapping("/download/{fileName}")
+//    public void download(@PathVariable String fileName, HttpServletResponse response) throws IOException {
+//    //    response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileFullName, "UTF-8"));  // 附件下载
+//        String filePath = ROOT_PATH  + File.separator + fileName;
+//        if (!FileUtil.exist(filePath)) {
+//            return;
+//        }
+//        byte[] bytes = FileUtil.readBytes(filePath);
+//        ServletOutputStream outputStream = response.getOutputStream();
+//        outputStream.write(bytes);  // 数组是一个字节数组，也就是文件的字节流数组
+//        outputStream.flush();
+//        outputStream.close();
+//    }
 
 
 }

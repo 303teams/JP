@@ -54,7 +54,7 @@ public class TeacherController {
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
                 .setHomeworkID(Id)
-                .setTno("678")
+                .setTno("21001001")
                 .setName(name)
                 .setCno(cno);
 //                .setSubmitDdl(submit_ddl)
