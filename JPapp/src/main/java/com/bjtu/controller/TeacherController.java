@@ -68,8 +68,12 @@ public class TeacherController {
     @PostMapping("/downloadHW")
     public  RspObject<Object> downloadHW(String homeworkID, HttpServletResponse response){
         Homework homework = homeworkService.findHomeworkByThId(homeworkID);
-        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
+        System.out.println(homework);
+        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response)){
+            System.out.println("成功下载");
             return RspObject.success("成功下载", homework);
+        }
+
         else return RspObject.fail("下载失败", homework);
     }
 
