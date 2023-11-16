@@ -18,8 +18,8 @@ public class Homework {
     private String cno;
     private String name;
     private String tno;
-    private Blob content;
-    public Homework(String homeworkID,String cno,String name,Blob content,String tno){
+    private byte[] content;
+    public Homework(String homeworkID,String cno,String name,byte[] content,String tno){
 
         this.homeworkID = homeworkID;
         this.cno = cno;

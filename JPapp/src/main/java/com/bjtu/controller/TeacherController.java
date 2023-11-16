@@ -51,10 +51,10 @@ public class TeacherController {
     public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String Id, @RequestParam String cno) throws IOException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
-        Blob blob = file.getBytes().
+
 
         User user = TokenUtils.getCurrentUser();
-        homework.setContent(file.)
+        homework.setContent(file.getBytes())
                 .setHomeworkID(Id)
                 .setTno(user.getId())
                 .setName(name)

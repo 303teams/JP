@@ -30,6 +30,6 @@ public interface HomeworkService {
 //
 //    public RspObject<String> modifyInfo(Student student);
 
-    RspObject<Boolean> submitHomework(String id,String homeworkId,String cno,String url);
+//    RspObject<Boolean> submitHomework(String id,String homeworkId,String cno,String url);
 
 }

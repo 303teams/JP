@@ -13,8 +13,8 @@ class HomeworkServiceImplTest {
     @Autowired
     HomeworkService homeworkService;
 
-    @Test
-    void submitHomework() {
-        System.out.println(homeworkService.submitHomework("21301001","1","1001","www.baidu.com"));
-    }
+//    @Test
+//    void submitHomework() {
+//        System.out.println(homeworkService.submitHomework("21301001","1","1001","www.baidu.com"));
+//    }
 }
