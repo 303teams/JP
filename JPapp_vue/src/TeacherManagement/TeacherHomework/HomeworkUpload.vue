@@ -19,7 +19,7 @@
 <script>
 import '@wangeditor/editor/dist/css/style.css'; // Import CSS
 
-import { onBeforeUnmount, ref, shallowRef, onMounted, defineProps } from 'vue';
+import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { Boot } from '@wangeditor/editor';
 import attachmentModule from '@wangeditor/plugin-upload-attachment';
@@ -31,7 +31,7 @@ export default {
 
     const editorRef = shallowRef();
     const valueHtml = ref('<p></p>');
-    const props = defineProps(['id']);
+    // const props = defineProps(['id']);
 
     onMounted(() => {
       // console.log(props.id)
@@ -69,7 +69,8 @@ export default {
           async customUpload(file, insertFn) { // 文件上传
             const formData = new FormData();
             formData.set('file', file)
-            formData.set('id', props.id)
+            formData.set('Id', "1")
+            formData.set('cno', "1001")
 
             let result = await axios.post(
                 'http://localhost:8081/teacher/uploadHW',
@@ -95,8 +96,7 @@ export default {
             }
             const formData = new FormData();
             formData.set('file', file)
-            formData.set('Id', "10000")
-            formData.set('name', "qq")
+            formData.set('Id', "1")
             formData.set('cno', "1001")
 
             console.log(formData)

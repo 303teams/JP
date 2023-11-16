@@ -113,18 +113,34 @@ const downloadHomework = (homeworkID) => {
               'Content-Type': 'application/x-www-form-urlencoded',
               'token': token,
             },
+
+            responseType: "blob",
           }
       )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(res)
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        return response.arrayBuffer(); // 将响应转换为 ArrayBuffer
       })
-      .catch((err) => {
-        console.error("发生未知错误！");
-        console.log(err);
+      .then(data => {
+        // 创建一个 Blob 对象，并生成一个下载链接
+        const blob = new Blob([data], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+
+        // 创建一个下载链接并模拟点击
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'homework.zip'; // 替换成实际的文件名
+        document.body.appendChild(a);
+        a.click();
+
+        // 清理生成的下载链接
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      })
+      .catch(error => {
+        console.error('Error during download:', error);
       });
 }
 
