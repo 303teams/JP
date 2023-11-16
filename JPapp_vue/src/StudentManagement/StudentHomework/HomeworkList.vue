@@ -49,6 +49,7 @@
 
     <!-- 上传文件的弹出框 -->
     <el-dialog title="上传文件" v-model="dialogTableVisible" width="30%" center>
+      <el-input placeholder="输入文字或选择文件路径"></el-input>
       <el-upload
           class="upload-demo"
           drag
@@ -56,16 +57,13 @@
           :headers="{'token': token}"
           multiple
       >
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">
-          拖动文件到这或者 <em>点击上传</em>
-        </div>
-        <template #tip>
-        <div class="el-upload__tip">
-          文件不能大于5mb
-        </div>
+        <template #trigger>
+        <el-button icon="el-icon-upload">选择文件</el-button>
         </template>
       </el-upload>
+
+      <el-button>提交</el-button>
+      <el-button>取消</el-button>
     </el-dialog>
   </div>
 </template>

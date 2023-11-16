@@ -5,6 +5,7 @@ import StuInfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
 import TeaInfoPage from "@/TeacherManagement/TeacherHome/TeaInfoPage.vue";
 import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
 import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
+import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
 const routerHistory = createWebHistory();
 
 
@@ -44,6 +45,13 @@ const router = createRouter({
                     name:'ViewHomework',
                     component: HomeworkList,
                     props: true,
+                },
+
+                {
+                    path: 'HomeworkSubmit',
+                    name:'HomeworkSubmit',
+                    component: HomeworkSubmit,
+                    props: true,
                 }
             ]
         },
@@ -59,6 +67,12 @@ const router = createRouter({
                 },
             ]
         },
+
+        {
+            path: '/wangEditor',
+            name: 'wangEditor',
+            component: () => import('@/components/wangEditor.vue')
+        }
 
 
         // {
