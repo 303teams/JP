@@ -11,6 +11,8 @@ import java.util.List;
 public interface HomeworkService {
 
     RspObject<List<Homework>> findAll();
+    Homework findHomeworkByThId(String id);
+    void addHomework(Homework homework);
 
     RspObject<List<Homework>> findById(String id,String cno);
 //    public RspObject<User> login(String id, String password);

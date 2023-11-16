@@ -27,15 +27,13 @@ public class HomeworkServiceImpl implements HomeworkService {
     public RspObject<List<Homework>> findById(String id,String cno){
         return RspObject.success("查询成功！",homeworkDao.findById(id,cno));
     }
-
     @Override
-    public RspObject<Boolean> submitHomework(String id, String homeworkId, String cno, String url) {
-        try {
-//            homeworkDao.addShOne(id, homeworkId, cno, url);
-            return RspObject.success("提交成功！", Boolean.TRUE);
-        } catch (Exception e) {
-            throw new ServiceException("提交失败！");
-        }
+    public Homework findHomeworkByThId(String id){
+        return homeworkDao.findHomeworkByThId(id);
     }
 
+    @Override
+    public void addHomework(Homework homework) {
+        homeworkDao.insert(homework);
+    }
 }
