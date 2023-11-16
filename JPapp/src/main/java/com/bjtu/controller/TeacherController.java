@@ -17,6 +17,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Blob;
 import java.util.Date;
 
 @RestController
@@ -47,30 +48,36 @@ public class TeacherController {
 
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(MultipartFile file, String Id, String name,String cno) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String Id, @RequestParam String cno) throws IOException {
         Homework homework = new Homework();
-        Date now = new Date(System.currentTimeMillis());
+        String name = file.getOriginalFilename();
+        Blob blob = file.getBytes().
 
         User user = TokenUtils.getCurrentUser();
-        homework.setContent(file.getBytes())
+        homework.setContent(file.)
                 .setHomeworkID(Id)
-                .setTno("678")
+                .setTno(user.getId())
                 .setName(name)
                 .setCno(cno);
-//                .setSubmitDdl(submit_ddl)
-//                .setScoreDdl(score_ddl)
+// .setSubmitDdl(submit_ddl)
+// .setScoreDdl(score_ddl)
         homeworkService.addHomework(homework);
         return RspObject.success("上传成功，当前thId：" + Id , homework);
     }
 
-
     @AuthAccess
-    @GetMapping("/downloadHW/{homeworkID}")
-    public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
+    @PostMapping("/downloadHW")
+    public  RspObject<Object> downloadHW(String homeworkID, HttpServletResponse response){
         Homework homework = homeworkService.findHomeworkByThId(homeworkID);
-        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
-            return RspObject.success("成功下载", homework);
-        else return RspObject.fail("下载失败", homework);
+        System.out.println(homework.getContent());
+//        if(fileUtils.downloadFile(homework.getContent(),homework.getName(), response)){
+//            System.out.println("下载成功123");
+//            return RspObject.success("成功下载", "1");
+//        }else{
+//            return RspObject.fail("下载失败", homework);
+//        }
+        return RspObject.success("成功下载", homework);
+
     }
 
 

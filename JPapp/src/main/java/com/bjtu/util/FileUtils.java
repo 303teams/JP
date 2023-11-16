@@ -15,13 +15,16 @@ public class FileUtils {
             File tempFile = File.createTempFile(fileName, ".temp");
 
             try (FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
+                System.out.println("1");
                 fileOutputStream.write(data);
             }
 
+            System.out.println("2");
             response.setContentType("application/octet-stream;charset=UTF-8");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
             try (ServletOutputStream outputStream = response.getOutputStream()){
+                System.out.println("3");
                 java.nio.file.Files.copy(tempFile.toPath(), outputStream);
                 outputStream.flush();
             }

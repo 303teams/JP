@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 13/11/2023 19:12:43
+ Date: 16/11/2023 20:27:46
 */
 
 SET NAMES utf8mb4;
@@ -41,10 +41,10 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `content`;
 CREATE TABLE `content` (
-                           `contentID` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                           `contentID` int NOT NULL,
                            `cno` varchar(20) DEFAULT NULL,
                            `sno` varchar(20) DEFAULT NULL,
-                           `homeworkID` varchar(20) DEFAULT NULL,
+                           `homeworkID` int DEFAULT NULL,
                            `content` blob,
                            `appeal_content` varchar(255) DEFAULT NULL,
                            `times` int DEFAULT NULL,
@@ -57,12 +57,18 @@ CREATE TABLE `content` (
                            `score` double DEFAULT NULL,
                            `sumit_time` datetime DEFAULT NULL,
                            `is_submit` varchar(10) DEFAULT NULL,
+                           `sno1` varchar(20) DEFAULT NULL,
+                           `sno2` varchar(20) DEFAULT NULL,
+                           `sno3` varchar(20) DEFAULT NULL,
+                           `sno4` varchar(20) DEFAULT NULL,
+                           `sno5` varchar(20) DEFAULT NULL,
+                           `sno6` varchar(20) DEFAULT NULL,
                            PRIMARY KEY (`contentID`) USING BTREE,
                            KEY `content_cno` (`cno`),
                            KEY `content_sno` (`sno`),
                            KEY `content_homeworkID` (`homeworkID`),
                            CONSTRAINT `content_cno` FOREIGN KEY (`cno`) REFERENCES `course` (`cno`),
-                           CONSTRAINT `content_homeworkID` FOREIGN KEY (`homeworkID`) REFERENCES `homework` (`homeworkID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+                           CONSTRAINT `content_homeworkID` FOREIGN KEY (`homeworkID`) REFERENCES `homework` (`homeworkID`),
                            CONSTRAINT `content_sno` FOREIGN KEY (`sno`) REFERENCES `student` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -100,7 +106,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `homework`;
 CREATE TABLE `homework` (
-                            `homeworkID` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                            `homeworkID` int NOT NULL AUTO_INCREMENT,
                             `cno` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
                             `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
                             `submit_ddl` date DEFAULT NULL,
@@ -112,23 +118,23 @@ CREATE TABLE `homework` (
                             KEY `homework_tno` (`tno`),
                             CONSTRAINT `hoemwork_cno` FOREIGN KEY (`cno`) REFERENCES `course` (`cno`),
                             CONSTRAINT `homework_tno` FOREIGN KEY (`tno`) REFERENCES `teacher` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of homework
 -- ----------------------------
 BEGIN;
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10011', '1001', '实验1', '2023-10-31', 0x00, '21001001', '2023-11-02');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10012', '1001', '实验2', '2023-11-04', 0x00, '21001001', '2023-11-06');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10021', '1002', '实验1', '2023-11-01', 0x00, '21001002', '2023-11-03');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10022', '1002', '感知机', '2023-11-07', 0x00, '21001002', '2023-11-09');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10031', '1003', '黑盒测试', '2023-10-28', 0x00, '21001003', '2023-10-30');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10032', '1003', '测试', '2023-11-05', 0x00, '21001003', '2023-11-07');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10041', '1004', '课堂小测1', '2023-11-03', 0x00, '21001004', '2023-11-05');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10042', '1004', '课堂小测2', '2023-11-10', 0x00, '21001004', '2023-11-12');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10051', '1005', '实训', '2023-10-17', 0x00, '21001005', '2023-10-19');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10052', '1005', '实训', '2023-10-31', 0x00, '21001005', '2023-11-02');
-INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES ('10053', '1005', '实训', '2023-11-10', 0x00, '21001005', '2023-11-12');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (1, '1001', '实验1', '2023-10-31', 0x00, '21001001', '2023-11-02');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (2, '1001', '实验2', '2023-11-04', 0x00, '21001001', '2023-11-06');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (3, '1002', '实验1', '2023-11-01', 0x00, '21001002', '2023-11-03');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (4, '1002', '感知机', '2023-11-07', 0x00, '21001002', '2023-11-09');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (5, '1003', '黑盒测试', '2023-10-28', 0x00, '21001003', '2023-10-30');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (6, '1003', '测试', '2023-11-05', 0x00, '21001003', '2023-11-07');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (7, '1004', '课堂小测1', '2023-11-03', 0x00, '21001004', '2023-11-05');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (8, '1004', '课堂小测2', '2023-11-10', 0x00, '21001004', '2023-11-12');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (9, '1005', '实训', '2023-10-17', 0x00, '21001005', '2023-10-19');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (10, '1005', '实训', '2023-10-31', 0x00, '21001005', '2023-11-02');
+INSERT INTO `homework` (`homeworkID`, `cno`, `name`, `submit_ddl`, `content`, `tno`, `score_ddl`) VALUES (11, '1005', '实训', '2023-11-10', 0x00, '21001005', '2023-11-12');
 COMMIT;
 
 -- ----------------------------
@@ -184,7 +190,7 @@ COMMIT;
 DROP TABLE IF EXISTS `score`;
 CREATE TABLE `score` (
                          `sno` varchar(20) NOT NULL,
-                         `contentID` varchar(20) NOT NULL,
+                         `contentID` int NOT NULL,
                          `score` double DEFAULT NULL,
                          `time` datetime DEFAULT NULL,
                          `content` varchar(255) DEFAULT NULL,
@@ -211,6 +217,7 @@ CREATE TABLE `student` (
                            `email` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
                            `age` int DEFAULT NULL,
                            `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                           `picture` blob,
                            PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
@@ -218,15 +225,15 @@ CREATE TABLE `student` (
 -- Records of student
 -- ----------------------------
 BEGIN;
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301001', '张飞', '男', '2461172547@qq.com', 21, '4eFSt1KosQJzERsG+t3iJA==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301002', '关羽', '男', '2461172547@qq.com', 21, 'oh8hGbhmpv4aJIm8X+eIGQ==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301003', '赵云', '男', '2461172547@qq.com', 21, '4234PAyaZ76I3HdA5WY86g==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301004', '黄忠', '男', '2461172547@qq.com', 21, 'v9/Pmtd9hHPuZVtvyCV7Vg==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301005', '马超', '男', '2461172547@qq.com', 21, 'sXEeK3I7Mw+P8UrcXkxCLQ==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301006', '诸葛亮', '男', '2461172547@qq.com', 21, '+m8+7ZYRKnOb2819qIb6GA==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301007', '刘备', '男', '2461172547@qq.com', 21, '9lhHnRulVWDxug4+Kk3TOg==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301008', '刘禅', '男', '2461172547@qq.com', 21, '3oQU+/y/hcVhXyAdBOPNKg==');
-INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`) VALUES ('21301009', '诸葛瞻', '男', '2461172547@qq.com', 21, 'CVGFB6ku7R4SM0SpL7aBkw==');
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301001', '张飞', '男', '2461172547@qq.com', 21, '4eFSt1KosQJzERsG+t3iJA==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301002', '关羽', '男', '2461172547@qq.com', 21, 'oh8hGbhmpv4aJIm8X+eIGQ==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301003', '赵云', '男', '2461172547@qq.com', 21, '4234PAyaZ76I3HdA5WY86g==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301004', '黄忠', '男', '2461172547@qq.com', 21, 'v9/Pmtd9hHPuZVtvyCV7Vg==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301005', '马超', '男', '2461172547@qq.com', 21, 'sXEeK3I7Mw+P8UrcXkxCLQ==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301006', '诸葛亮', '男', '2461172547@qq.com', 21, '+m8+7ZYRKnOb2819qIb6GA==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301007', '刘备', '男', '2461172547@qq.com', 21, '9lhHnRulVWDxug4+Kk3TOg==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301008', '刘禅', '男', '2461172547@qq.com', 21, '3oQU+/y/hcVhXyAdBOPNKg==', NULL);
+INSERT INTO `student` (`id`, `name`, `sex`, `email`, `age`, `password`, `picture`) VALUES ('21301009', '诸葛瞻', '男', '2461172547@qq.com', 21, 'CVGFB6ku7R4SM0SpL7aBkw==', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -240,6 +247,7 @@ CREATE TABLE `teacher` (
                            `email` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
                            `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
                            `sex` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+                           `picture` blob,
                            PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
@@ -247,11 +255,11 @@ CREATE TABLE `teacher` (
 -- Records of teacher
 -- ----------------------------
 BEGIN;
-INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`) VALUES ('21001001', '曹操', 35, '12345', 'kOXPXXRgOBthTT3tg1hFTQ==', '男');
-INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`) VALUES ('21001002', '典韦', 35, '12345', 'LUiSrS2oC8115Htvew9RFA==', '男');
-INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`) VALUES ('21001003', '许褚', 35, '12345', 'g010hnJmUtkj5nkQDpxDnw==', '男');
-INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`) VALUES ('21001004', '郭嘉', 35, '12345', 'Q/7wqQvHICQgYEHGq3aESA==', '男');
-INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`) VALUES ('21001005', '荀彧', 35, '12345', 'gbywccUL79N3Rj5w+iNYIg==', '男');
+INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`, `picture`) VALUES ('21001001', '曹操', 35, '12345', 'kOXPXXRgOBthTT3tg1hFTQ==', '男', NULL);
+INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`, `picture`) VALUES ('21001002', '典韦', 35, '12345', 'LUiSrS2oC8115Htvew9RFA==', '男', NULL);
+INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`, `picture`) VALUES ('21001003', '许褚', 35, '12345', 'g010hnJmUtkj5nkQDpxDnw==', '男', NULL);
+INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`, `picture`) VALUES ('21001004', '郭嘉', 35, '12345', 'Q/7wqQvHICQgYEHGq3aESA==', '男', NULL);
+INSERT INTO `teacher` (`id`, `name`, `age`, `email`, `password`, `sex`, `picture`) VALUES ('21001005', '荀彧', 35, '12345', 'gbywccUL79N3Rj5w+iNYIg==', '男', NULL);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

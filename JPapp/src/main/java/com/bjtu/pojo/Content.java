@@ -7,8 +7,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Content {
 
-    private String contntID;
+    private String contentID;
     private String cno;
+    private String cname;
     private String sno;
     private String homeworkID;
     private byte[] content;

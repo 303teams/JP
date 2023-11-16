@@ -48,7 +48,7 @@
           <el-icon><user /></el-icon>个人信息
           </template>
         </el-menu-item>
-        <el-menu-item index="/viewHomework" :route="{ name: 'ViewHomework' }">
+        <el-menu-item index="/HomeworkUpload" :route="{ name: 'HomeworkUpload' }">
           <template #title>
           <el-icon><message /></el-icon>作业
           </template>

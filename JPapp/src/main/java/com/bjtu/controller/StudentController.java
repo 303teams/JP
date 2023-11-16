@@ -51,22 +51,25 @@ public class StudentController {
         return studentService.findCourse(user.getId());
     }
 
-    @AuthAccess
-    @GetMapping("/downloadHW/{homeworkID}")
-    public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
-        Homework homework = homeworkService.findHomeworkByThId(homeworkID);
-        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
-            return RspObject.success("成功下载", homework);
-        else return RspObject.fail("下载失败", homework);
-    }
+//    @AuthAccess
+//    @GetMapping("/downloadHW/{homeworkID}")
+//    public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
+//        Homework homework = homeworkService.findHomeworkByThId(homeworkID);
+//        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
+//            return RspObject.success("成功下载", homework);
+//        else return RspObject.fail("下载失败", homework);
+//    }
     @AuthAccess
     @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(MultipartFile file, String Id) throws IOException {
+    public RspObject<Object> uploadCT(MultipartFile file, String Id,String cno) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
+        System.out.println("hh");
         content.setContent(file.getBytes())
-                .setContntID(Id)
-                .setSno(user.getId());
+                .setContentID(Id)
+                .setSno(user.getId())
+                .setCno(cno)
+                .setCname("Math");
         contentService.addContent(content);
         return RspObject.success("上传成功，当前thId：" + Id , content);
     }

@@ -27,9 +27,9 @@
         <el-table-column label="课程名称" sortable prop="courseName" />
         <el-table-column label="发布人" sortable prop="teacherName" />
         <el-table-column label="截止时间" sortable prop="submitDdl" />
+        <el-table-column label="作业内容" prop="content" />
         <el-table-column align="right">
           <template v-slot="scope">
-          <el-button size="large" @click="downloadHomework(scope.row.homeworkID)">下载作业</el-button>
           <el-button size="large" @click="handleSubmit(scope.row.homeworkID)">提交</el-button>
           </template>
         </el-table-column>
@@ -100,49 +100,6 @@ const handleSubmit = (homeworkID) => {
   router.push(`/studentHome/HomeworkSubmit/${homeworkID}`);
 };
 
-const downloadHomework = (homeworkID) => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/downloadHW',
-          {
-            homeworkID: homeworkID,
-          },
-
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-
-            responseType: "blob",
-          }
-      )
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.arrayBuffer(); // 将响应转换为 ArrayBuffer
-      })
-      .then(data => {
-        // 创建一个 Blob 对象，并生成一个下载链接
-        const blob = new Blob([data], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
-
-        // 创建一个下载链接并模拟点击
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'homework.zip'; // 替换成实际的文件名
-        document.body.appendChild(a);
-        a.click();
-
-        // 清理生成的下载链接
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      })
-      .catch(error => {
-        console.error('Error during download:', error);
-      });
-}
 
 const fetchData = () => {
   axios

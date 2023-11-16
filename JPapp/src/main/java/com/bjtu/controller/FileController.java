@@ -37,7 +37,7 @@ public class FileController {
 //
 //        try {
 //            //File file=new File("D:\\1.jpg");//要转换的文件
-//            FileInputStream inputStream=new FileInputStream(file);
+//            FileInputStream inputStream=new FileInputStream(file);content
 //            String sql="insert into save_image(images) values(?)";//存入数据库的SQL语句在执行的时候一定要用prepareStatement
 //            statement=connection.prepareStatement(sql);
 //            statement.setBinaryStream(1, inputStream,(int)file.length());
