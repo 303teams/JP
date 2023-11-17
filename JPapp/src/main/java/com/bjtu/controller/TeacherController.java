@@ -9,6 +9,10 @@ import com.bjtu.service.TeacherService;
 import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +21,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Blob;
+import java.util.Arrays;
 import java.util.Date;
 
 @RestController
@@ -51,10 +55,9 @@ public class TeacherController {
     public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String Id, @RequestParam String cno) throws IOException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
-        Blob blob = file.getBytes().
 
         User user = TokenUtils.getCurrentUser();
-        homework.setContent(file.)
+        homework.setContent(file.getBytes())
                 .setHomeworkID(Id)
                 .setTno(user.getId())
                 .setName(name)
@@ -67,17 +70,20 @@ public class TeacherController {
 
     @AuthAccess
     @PostMapping("/downloadHW")
-    public  RspObject<Object> downloadHW(String homeworkID, HttpServletResponse response){
+    public ResponseEntity<byte[]> downloadHW(@RequestParam String homeworkID) {
+        System.out.println("hh"+homeworkID);
         Homework homework = homeworkService.findHomeworkByThId(homeworkID);
-        System.out.println(homework.getContent());
-//        if(fileUtils.downloadFile(homework.getContent(),homework.getName(), response)){
-//            System.out.println("下载成功123");
-//            return RspObject.success("成功下载", "1");
-//        }else{
-//            return RspObject.fail("下载失败", homework);
-//        }
-        return RspObject.success("成功下载", homework);
 
+        System.out.println("hh"+homeworkID);
+
+        byte[] content = homework.getContent();
+        String fileName = homework.getFileName();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
 

@@ -14,6 +14,8 @@
         </el-icon>
           <span style="vertical-align: middle"> 查询 </span>
         </el-button>
+
+        <el-button @click="uploadHomework" size="large" class="upload-button">上传作业</el-button>
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
@@ -30,7 +32,7 @@
         <el-table-column label="作业内容" prop="content" />
         <el-table-column align="right">
           <template v-slot="scope">
-          <el-button size="large" @click="handleSubmit(scope.row.homeworkID)">提交</el-button>
+          <el-button size="large" @click="handleSubmit(scope.row.homeworkID)">更改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,25 +49,38 @@
           />
         </div>
       </el-config-provider>
+
     </div>
 
     <!-- 上传文件的弹出框 -->
-    <el-dialog title="上传文件" v-model="dialogTableVisible" width="30%" center>
-      <el-input placeholder="输入文字或选择文件路径"></el-input>
-      <el-upload
-          class="upload-demo"
-          drag
-          action="http://localhost:8081/file/upload"
-          :headers="{'token': token}"
-          multiple
-      >
-        <template #trigger>
-        <el-button icon="el-icon-upload">选择文件</el-button>
-        </template>
-      </el-upload>
-
-      <el-button>提交</el-button>
-      <el-button>取消</el-button>
+    <el-dialog title="上传文件" :close-on-click-modal="false" v-model="dialogTableVisible" width="30%" center>
+        <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
+          <el-form-item label="作业名字:" prop="kgCode" >
+            <el-input v-model="homeworkData.name" ></el-input>
+          </el-form-item>
+          <el-form-item label="提交截止日期:" prop="targetUrl" >
+            <el-date-picker v-model="homeworkData.submitDdl" type="datetime" placeholder="选择日期和时间"/>
+          </el-form-item>
+          <el-form-item label="互评截止日期:" prop="targetUsername" >
+            <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" placeholder="选择日期和时间"/>
+          </el-form-item>
+          <el-form-item label="上传文件" prop="content">
+            <el-upload
+                class="upload-demo"
+                drag
+                action
+                :auto-upload="false"
+                :http-request="httpRequest"
+                multiple
+            >
+              <template #trigger>
+              <el-button icon="el-icon-upload">选择文件</el-button>
+              </template>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      <el-button @click="sumitHomework">提交</el-button>
+      <el-button @click="closeDia">取消</el-button>
     </el-dialog>
   </div>
 </template>
@@ -86,6 +101,28 @@ const dialogTableVisible = ref(false);
 const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const router = useRouter();
+const HomeworkFormRef =ref();
+const homeworkData = reactive({
+  name: '',
+  content: '',
+  submitDdl: '',
+  scoreDdl: '',
+});
+
+const homeFormRules = reactive({
+  name: [
+    { required: true, message: '请输入作业名字', trigger: 'blur' },
+  ],
+  content: [
+    { required: true, message: '请输入作业内容', trigger: 'blur' },
+  ],
+  submitDdl: [
+    { required: true, message: '请选择提交截止日期', trigger: 'blur' },
+  ],
+  scoreDdl: [
+    { required: true, message: '请选择互评截止日期', trigger: 'blur' },
+  ],
+});
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -140,9 +177,59 @@ const updateFilteredData = () => {
   );
 };
 
+const uploadHomework = () => {
+  dialogTableVisible.value = true;
+};
+
 const clickSearch = () => {
   updateFilteredData();
 };
+
+const sumitHomework = () => {
+  const formData = new FormData();
+  formData.append('name', homeworkData.name);
+  formData.append('content', homeworkData.content);
+  formData.append('submitDdl', homeworkData.submitDdl);
+  formData.append('scoreDdl', homeworkData.scoreDdl);
+
+
+  HomeworkFormRef.value.validate((valid) => {
+      if (valid) {
+        axios
+            .post(
+                'http://localhost:8081/teacher/uploadHW',
+                formData,
+                {
+                  headers: {
+                    'Content-Type': 'application/form-data',
+                    'token': token,
+                  },
+                }
+            )
+            .then((res) => {
+              if (res.data.code === 200) {
+                console.log(res)
+                window.alert("上传成功");
+                dialogTableVisible.value = false;
+              } else {
+                window.alert("上传失败:" + res.data.msg);
+              }
+            })
+            .catch((err) => {
+              console.error("发生未知错误！");
+              console.log(err);
+            });
+      } else {
+        console.log("error submit!!");
+        return false;
+      }
+    });
+  dialogTableVisible.value = false;
+};
+const closeDia = () => {
+  dialogTableVisible.value = false;
+};
+
 
 onMounted(() => {
   fetchData();
@@ -195,6 +282,14 @@ onMounted(() => {
 .search_button{
   color: #2176d7;
   margin-left: 10px;
+}
+
+.upload-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 
 .demo-pagination-block{

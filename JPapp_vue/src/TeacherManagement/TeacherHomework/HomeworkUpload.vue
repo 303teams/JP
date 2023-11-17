@@ -77,7 +77,7 @@ export default {
                 formData,
                 {
                   headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'multipart/form-data',
                     'token': localStorage.getItem('token')
                   },
 
@@ -106,7 +106,7 @@ export default {
                   formData,
                   {
                     headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'Content-Type': 'multipart/form-data',
                       'token': localStorage.getItem('token')
                     },
                   }

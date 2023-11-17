@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Blob;
 import java.util.Date;
 
 
@@ -18,8 +17,9 @@ public class Homework {
     private String cno;
     private String name;
     private String tno;
-    private Blob content;
-    public Homework(String homeworkID,String cno,String name,Blob content,String tno){
+    private String fileName;
+    private byte[] content;
+    public Homework(String homeworkID,String cno,String name,byte[] content,String tno){
 
         this.homeworkID = homeworkID;
         this.cno = cno;
