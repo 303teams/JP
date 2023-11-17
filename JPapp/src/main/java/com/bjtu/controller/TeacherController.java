@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("teacher")
@@ -43,7 +45,12 @@ public class TeacherController {
 //    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
 //        return teacherService.modifyPassword(newPassword,oldPassword);
 //    }
-
+@AuthAccess
+@PostMapping("/findCourse")
+public RspObject<List<Map<String, Object>>> CourseList() {
+    User user = TokenUtils.getCurrentUser();
+    return teacherService.findCourse("21001001");
+}
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){
         System.out.println("modifyInfo: "+teacher);
