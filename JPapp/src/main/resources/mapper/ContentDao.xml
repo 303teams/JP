@@ -7,7 +7,7 @@
 
 
     <insert id="insert" parameterType="Content" useGeneratedKeys="true" keyProperty="contentID">
-        insert into content(contentID,cno,sno,,homeworkID,content)
+        insert into content(contentID,cno,sno,homeworkID,content)
         values (#{contentID}, #{cno},#{sno},#{homeworkID},#{content})
     </insert>
 

@@ -36,13 +36,21 @@ public class TeacherController {
     HomeworkService homeworkService;
     @Resource
     FileUtils fileUtils;
-
-    @AuthAccess
-    @PostMapping("/findCourse")
-    public RspObject<List<Map<String, Object>>> CourseList() {
-        User user = TokenUtils.getCurrentUser();
-        return teacherService.findCourse("21001001");
-    }
+//    @PostMapping("modifyEmail")
+//    public RspObject<String> modifyEmail(String email){
+//        return teacherService.modifyEmail(email);
+//    }
+//
+//    @PostMapping("modifyPassword")
+//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
+//        return teacherService.modifyPassword(newPassword,oldPassword);
+//    }
+@AuthAccess
+@PostMapping("/findCourse")
+public RspObject<List<Map<String, Object>>> CourseList() {
+    User user = TokenUtils.getCurrentUser();
+    return teacherService.findCourse("21001001");
+}
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){
         System.out.println("modifyInfo: "+teacher);
