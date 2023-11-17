@@ -98,6 +98,8 @@ export default {
             formData.set('file', file)
             formData.set('Id', "1")
             formData.set('cno', "1001")
+            formData.set('submit_date', "2023-11-20")
+            formData.set('score_date', "2023-11-20")
 
             console.log(formData)
             try {
