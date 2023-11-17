@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("teacher")
@@ -34,16 +36,13 @@ public class TeacherController {
     HomeworkService homeworkService;
     @Resource
     FileUtils fileUtils;
-//    @PostMapping("modifyEmail")
-//    public RspObject<String> modifyEmail(String email){
-//        return teacherService.modifyEmail(email);
-//    }
-//
-//    @PostMapping("modifyPassword")
-//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-//        return teacherService.modifyPassword(newPassword,oldPassword);
-//    }
 
+    @AuthAccess
+    @PostMapping("/findCourse")
+    public RspObject<List<Map<String, Object>>> CourseList() {
+        User user = TokenUtils.getCurrentUser();
+        return teacherService.findCourse("21001001");
+    }
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){
         System.out.println("modifyInfo: "+teacher);
@@ -52,20 +51,19 @@ public class TeacherController {
 
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String Id, @RequestParam String cno) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno) throws IOException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
 
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
-                .setHomeworkID(Id)
                 .setTno(user.getId())
-                .setName(name)
+                .setFileName(name)
                 .setCno(cno);
 // .setSubmitDdl(submit_ddl)
 // .setScoreDdl(score_ddl)
         homeworkService.addHomework(homework);
-        return RspObject.success("上传成功，当前thId：" + Id , homework);
+        return RspObject.success("上传成功，当前thId：" , homework);
     }
 
     @AuthAccess
