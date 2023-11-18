@@ -36,15 +36,7 @@ public class TeacherController {
     HomeworkService homeworkService;
     @Resource
     FileUtils fileUtils;
-//    @PostMapping("modifyEmail")
-//    public RspObject<String> modifyEmail(String email){
-//        return teacherService.modifyEmail(email);
-//    }
-//
-//    @PostMapping("modifyPassword")
-//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-//        return teacherService.modifyPassword(newPassword,oldPassword);
-//    }
+
 @AuthAccess
 @PostMapping("/findCourse")
 public RspObject<List<Map<String, Object>>> CourseList() {
@@ -65,7 +57,7 @@ public RspObject<List<Map<String, Object>>> CourseList() {
 
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
-                .setTno(user.getId())
+                .setTno("21")
                 .setFileName(name)
                 .setCno(cno);
 // .setSubmitDdl(submit_ddl)
