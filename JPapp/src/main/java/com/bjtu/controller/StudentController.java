@@ -74,7 +74,7 @@ public class StudentController {
         content.setContent(file.getBytes())
                 .setHomeworkID(homeworkID)
                 .setCname(name)
-                .setSno("21301001")
+                .setSno(user.getId())
                 .setCno(cno) ;
         contentService.addContent(content);
         return RspObject.success("上传成功，当前thId：" , content);

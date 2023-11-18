@@ -70,7 +70,6 @@
                 drag
                 action
                 :auto-upload="false"
-                :http-request="httpRequest"
                 multiple
             >
               <template #trigger>
@@ -187,11 +186,15 @@ const clickSearch = () => {
 
 const sumitHomework = () => {
   const formData = new FormData();
-  formData.append('name', homeworkData.name);
-  formData.append('content', homeworkData.content);
-  formData.append('submitDdl', homeworkData.submitDdl);
-  formData.append('scoreDdl', homeworkData.scoreDdl);
+  formData.set('cno', "1001")
+  formData.set('name', homeworkData.name);
+  formData.set('file', homeworkData.content);
+  formData.set('submit_ddl', homeworkData.submitDdl);
+  formData.set('score_ddl', homeworkData.scoreDdl);
 
+  console.log(homeworkData.name)
+
+  console.log(formData)
 
   HomeworkFormRef.value.validate((valid) => {
       if (valid) {
