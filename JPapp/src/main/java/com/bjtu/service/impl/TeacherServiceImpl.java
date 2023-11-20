@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
@@ -116,6 +117,21 @@ public class TeacherServiceImpl implements TeacherService {
         }else{
             teacherDao.updateInfo(teacher1);
             return RspObject.success("密码修改成功！");
+        }
+    }
+    @Override
+    public RspObject<List<Map<String, Object>>> findCourse(String id){
+        try {
+            List<Map<String, Object>> courses = teacherDao.findCourse(id);
+
+            if (courses.isEmpty()) {
+                return RspObject.fail("无课程信息！");
+            }
+
+            return RspObject.success("查询成功！",teacherDao.findCourse(id));
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
         }
     }
 }

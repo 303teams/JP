@@ -101,48 +101,59 @@ const handleSubmit = (homeworkID) => {
 };
 
 const downloadHomework = (homeworkID) => {
+  console.log(homeworkID)
   axios
       .post(
           'http://localhost:8081/teacher/downloadHW',
+          null, // 空的请求体
           {
-            homeworkID: homeworkID,
-          },
-
-          {
+            params: {
+              homeworkID: homeworkID, // 将homeworkID作为查询参数添加
+            },
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/json',
               'token': token,
             },
+            responseType: 'blob',
+          })
 
-            responseType: "blob",
-          }
-      )
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+      .then((res) => {
+        // const fileName = res.headers['x-file-name'];
+        const blob = new Blob([res.data], { type: 'application/octet-stream' });
+
+        // 提取 filename 的方法
+        function extractFilename(contentDisposition) {
+          const matches = contentDisposition.match(/filename="(.+?)"/);
+          return matches ? matches[1] : null;
         }
-        return response.arrayBuffer(); // 将响应转换为 ArrayBuffer
-      })
-      .then(data => {
-        // 创建一个 Blob 对象，并生成一个下载链接
-        const blob = new Blob([data], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
 
-        // 创建一个下载链接并模拟点击
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'homework.zip'; // 替换成实际的文件名
-        document.body.appendChild(a);
-        a.click();
+        const contentDisposition = res.headers['content-disposition'];
+        const fileName = extractFilename(contentDisposition);
+        console.log(res)
 
-        // 清理生成的下载链接
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+
+        const downloadLink = document.createElement('a');
+        const blobUrl = URL.createObjectURL(blob);
+
+        downloadLink.href = blobUrl;
+        downloadLink.download =fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+
+        // Cleanup
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(blobUrl);
       })
-      .catch(error => {
-        console.error('Error during download:', error);
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+
+        // 添加下面这行，查看是否有响应内容
+        console.log(err.response);
       });
-}
+};
+
+
 
 const fetchData = () => {
   axios

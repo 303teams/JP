@@ -8,11 +8,14 @@ import com.bjtu.service.StudentService;
 import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +26,9 @@ public class StudentController {
 
     @Autowired
     StudentService studentService;
+    @Autowired
     HomeworkService homeworkService;
-
+    @Autowired
     ContentService contentService;
     @Resource
     FileUtils fileUtils;
@@ -61,26 +65,44 @@ public class StudentController {
 //    }
     @AuthAccess
     @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(MultipartFile file, String Id,String cno) throws IOException {
+    public RspObject<Object> uploadCT(MultipartFile file,String cno,int homeworkID) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
         System.out.println("hh");
-        content.setContent(file.getBytes())
-                .setContentID(Id)
-                .setSno(user.getId())
-                .setCno(cno)
-                .setCname("Math");
-        contentService.addContent(content);
-        return RspObject.success("上传成功，当前thId：" + Id , content);
-    }
+        String name = file.getOriginalFilename();
 
-    @AuthAccess
-    @GetMapping("/downloadCT/{contentID}")
-    public  RspObject<Object> downloadCT(@PathVariable String contentID, HttpServletResponse response){
-        Content content = contentService.findById(contentID);
-        if(fileUtils.downloadFile(content.getContent(), "homework_9", response))
-            return RspObject.success("成功下载学生作业", content);
-        else return RspObject.fail("学生下载失败", content);
+        content.setContent(file.getBytes())
+                .setHomeworkID(homeworkID)
+                .setCname(name)
+                .setSno(user.getId())
+                .setCno(cno) ;
+        contentService.addContent(content);
+        return RspObject.success("上传成功，当前thId：" , content);
     }
+    @AuthAccess
+    @PostMapping("/downloadCT")
+    public ResponseEntity<byte[]> downloadCT(@RequestParam String contentID) {
+        System.out.println("hh"+ contentID);
+        Content content1 = contentService.findById(contentID);
+
+        System.out.println("hh"+ contentID);
+
+        byte[] content = content1.getContent();
+        String fileName = content1.getCname();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
+    }
+//    @AuthAccess
+//    @GetMapping("/downloadCT/{contentID}")
+//    public  RspObject<Object> downloadCT(@PathVariable String contentID, HttpServletResponse response){
+//        Content content = contentService.findById(contentID);
+//        if(fileUtils.downloadFile(content.getContent(), "homework_9", response))
+//            return RspObject.success("成功下载学生作业", content);
+//        else return RspObject.fail("学生下载失败", content);
+//    }
 
 }

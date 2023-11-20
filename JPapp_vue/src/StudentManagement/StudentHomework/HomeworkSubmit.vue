@@ -1,15 +1,137 @@
 <template>
-  <div>
-    <WangEditor :id="props.homeworkID"></WangEditor>
+  <div style="border: 1px solid #ccc;">
+    <Toolbar
+        style="border-bottom: 1px solid #ccc"
+        :editor="editorRef"
+        :defaultConfig="toolbarConfig"
+        :mode="mode"
+    />
+    <Editor
+        style="height: 500px; overflow-y: hidden;"
+        v-model="valueHtml"
+        :defaultConfig="editorConfig"
+        :mode="mode"
+        @onCreated="handleCreated"
+    />
   </div>
 </template>
 
-<script setup>
-import WangEditor from "@/components/wangEditor.vue";
+<script>
+import '@wangeditor/editor/dist/css/style.css'; // Import CSS
 
-import {defineProps} from "vue";
+import { onBeforeUnmount, ref, shallowRef, onMounted, defineProps } from 'vue';
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
+import { Boot } from '@wangeditor/editor';
+import attachmentModule from '@wangeditor/plugin-upload-attachment';
+import axios from "axios";
 
-const props = defineProps(["homeworkID"]);
+export default {
+  components: { Editor, Toolbar },
+  setup() {
 
+    const editorRef = shallowRef();
+    const valueHtml = ref('<p></p>');
+    const props = defineProps(['homeworkID']);
 
+    onMounted(() => {
+      // console.log(props.id)
+      setTimeout(() => {
+        valueHtml.value = '<p></p>';
+      }, 1500);
+    });
+
+    // Register the attachmentModule plugin
+    if (Boot.plugins.length < 13) {
+      Boot.registerModule(attachmentModule);
+    }
+
+    const toolbarConfig = {
+      insertKeys: {
+        index: 0, // 自定义插入的位置
+        keys: ['uploadAttachment'],
+      },
+    };
+
+    const editorConfig = {
+      placeholder: '请输入内容...',
+      MENU_CONF: {
+        // 图片上传设置
+        uploadImage: {
+          // 小于该值就插入 base64 格式（而不上传），默认为 0
+          base64LimitSize: 5 * 1024, // 5kb
+          allowedFileTypes: ['image/*'],
+          // 自定义上传
+          async customUpload(file, insertFn) { // 文件上传
+            const formData = new FormData();
+            formData.set('file', file)
+            formData.set('id', props.id)
+
+            let result = await axios.post(
+                'http://localhost:8081/student/uploadCT',
+                formData,
+                {
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': localStorage.getItem('token')
+                  },
+
+                }
+            )
+            // 插入到富文本编辑器中，主意这里的三个参数都是必填的，要不然控制台报错：typeError: Cannot read properties of undefined (reading 'replace')
+            insertFn(result.data.data.url, result.data.data.name, result.data.data.name)
+          }
+        },
+        // 附件上传
+        uploadAttachment: {
+          async customUpload(file, insertFn) {
+            console.log(file, 'uploadAttachment');
+            if (file.size / 1024 / 1024 > 200) {
+              return console.error('请上传200M以内的附件！');
+            }
+            const formData = new FormData();
+            formData.set('file', file)
+            formData.set('homeworkId', props.homeworkID)
+            console.log(formData)
+            try {
+              const res = await axios.post(
+                  'http://localhost:8081/student/uploadCT',
+                  formData,
+                  {
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'token': localStorage.getItem('token')
+                    },
+                  }
+              );
+              insertFn(res.data.url, res.data.name);
+            } catch (error) {
+              console.error(error);
+            }
+          },
+        },
+      }
+    };
+
+    onBeforeUnmount(() => {
+      const editor = editorRef.value;
+      if (editor == null) return;
+      editor.destroy();
+    });
+
+    const handleCreated = (editor) => {
+      editorRef.value = editor;
+    };
+
+    return {
+      editorRef,
+      valueHtml,
+      mode: 'default',
+      toolbarConfig,
+      editorConfig,
+      handleCreated,
+    };
+  },
+};
 </script>
+
+<style src="@wangeditor/editor/dist/css/style.css"></style>
