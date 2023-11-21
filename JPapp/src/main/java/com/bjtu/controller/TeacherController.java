@@ -49,7 +49,7 @@ public class TeacherController {
 @PostMapping("/findCourse")
 public RspObject<List<Map<String, Object>>> CourseList() {
     User user = TokenUtils.getCurrentUser();
-    return teacherService.findCourse("21001001");
+    return teacherService.findCourse(user.getId());
 }
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){
@@ -59,14 +59,18 @@ public RspObject<List<Map<String, Object>>> CourseList() {
 
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file,
+                                      @RequestParam String cno,
+                                      @RequestParam String name) throws IOException {
         Homework homework = new Homework();
-        String name = file.getOriginalFilename();
+        String filename = file.getOriginalFilename();
+        System.out.println("filename: "+filename);
 
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
                 .setTno(user.getId())
-                .setFileName(name)
+                .setName(name)
+                .setFileName(filename)
                 .setCno(cno);
 // .setSubmitDdl(submit_ddl)
 // .setScoreDdl(score_ddl)
