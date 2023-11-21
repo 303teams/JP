@@ -38,7 +38,7 @@ public class Homework {
     private Date scoreDdl;
     private String teacherName;
     private String courseName;
-
+    private String contentID;
 
     public Homework() {
     }
