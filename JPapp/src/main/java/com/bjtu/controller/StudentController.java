@@ -14,9 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -63,21 +66,34 @@ public class StudentController {
 //            return RspObject.success("成功下载", homework);
 //        else return RspObject.fail("下载失败", homework);
 //    }
+
     @AuthAccess
     @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(MultipartFile file,String cno,int homeworkID) throws IOException {
+    public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,
+                                      @RequestParam String cno,
+                                      @RequestParam String homeworkID,
+                                      HttpServletResponse response) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
-        System.out.println("hh");
+        System.out.println(cno+" "+homeworkID+" "+user.getId());
         String name = file.getOriginalFilename();
+        System.out.println("filename: "+name);
 
         content.setContent(file.getBytes())
                 .setHomeworkID(homeworkID)
                 .setCname(name)
                 .setSno(user.getId())
                 .setCno(cno) ;
+
         contentService.addContent(content);
-        return RspObject.success("上传成功，当前thId：" , content);
+
+        // 添加对响应头的修改
+        response.setHeader("Content-Disposition", "attachment;filename=" + name);
+
+        byte[] bytes = file.getBytes();
+
+
+        return RspObject.success("上传成功，当前thId：" , bytes);
     }
     @AuthAccess
     @PostMapping("/downloadCT")
