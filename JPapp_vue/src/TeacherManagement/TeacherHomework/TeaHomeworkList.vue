@@ -22,9 +22,6 @@
                 size="large" column_width="60px"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="id" align="center">
-          <template v-slot="{ $index }">{{ $index + 1 }}</template>
-        </el-table-column>
         <el-table-column label="作业名称" sortable prop="name" />
         <el-table-column label="课程名称" sortable prop="courseName" />
         <el-table-column label="发布人" sortable prop="teacherName" />
@@ -32,7 +29,7 @@
         <el-table-column label="作业内容" prop="content" />
         <el-table-column align="right">
           <template v-slot="scope">
-          <el-button size="large" @click="handleSubmit(scope.row.homeworkID)">更改</el-button>
+          <el-button size="large" @click="handleChange(scope.row.homeworkID)">更改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -53,34 +50,49 @@
     </div>
 
     <!-- 上传文件的弹出框 -->
-    <el-dialog title="上传文件" :close-on-click-modal="false" v-model="dialogTableVisible" width="30%" center>
+    <el-dialog title="上传文件" :close-on-click-modal="false" v-model="dialogTableVisible" width="50%" >
+      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
-          <el-form-item label="作业名字:" prop="kgCode" >
-            <el-input v-model="homeworkData.name" ></el-input>
+          <el-form-item label="作业名字:" prop="name" >
+            <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
           </el-form-item>
-          <el-form-item label="提交截止日期:" prop="targetUrl" >
+          <el-form-item label="提交截止日期:" prop="submitDdl" >
             <el-date-picker v-model="homeworkData.submitDdl" type="datetime" placeholder="选择日期和时间"/>
           </el-form-item>
-          <el-form-item label="互评截止日期:" prop="targetUsername" >
+          <el-form-item label="互评截止日期:" prop="scoreDdl" >
             <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="上传文件" prop="content">
             <el-upload
                 class="upload-demo"
                 drag
-                action
+                action="#"
                 :auto-upload="false"
+                :on-change="onChange"
+                :before-remove="beforeRemove"
                 multiple
+                :file-list="fileList"
+                limit="1"
             >
-              <template #trigger>
-              <el-button icon="el-icon-upload">选择文件</el-button>
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                拖动文件到这或者 <em>点击上传</em>
+              </div>
+              <template #tip>
+              <div class="el-upload__tip">
+                文件大小不超过10Mb
+              </div>
               </template>
             </el-upload>
           </el-form-item>
         </el-form>
-      <el-button @click="sumitHomework">提交</el-button>
-      <el-button @click="closeDia">取消</el-button>
+      </div>
+      <span class="dialog-footer">
+        <el-button @click="submitHomework">提交</el-button>
+        <el-button @click="closeDia">取消</el-button>
+      </span>
     </el-dialog>
+
   </div>
 </template>
 
@@ -103,10 +115,11 @@ const router = useRouter();
 const HomeworkFormRef =ref();
 const homeworkData = reactive({
   name: '',
-  content: '',
+  content: null,
   submitDdl: '',
   scoreDdl: '',
 });
+const fileList = ref([]);
 
 const homeFormRules = reactive({
   name: [
@@ -123,6 +136,9 @@ const homeFormRules = reactive({
   ],
 });
 
+const handleChange = (homeworkID) => {
+  router.push(`/teacherHome/ChangeHomework/${homeworkID}`);
+};
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
     filteredData.value.slice(
@@ -130,11 +146,6 @@ const filterTableData = computed(() =>
         currentPage.value * pageSize.value
     )
 );
-
-//点击提交按钮
-const handleSubmit = (homeworkID) => {
-  router.push(`/studentHome/HomeworkSubmit/${homeworkID}`);
-};
 
 
 const fetchData = () => {
@@ -184,13 +195,23 @@ const clickSearch = () => {
   updateFilteredData();
 };
 
-const sumitHomework = () => {
+const onChange = (file) => {
+  homeworkData.content = file.raw;
+};
+
+const beforeRemove = () => {
+  homeworkData.content = null;  // 取消选择文件，清空 content
+  return true;  // 返回 true 表示继续移除
+};
+
+const submitHomework = () => {
   const formData = new FormData();
-  formData.set('cno', "1001")
-  formData.set('name', homeworkData.name);
   formData.set('file', homeworkData.content);
-  formData.set('submit_ddl', homeworkData.submitDdl);
-  formData.set('score_ddl', homeworkData.scoreDdl);
+  formData.set('cno', props.cno)
+  formData.set('name', homeworkData.name);
+
+  // formData.set('submit_ddl', homeworkData.submitDdl);
+  // formData.set('score_ddl', homeworkData.scoreDdl);
 
   console.log(homeworkData.name)
 
@@ -204,7 +225,7 @@ const sumitHomework = () => {
                 formData,
                 {
                   headers: {
-                    'Content-Type': 'application/form-data',
+                    'Content-Type': 'multipart/form-data',
                     'token': token,
                   },
                 }
@@ -214,16 +235,20 @@ const sumitHomework = () => {
                 console.log(res)
                 window.alert("上传成功");
                 dialogTableVisible.value = false;
+                resetFormData();
               } else {
                 window.alert("上传失败:" + res.data.msg);
+                resetFormData();
               }
             })
             .catch((err) => {
               console.error("发生未知错误！");
+              resetFormData();
               console.log(err);
             });
       } else {
         console.log("error submit!!");
+        resetFormData();
         return false;
       }
     });
@@ -231,8 +256,16 @@ const sumitHomework = () => {
 };
 const closeDia = () => {
   dialogTableVisible.value = false;
+  resetFormData();
 };
 
+const resetFormData = () => {
+  homeworkData.name = '';
+  homeworkData.content = null;
+  homeworkData.submitDdl = '';
+  homeworkData.scoreDdl = '';
+  fileList.value = [];
+};
 
 onMounted(() => {
   fetchData();
@@ -311,7 +344,6 @@ onMounted(() => {
 .HomeworkList{
   width: 100vh;
 }
-
 
 
 </style>

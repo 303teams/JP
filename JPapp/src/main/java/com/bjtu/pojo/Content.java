@@ -11,7 +11,7 @@ public class Content {
     private String cno;
     private String cname;
     private String sno;
-    private int homeworkID;
+    private String homeworkID;
     private byte[] content;
 
     public Content(){

@@ -20,8 +20,8 @@
     </select>
 
     <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
-        insert into homework(homeworkID,cno,name,content,tno)
-        values (#{homeworkID}, #{cno},#{name},#{content},#{tno})
+        insert into homework(homeworkID,cno,name,content,tno,fileName)
+        values (#{homeworkID}, #{cno},#{name},#{content},#{tno},#{fileName})
     </insert>
 
     <select id="findById" resultType="Homework" parameterType="string">

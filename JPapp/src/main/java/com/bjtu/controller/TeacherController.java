@@ -57,7 +57,7 @@ public RspObject<List<Map<String, Object>>> CourseList() {
 
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
-                .setTno("21")
+                .setTno(user.getId())
                 .setFileName(name)
                 .setCno(cno);
 // .setSubmitDdl(submit_ddl)
