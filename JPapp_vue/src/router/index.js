@@ -5,6 +5,7 @@ import StuInfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
 import TeaInfoPage from "@/TeacherManagement/TeacherHome/TeaInfoPage.vue";
 import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
 import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
+import CoursePage from "@/TeacherManagement/TeacherHomework/CoursePage.vue";
 import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
 import TeaCourseList from "@/TeacherManagement/TeacherHomework/TeacherCourseList.vue";
 import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList.vue";
@@ -73,10 +74,19 @@ const router = createRouter({
                     component: TeaCourseList,
                     props: true,
                 },
+
                 {
-                    path: 'ViewMyHomework/:cno',
-                    name:'ViewMyHomework',
-                    component: TeaHomeworkList,
+                    path: 'CoursePage/:cno',
+                    name:'CoursePage',
+                    component: CoursePage,
+                    children:[
+                        {
+                            path: 'ViewTeaHomework',
+                            name:'ViewTeaHomework',
+                            component: TeaHomeworkList,
+                            props: true,
+                        },
+                    ],
                     props: true,
                 }
             ]
