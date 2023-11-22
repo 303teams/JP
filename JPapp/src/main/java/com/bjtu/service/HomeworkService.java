@@ -19,10 +19,7 @@ public interface HomeworkService {
     void addHomework(Homework homework);
 
     RspObject<List<Homework>> findById(String id,String cno);
-
-
-
-
+    RspObject<List<Homework>> findByTeaId(String id,String cno);
 //    public RspObject<User> login(String id, String password);
 //    public RspObject<Boolean> insert(Student student);
 //

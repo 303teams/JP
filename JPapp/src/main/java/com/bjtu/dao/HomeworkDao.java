@@ -9,6 +9,7 @@ import java.util.List;
 public interface HomeworkDao {
     public List<Homework> findAll();
     public List<Homework> findById(String id,String cno);
+    public List<Homework> findByTeaId(String id,String cno);
 
     public Homework findHWbyId(String id);
 
