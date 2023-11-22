@@ -1,7 +1,8 @@
 <template>
   <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
+    <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
-      <div class="title">课程作业</div>
+      <div class="title">提交情况</div>
     </div>
     <div class="main">
       <div class="search-container">
@@ -15,29 +16,29 @@
           <span style="vertical-align: middle"> 查询 </span>
         </el-button>
 
-        <el-button @click="uploadHomework" size="large" class="upload-button">上传作业</el-button>
+        <div style="margin-left: 130px">
+          <el-button @click="modifyContent" size="large" class="upload-button">修改作业内容</el-button>
+          <el-button @click="modifyDdl" size="large" class="upload-button">修改截止时间</el-button>
+        </div>
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
                 size="large" column_width="60px"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" sortable prop="name" />
-        <el-table-column label="作业截止时间" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" sortable prop="scoreDdl" />
-        <el-table-column label="作业内容" prop="content" >
+        <el-table-column label="学生学号" sortable prop="name" />
+        <el-table-column label="学生姓名" sortable prop="submitDdl" />
+        <el-table-column label="提交时间" sortable prop="scoreDdl" />
+        <el-table-column label="作业提交内容" prop="content" >
           <template v-slot="scope">
           <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
           </template>
         </el-table-column>
-        <el-table-column label="提交情况" align="center">
+        <el-table-column label="作业成绩" sortable prop="score" />
+        <el-table-column label="操作">
           <template v-slot="scope">
-          <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
-          <span @click="handleClick(scope.row)" style="cursor: pointer;">
-            20 / 30
-            <i class="el-icon-search" style="margin-left: 5px;"></i>
-          </span>
-          </el-tooltip>
+          <el-button size="large" v-if="scope.row.contentID === null" @click="modifyScore(scope.row.contentID)">修改成绩</el-button>
+          <span v-else>未提交</span>
           </template>
         </el-table-column>
       </el-table>
@@ -57,54 +58,163 @@
 
     </div>
 
-    <!-- 上传文件的弹出框 -->
-    <el-dialog title="上传文件" :close-on-click-modal="false" v-model="dialogTableVisible" width="50%" >
-      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
-          <el-form-item label="作业名字:" prop="name" >
-            <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
-          </el-form-item>
-          <el-form-item label="提交截止日期:" prop="submitDdl" >
-            <el-date-picker v-model="homeworkData.submitDdl" type="datetime" placeholder="选择日期和时间"/>
-          </el-form-item>
-          <el-form-item label="互评截止日期:" prop="scoreDdl" >
-            <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" placeholder="选择日期和时间"/>
-          </el-form-item>
-          <el-form-item label="上传文件" prop="content">
-            <el-upload
-                class="upload-demo"
-                drag
-                action="#"
-                :auto-upload="false"
-                :on-change="onChange"
-                :before-remove="beforeRemove"
-                multiple
-                :file-list="fileList"
-                limit="1"
-            >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">
-                拖动文件到这或者 <em>点击上传</em>
-              </div>
-              <template #tip>
-              <div class="el-upload__tip">
-                文件大小不超过10Mb
-              </div>
-              </template>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-      </div>
-      <span class="dialog-footer">
-        <el-button @click="submitHomework">提交</el-button>
-        <el-button @click="closeDia">取消</el-button>
-      </span>
-    </el-dialog>
 
   </div>
 </template>
 
+
 <script setup>
-import zhCn from "element-plus/es/locale/lang/zh-cn";
-import {ElConfigProvider} from "element-plus";
+import { ref, computed, reactive, onMounted,defineProps } from 'vue';
+import axios from 'axios';
+import { ElConfigProvider } from 'element-plus';
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
+ import {useRouter} from "vue-router";
+
+const currentPage = ref(1); // 从第一页开始
+const pageSize = ref(10); //每页展示多少条数据
+const search = ref('');  // 搜索关键字
+const tableData = reactive({ data: [] });  //储存后端传来的数据
+const filteredData = ref([]); // 新的变量用于存储过滤后的数据
+const token = localStorage.getItem('token');
+const props = defineProps(['cno']);
+const router = useRouter();
+
+// 将表格中的数据按pageSize切片
+const filterTableData = computed(() =>
+    filteredData.value.slice(
+        (currentPage.value - 1) * pageSize.value,
+        currentPage.value * pageSize.value
+    )
+);
+
+
+const fetchData = () => {
+  axios
+      .post(
+          'http://localhost:8081/student/findCTByCno',
+          {
+            cno: props.cno,
+          },
+
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'token': token,
+            },
+          }
+      )
+      .then((res) => {
+        if (res.data.code === 200) {
+          console.log(props.cno);
+          tableData.data = res.data.data;
+          console.log(res)
+          updateFilteredData(); // 更新过滤后的数据
+        } else {
+          window.alert("获取信息失败:" + res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+};
+
+const updateFilteredData = () => {
+  filteredData.value = tableData.data.filter(
+      (data) =>
+          !search.value ||
+          data.sno.toLowerCase().includes(search.value.toLowerCase()) ||
+          data.sname.toLowerCase().includes(search.value.toLowerCase())
+  );
+};
+
+const clickSearch = () => {
+  updateFilteredData();
+};
+
+const Back = () => {
+  router.back();
+};
+
+onMounted(() => {
+  fetchData();
+});
+
+
 </script>
+
+
+<style scoped>
+.homeListMain{
+  margin-top: 50px;
+}
+
+.icon{
+  position: absolute;
+  top: -40px;
+  left: 50px;
+  font-size: 30px;
+  color: #3796EC;
+  cursor: pointer;
+}
+
+.base_title {
+  position: absolute;
+  top: -40px;
+  left: 170px;
+}
+
+.title {
+  position: relative;
+  padding-left: 13px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.title:before {
+  content: "";
+  background-color: #3796EC;
+  width: 4px;
+  height: 23px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -10px;
+}
+
+.search-container {
+  display: flex;
+  width: auto;
+  margin-bottom: 10px;
+}
+
+.search_input{
+  width: 350px;
+  margin-right: 10px;
+}
+
+.search_button{
+  color: #2176d7;
+  margin-left: 10px;
+}
+
+.demo-pagination-block{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  margin-top: 20px;
+  right: 170px;
+}
+
+.main_page{
+  margin-top: 80px;
+}
+
+.HomeworkList{
+  width: 100vh;
+}
+
+
+
+</style>

@@ -8,6 +8,7 @@ import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
 import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
 import TeaCourseList from "@/TeacherManagement/TeacherHomework/TeacherCourseList.vue";
 import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList.vue";
+import HomeworkSubmitList from "@/TeacherManagement/TeacherHomework/HomeworkSubmitList.vue";
 const routerHistory = createWebHistory();
 
 
@@ -78,6 +79,13 @@ const router = createRouter({
                     path: 'ViewMyHomework/:cno',
                     name:'ViewMyHomework',
                     component: TeaHomeworkList,
+                    props: true,
+                },
+
+                {
+                    path: 'ViewHomeworkSubmit/:cno/:homeworkID',
+                    name:'ViewHomeworkSubmit',
+                    component: HomeworkSubmitList,
                     props: true,
                 }
             ]

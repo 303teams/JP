@@ -1,5 +1,6 @@
 <template>
-  <div class="homeListMain" style="position: relative">
+  <div class="homeListMain"  style="position: relative; display: flex; justify-content: center">
+    <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <div class="title">课程作业</div>
     </div>
@@ -122,6 +123,10 @@ const clickSearch = () => {
   updateFilteredData();
 };
 
+const Back = () => {
+  router.back();
+};
+
 onMounted(() => {
   fetchData();
 });
@@ -134,11 +139,19 @@ onMounted(() => {
   margin-top: 50px;
 }
 
+.icon{
+  position: absolute;
+  top: -40px;
+  left: 50px;
+  font-size: 30px;
+  color: #3796EC;
+  cursor: pointer;
+}
 
 .base_title {
   position: absolute;
   top: -40px;
-  left: 0;
+  left: 170px;
 }
 
 .title {
@@ -181,7 +194,7 @@ onMounted(() => {
   align-items: center;
   position: absolute;
   margin-top: 20px;
-  right: 0;
+  right: 170px;
 }
 
 .main_page{

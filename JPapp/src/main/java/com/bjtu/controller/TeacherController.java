@@ -60,7 +60,7 @@ public class TeacherController {
     @PostMapping("/findHWbyCno")
     public RspObject<List<Homework>> findHWbyCno(@RequestParam String cno) {
         User user = TokenUtils.getCurrentUser();
-        return homeworkService.findById(user.getId(),cno);
+        return homeworkService.findByTeaId(user.getId(),cno);
     }
 
 }

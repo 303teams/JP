@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="display: flex; flex-direction: column; justify-content: center;">
     <div class="title" style="text-align: left">
       <h1 style="font-size: 30px; margin: 0; display: inline-block;">实验报告</h1>
       <span style="font-size: 15px;color: red; display: inline-block; margin-left: 40px;">截止时间</span>
@@ -13,8 +13,11 @@
 
     <el-divider></el-divider>
 
-    <el-button @click="UploadHomework">提交作业</el-button>
-    <el-button @click="back">返回</el-button>
+    <div>
+      <el-button @click="UploadHomework">提交作业</el-button>
+      <el-button @click="Back">返回</el-button>
+    </div>
+
 
     <el-dialog title="提交作业" :close-on-click-modal="false" v-model="dialogTableVisible" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
@@ -105,7 +108,7 @@ const submitHomework = () => {
     if (valid) {
       axios
           .post(
-              'http://localhost:8081/student/uploadCT',
+              'http://localhost:8081/homework/uploadCT',
               formData,
               {
                 headers: {
@@ -117,17 +120,19 @@ const submitHomework = () => {
           .then((res) => {
             if (res.data.code === 200) {
               console.log(res)
-              window.alert("提交成功");
               dialogTableVisible.value = false;
               resetFormData();
+              Back();
             } else {
               window.alert("上传失败:" + res.data.msg);
               resetFormData();
+              Back();
             }
           })
           .catch((err) => {
             console.error("发生未知错误！");
             resetFormData();
+            Back();
             console.log(err);
           });
     } else {
@@ -149,18 +154,18 @@ const closeDia= () => {
   resetFormData();
 };
 
-const back = () => {
+const Back = () => {
   router.back();
 };
 
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/teacher/downloadHW',
+          'http://localhost:8081/homework/downloadHW',
           null, // 空的请求体
           {
             params: {
-              homeworkID: props.homeworkID, // 将homeworkID作为查询参数添加
+              homeworkId: props.homeworkID, // 将homeworkID作为查询参数添加
             },
             headers: {
               'Content-Type': 'application/json',
@@ -210,7 +215,7 @@ onMounted(() => {
 <style scoped>
 .title {
   height: 100px;
-  width: 1000px;
+  width: 1150px;
   padding: 10px;
   background-color: rgb(233, 233, 233);
   border-radius: 10px;
@@ -218,7 +223,7 @@ onMounted(() => {
 
 .content-container {
   text-align: left;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 200px;
   display: flex;
   flex-direction: column;

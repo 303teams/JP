@@ -1,5 +1,6 @@
 <template>
   <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
+    <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <div class="title">课程作业</div>
     </div>
@@ -27,7 +28,13 @@
         <el-table-column label="互评截止时间" sortable prop="scoreDdl" />
         <el-table-column label="作业内容" prop="content" >
           <template v-slot="scope">
-            <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
+            <el-link
+                :href="scope.row.blobUrl"
+                :download="scope.row.fileName"
+                style="color: dodgerblue; text-decoration: underline;"
+            >
+              下载作业
+            </el-link>
           </template>
         </el-table-column>
         <el-table-column label="提交情况" align="center">
@@ -128,7 +135,6 @@ const homeworkData = reactive({
   scoreDdl: '',
 });
 const fileList = ref([]);
-const blobUrl = ref();
 
 const homeFormRules = reactive({
   name: [
@@ -155,39 +161,72 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/homework/findByTeaId',
-          {
-            cno: props.cno,
+  return new Promise((resolve, reject) => {
+    axios.post(
+        'http://localhost:8081/homework/findByTeaId',
+        {
+          cno: props.cno,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'token': token,
           },
-
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-
-          }
-      )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(props.cno);
-          tableData.data = res.data.data;
-          console.log(res)
-
-          const blob = new Blob([res.data.data.content]);
-
-          blobUrl.value = URL.createObjectURL(blob);
-          updateFilteredData(); // 更新过滤后的数据
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
         }
-      })
-      .catch((err) => {
-        console.error("发生未知错误！");
-        console.log(err);
-      });
+    )
+        .then(res1 => {
+          // Process the response of the first request
+          if (res1.data.code === 200) {
+            console.log(props.cno);
+            tableData.data = res1.data.data;
+            console.log(res1);
+
+            // 使用promise实现多个接口的调用
+            const promises = tableData.data.map(item => {
+              return axios.post(
+                  'http://localhost:8081/homework/downloadHW',
+                  null,
+                  {
+                    params: {
+                      homeworkId: item.homeworkID,
+                    },
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'token': token,
+                    },
+                    responseType: 'blob',
+                  }
+              ).then(res2 => {
+                console.log(res2)
+                const blob = new Blob([res2.data], { type: 'application/octet-stream' });
+                const blobUrl = URL.createObjectURL(blob);
+
+                // Assign the generated blob URL to the data item
+                item.blobUrl = blobUrl;
+                updateFilteredData(); // 更新过滤后的数据
+              });
+            });
+
+            console.log(tableData.data)
+            // Use Promise.all to wait for all promises to resolve
+            return Promise.all(promises);
+          } else {
+            window.alert("获取信息失败:" + res1.data.msg);
+            reject("获取信息失败:" + res1.data.msg);
+          }
+        })
+        .then(() => {
+          // Resolve the promise with any necessary data
+          resolve({ success: true, message: 'Data fetched successfully' });
+        })
+        .catch(error => {
+          console.error("发生未知错误！");
+          console.log(error);
+
+          // Reject the promise with an error message
+          reject("发生未知错误！");
+        });
+  });
 };
 
 const updateFilteredData = () => {
@@ -286,6 +325,9 @@ onMounted(() => {
   fetchData();
 });
 
+const Back = () => {
+  router.back();
+};
 
 </script>
 
@@ -294,6 +336,14 @@ onMounted(() => {
   margin-top: 50px;
 }
 
+.icon{
+  position: absolute;
+  top: -40px;
+  left: 50px;
+  font-size: 30px;
+  color: #3796EC;
+  cursor: pointer;
+}
 
 .base_title {
   position: absolute;
@@ -358,6 +408,5 @@ onMounted(() => {
 .HomeworkList{
   width: 100vh;
 }
-
 
 </style>
