@@ -12,6 +12,5 @@ mybatis:
   type-aliases-package: com.bjtu.pojo
 
 
-
 server:
   port: 8081

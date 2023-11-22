@@ -23,7 +23,7 @@ public interface TeacherDao{
 
     public void updateInfo(Teacher teacher);
 
-//    public void updatePassword(String id, String password);
+    public void updatePassword(Teacher teacher);
 
     public void updateEmail(String id, String email);
 

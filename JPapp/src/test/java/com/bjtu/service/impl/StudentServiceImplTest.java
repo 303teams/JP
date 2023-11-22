@@ -42,6 +42,12 @@ class StudentServiceImplTest {
 
     @Test
     void changePassword() {
-        System.out.println(studentService.changePassword("222","222"));
+//        System.out.println(studentService.changePassword("21301001","21301001"));
+        System.out.println(new Student("444","444","lzc","2461172547@qq.com","男",21).getPassword());
+    }
+
+    @Test
+    void testChangePassword() {
+        System.out.println(studentService.changePassword("21301001","111"));
     }
 }

@@ -2,6 +2,7 @@ package com.bjtu.service.impl;
 
 import com.bjtu.dao.HomeworkDao;
 import com.bjtu.dao.StudentDao;
+import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.Homework;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.service.HomeworkService;
@@ -9,6 +10,7 @@ import com.bjtu.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.rowset.serial.SerialException;
 import java.util.List;
 
 @Service("HomeworkService")
