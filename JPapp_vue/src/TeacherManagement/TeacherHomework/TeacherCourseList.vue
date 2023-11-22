@@ -1,5 +1,5 @@
 <template>
-  <div style="">
+  <div>
     <el-row v-if="items.length > 0">
       <el-col
           v-for="(item, index) in items"
@@ -20,9 +20,8 @@
           <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
         </div>
 
-
+        <el-divider />
       </el-col>
-      <el-divider />
     </el-row>
 
     <div v-else>

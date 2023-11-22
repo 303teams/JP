@@ -48,8 +48,6 @@ export default {
 }
 
 .layout-container-demo .el-main {
-  display: flex;
-  justify-content: center;
   height: 100%;
   width: 100%;
 }

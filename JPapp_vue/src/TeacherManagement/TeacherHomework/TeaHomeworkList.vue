@@ -1,5 +1,5 @@
 <template>
-  <div class="homeListMain" style="position: relative">
+  <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
     <div class="base_title">
       <div class="title">课程作业</div>
     </div>
@@ -33,9 +33,9 @@
         <el-table-column label="提交情况" align="center">
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
-          <span @click="handleClick(scope.row)" style="cursor: pointer;">
-            {{ scope.row.submittedCount }} / {{ scope.row.totalCount }}
-            <i class="el-icon-search" style="margin-left: 5px;"></i>
+          <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
+            20 / 30
+            <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
           </template>
@@ -96,7 +96,7 @@
         </el-form>
       </div>
       <span class="dialog-footer">
-        <el-button @click="submitHomework">提交</el-button>
+        <el-button @click="assignHomework">提交</el-button>
         <el-button @click="closeDia">取消</el-button>
       </span>
     </el-dialog>
@@ -109,6 +109,7 @@ import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
+import {useRouter} from "vue-router";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -119,6 +120,7 @@ const dialogTableVisible = ref(false);
 const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const HomeworkFormRef =ref();
+const router = useRouter();
 const homeworkData = reactive({
   name: '',
   content: null,
@@ -192,8 +194,12 @@ const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
           !search.value ||
-          data.cno.toLowerCase().includes(search.value.toLowerCase())
+          data.name.toLowerCase().includes(search.value.toLowerCase())
   );
+};
+
+const handleClick = (row) => {
+  router.push(`/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.id}`);
 };
 
 const uploadHomework = () => {
@@ -213,7 +219,7 @@ const beforeRemove = () => {
   return true;  // 返回 true 表示继续移除
 };
 
-const submitHomework = () => {
+const assignHomework = () => {
   const formData = new FormData();
   formData.set('file', homeworkData.content);
   formData.set('cno', props.cno)
@@ -292,7 +298,7 @@ onMounted(() => {
 .base_title {
   position: absolute;
   top: -40px;
-  left: 0;
+  left: 170px;
 }
 
 .title {
@@ -332,9 +338,8 @@ onMounted(() => {
 .upload-button {
   position: absolute;
   top: 0;
-  right: 0;
-  margin-top: 10px;
-  margin-right: 10px;
+  right: 170px;
+  margin-bottom: 10px;
 }
 
 .demo-pagination-block{
@@ -343,7 +348,7 @@ onMounted(() => {
   align-items: center;
   position: absolute;
   margin-top: 20px;
-  right: 0;
+  right: 170px;
 }
 
 .main_page{
