@@ -170,7 +170,6 @@ const fetchData = () => {
           })
 
       .then((res) => {
-        // const fileName = res.headers['x-file-name'];
         const blob = new Blob([res.data], { type: 'application/octet-stream' });
 
         // 提取 filename 的方法

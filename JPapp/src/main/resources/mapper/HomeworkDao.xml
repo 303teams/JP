@@ -40,6 +40,14 @@
         WHERE student.id = #{id} and course.cno = #{cno}
     </select>
 
+    <select id="findByTeaId" resultType="Homework" parameterType="string">
+        SELECT homework.*
+        FROM teacher
+        JOIN homework ON homework.tno = teacher.id
+        JOIN course ON homework.cno = course.cno
+        WHERE teacher.id = #{id} and course.cno = #{cno}
+    </select>
+
     <resultMap id="homeworkResultMap" type="Homework">
         <id property="id" column="homework_id" />
         <result property="hname" column="homework_name" />

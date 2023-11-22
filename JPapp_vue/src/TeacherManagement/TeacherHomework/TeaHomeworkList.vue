@@ -23,13 +23,21 @@
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" sortable prop="name" />
-        <el-table-column label="课程名称" sortable prop="courseName" />
-        <el-table-column label="发布人" sortable prop="teacherName" />
-        <el-table-column label="截止时间" sortable prop="submitDdl" />
-        <el-table-column label="作业内容" prop="content" />
-        <el-table-column align="right">
+        <el-table-column label="作业截止时间" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" sortable prop="scoreDdl" />
+        <el-table-column label="作业内容" prop="content" >
           <template v-slot="scope">
-          <el-button size="large" @click="handleChange(scope.row.homeworkID)">更改</el-button>
+            <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column label="提交情况" align="center">
+          <template v-slot="scope">
+          <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
+          <span @click="handleClick(scope.row)" style="cursor: pointer;">
+            {{ scope.row.submittedCount }} / {{ scope.row.totalCount }}
+            <i class="el-icon-search" style="margin-left: 5px;"></i>
+          </span>
+          </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -101,7 +109,6 @@ import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import {useRouter} from "vue-router";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -111,7 +118,6 @@ const filteredData = ref([]); // 新的变量用于存储过滤后的数据
 const dialogTableVisible = ref(false);
 const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
-const router = useRouter();
 const HomeworkFormRef =ref();
 const homeworkData = reactive({
   name: '',
@@ -120,6 +126,7 @@ const homeworkData = reactive({
   scoreDdl: '',
 });
 const fileList = ref([]);
+const blobUrl = ref();
 
 const homeFormRules = reactive({
   name: [
@@ -136,9 +143,6 @@ const homeFormRules = reactive({
   ],
 });
 
-const handleChange = (homeworkID) => {
-  router.push(`/teacherHome/ChangeHomework/${homeworkID}`);
-};
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
     filteredData.value.slice(
@@ -151,7 +155,7 @@ const filterTableData = computed(() =>
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/homework/findById',
+          'http://localhost:8081/homework/findByTeaId',
           {
             cno: props.cno,
           },
@@ -161,6 +165,7 @@ const fetchData = () => {
               'Content-Type': 'application/x-www-form-urlencoded',
               'token': token,
             },
+
           }
       )
       .then((res) => {
@@ -168,6 +173,10 @@ const fetchData = () => {
           console.log(props.cno);
           tableData.data = res.data.data;
           console.log(res)
+
+          const blob = new Blob([res.data.data.content]);
+
+          blobUrl.value = URL.createObjectURL(blob);
           updateFilteredData(); // 更新过滤后的数据
         } else {
           window.alert("获取信息失败:" + res.data.msg);
