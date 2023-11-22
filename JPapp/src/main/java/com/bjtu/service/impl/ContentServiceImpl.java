@@ -16,7 +16,7 @@ public class ContentServiceImpl implements ContentService {
     ContentDao contentDao;
     @Override
     public Content findById(String id) {
-        return contentDao.findContentById(id);
+        return contentDao.findCTById(id);
     }
 
     @Override

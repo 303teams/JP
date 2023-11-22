@@ -36,21 +36,12 @@ public class StudentController {
     @Resource
     FileUtils fileUtils;
 
-//    @PostMapping("modifyEmail")
-//    public RspObject<String> modifyEmail(String email){
-//        return studentService.modifyEmail(email);
-//    }
-//
-//    @PostMapping("modifyPassword")
-//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-//        return studentService.modifyPassword(newPassword,oldPassword);
-//    }
-
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Student student){
         return studentService.modifyInfo(student);
     }
 
+    // 学生的课程列表
     @AuthAccess
     @PostMapping("/findCourse")
     public RspObject<List<Map<String, Object>>> CourseList() {
@@ -58,67 +49,14 @@ public class StudentController {
         return studentService.findCourse(user.getId());
     }
 
-//    @AuthAccess
-//    @GetMapping("/downloadHW/{homeworkID}")
-//    public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
-//        Homework homework = homeworkService.findHomeworkByThId(homeworkID);
-//        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
-//            return RspObject.success("成功下载", homework);
-//        else return RspObject.fail("下载失败", homework);
-//    }
-
+//    学生查看自己某课程的作业列表
     @AuthAccess
-    @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,
-                                      @RequestParam String cno,
-                                      @RequestParam String homeworkID,
-                                      HttpServletResponse response) throws IOException {
-        Content content = new Content();
+    @PostMapping("/findCTByCno")
+    public RspObject<List<Homework>> findCTByCno(String cno) {
+        System.out.println(cno);
         User user = TokenUtils.getCurrentUser();
-        System.out.println(cno+" "+homeworkID+" "+user.getId());
-        String name = file.getOriginalFilename();
-        System.out.println("filename: "+name);
-
-        content.setContent(file.getBytes())
-                .setHomeworkID(homeworkID)
-                .setCname(name)
-                .setSno(user.getId())
-                .setCno(cno) ;
-
-        contentService.addContent(content);
-
-        // 添加对响应头的修改
-        response.setHeader("Content-Disposition", "attachment;filename=" + name);
-
-        byte[] bytes = file.getBytes();
-
-
-        return RspObject.success("上传成功，当前thId：" , bytes);
+        return homeworkService.findById(user.getId(),cno);
     }
-    @AuthAccess
-    @PostMapping("/downloadCT")
-    public ResponseEntity<byte[]> downloadCT(@RequestParam String contentID) {
-        System.out.println("hh"+ contentID);
-        Content content1 = contentService.findById(contentID);
 
-        System.out.println("hh"+ contentID);
-
-        byte[] content = content1.getContent();
-        String fileName = content1.getCname();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
-
-        return new ResponseEntity<>(content, headers, HttpStatus.OK);
-    }
-//    @AuthAccess
-//    @GetMapping("/downloadCT/{contentID}")
-//    public  RspObject<Object> downloadCT(@PathVariable String contentID, HttpServletResponse response){
-//        Content content = contentService.findById(contentID);
-//        if(fileUtils.downloadFile(content.getContent(), "homework_9", response))
-//            return RspObject.success("成功下载学生作业", content);
-//        else return RspObject.fail("学生下载失败", content);
-//    }
 
 }

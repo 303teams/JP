@@ -11,7 +11,11 @@ import java.util.List;
 public interface HomeworkService {
 
     RspObject<List<Homework>> findAll();
-    Homework findHomeworkByThId(String id);
+
+
+//    返回一个课程下的所有学生的作业
+    Homework findHWById(String id);
+
     void addHomework(Homework homework);
 
     RspObject<List<Homework>> findById(String id,String cno);

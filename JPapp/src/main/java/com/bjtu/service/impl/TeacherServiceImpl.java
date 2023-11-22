@@ -128,7 +128,7 @@ public class TeacherServiceImpl implements TeacherService {
                 return RspObject.fail("无课程信息！");
             }
 
-            return RspObject.success("查询成功！",teacherDao.findCourse(id));
+            return RspObject.success("查询成功！",courses);
         } catch (Exception e) {
             e.printStackTrace(); // 记录异常
             return RspObject.fail("查询失败！");
