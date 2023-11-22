@@ -37,11 +37,18 @@ public class Homework {
     @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
     private Date scoreDdl;
     private String teacherName;
-    private String courseName;
     private String contentID;
+
+//    总人数和提交人数
+    private Integer totalAmount;
+    private Integer submitAmount;
+
+
 
     public Homework() {
     }
+
+
 
 //    public Homework(String id, String cno, String hname, String tno, Date ddl) {
 //        super(id, cno, hname, tno,ddl);

@@ -9,6 +9,6 @@ import java.util.List;
 public interface ContentDao {
 
 
-    public Content findContentById(String id);
+    public Content findCTById(String id);
     void insert(Content content);
 }

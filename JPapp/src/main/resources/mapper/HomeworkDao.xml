@@ -13,7 +13,7 @@
         select * from homework
     </select>
 
-    <select id="findHomeworkByThId" resultType="Homework">
+    <select id="findHWbyId" resultType="Homework">
         SELECT *
         FROM homework
         WHERE homework.homeworkID = #{id}

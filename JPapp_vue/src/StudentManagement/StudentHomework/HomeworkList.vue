@@ -82,7 +82,7 @@ const handleSubmit = (cno,homeworkID) => {
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/homework/findById',
+          'http://localhost:8081/student/findCTByCno',
           {
             cno: props.cno,
           },
