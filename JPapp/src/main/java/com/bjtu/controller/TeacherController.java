@@ -55,12 +55,10 @@ public class TeacherController {
         return teacherService.findCourse(user.getId());
     }
 
-//    教师查看本课程所有学生提交的作业列表
+//    教师查看本课程布置的所有作业的列表
     @AuthAccess
     @PostMapping("/findHWbyCno")
     public RspObject<List<Homework>> findHWbyCno(@RequestParam String cno) {
-        User user = TokenUtils.getCurrentUser();
-        return homeworkService.findById(user.getId(),cno);
+        return teacherService.findHWbyCno(cno);
     }
-
 }

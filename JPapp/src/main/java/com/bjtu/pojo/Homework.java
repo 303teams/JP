@@ -1,6 +1,7 @@
 package com.bjtu.pojo;
 
 
+import cn.hutool.core.date.DateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -28,22 +29,15 @@ public class Homework {
         this.tno = tno;
     }
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
-    private Date submitDdl;
+    private DateTime submitDdl;
+    private DateTime scoreDdl;
 
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
-    private Date scoreDdl;
     private String teacherName;
     private String contentID;
 
 //    总人数和提交人数
     private Integer totalAmount;
     private Integer submitAmount;
-
-
 
     public Homework() {
     }
