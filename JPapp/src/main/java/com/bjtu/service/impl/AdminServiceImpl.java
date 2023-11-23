@@ -21,7 +21,7 @@ public class AdminServiceImpl implements AdminService {
     public RspObject<User> login(String id, String password) {
         System.out.println(id + " " + password);
         Admin admin = adminDao.findByNum(id);
-//        System.out.println(student);
+//        System.out.println(admin);
         if (admin == null) {
             return RspObject.fail("该管理员不存在!");
         } else if (!admin.getPassword().equals(password)) {

@@ -79,22 +79,24 @@
           <img :src="logo" alt="logo" class="image">
           <h1 class="header_1">简评</h1>
         </a>
-        <el-menu-item>
+        <el-menu-item index="/StuManagement" :route="{ name: 'StuManagement' }">
           <template #title>
-          <el-icon><message /></el-icon>学生管理
+            <div>
+              <span>学生管理</span>
+            </div>
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/TeaManagement" :route="{ name: 'TeaManagement' }">
           <template #title>
           <div>
             <span>老师管理</span>
           </div>
           </template>
-        </el-menu-item>
-        <el-menu-item>
+        </el-menu-item >
+        <el-menu-item index="/CouManagement" :route="{ name: 'CouManagement' }">
           <template #title>
           <div>
-            <span>成绩管理</span>
+            <span>课程管理</span>
           </div>
           </template>
         </el-menu-item>
@@ -116,6 +118,11 @@ export default {
 
   computed:{
     ...mapState(['role'])
+  },
+  methods:{
+    gotoPage(pageName){
+      this.$router.push({path:pageName})
+    }
   }
 }
 
