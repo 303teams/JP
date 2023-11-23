@@ -16,4 +16,9 @@ class TeacherDaoTest {
     void findByNum() {
         System.out.println(teacherDao.findByNum("777"));
     }
+
+    @Test
+    void findHWbyCno() {
+        System.out.println(teacherDao.findHWbyCno("1001"));
+    }
 }

@@ -1,8 +1,8 @@
 <template>
-  <div class="homeListMain"  style="position: relative; display: flex; justify-content: center">
+  <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
-      <div class="title">课程作业</div>
+      <div class="title">提交情况</div>
     </div>
     <div class="main">
       <div class="search-container">
@@ -11,25 +11,34 @@
         </div>
         <el-button size="large" class="search_button" @click="clickSearch">
           <el-icon style="vertical-align: middle">
-          <Search />
-        </el-icon>
+            <Search />
+          </el-icon>
           <span style="vertical-align: middle"> 查询 </span>
         </el-button>
+
+        <div style="margin-left: 130px">
+          <el-button @click="modifyContent" size="large" class="upload-button">修改作业内容</el-button>
+          <el-button @click="modifyDdl" size="large" class="upload-button">修改截止时间</el-button>
+        </div>
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large"
+                size="large" column_width="60px"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" sortable prop="name" />
-        <el-table-column label="课程名称" sortable prop="courseName" />
-        <el-table-column label="发布人" sortable prop="teacherName" />
-        <el-table-column label="截止时间" sortable prop="submitDdl" />
-        <el-table-column label="互评任务" sortable prop="submitDdl" />
-        <el-table-column label="提交作业">
+        <el-table-column label="学生学号" sortable prop="name" />
+        <el-table-column label="学生姓名" sortable prop="submitDdl" />
+        <el-table-column label="提交时间" sortable prop="scoreDdl" />
+        <el-table-column label="作业提交内容" prop="content" >
           <template v-slot="scope">
-          <el-button size="large" v-if="scope.row.contentID === null" @click="handleSubmit(props.cno, scope.row.homeworkID)">提交</el-button>
-          <span v-else>已提交</span>
+          <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column label="作业成绩" sortable prop="score" />
+        <el-table-column label="操作">
+          <template v-slot="scope">
+          <el-button size="large" v-if="scope.row.contentID === null" @click="modifyScore(scope.row.contentID)">修改成绩</el-button>
+          <span v-else>未提交</span>
           </template>
         </el-table-column>
       </el-table>
@@ -46,17 +55,20 @@
           />
         </div>
       </el-config-provider>
+
     </div>
+
 
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import {useRouter} from "vue-router";
+ import {useRouter} from "vue-router";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -75,15 +87,11 @@ const filterTableData = computed(() =>
     )
 );
 
-//点击提交按钮
-const handleSubmit = (cno,homeworkID) => {
-  router.push(`/studentHome/HomeworkSubmit/${cno}/${homeworkID}`);
-};
 
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/student/findCTByCno',
+          'http://localhost:8081/teacher/findHWbyCno',
           {
             cno: props.cno,
           },
@@ -115,7 +123,8 @@ const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
           !search.value ||
-          data.cno.toLowerCase().includes(search.value.toLowerCase())
+          data.sno.toLowerCase().includes(search.value.toLowerCase()) ||
+          data.sname.toLowerCase().includes(search.value.toLowerCase())
   );
 };
 
@@ -133,6 +142,7 @@ onMounted(() => {
 
 
 </script>
+
 
 <style scoped>
 .homeListMain{

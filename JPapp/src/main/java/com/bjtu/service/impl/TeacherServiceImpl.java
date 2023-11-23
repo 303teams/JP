@@ -4,10 +4,7 @@ import com.bjtu.dao.AdminDao;
 import com.bjtu.dao.StudentDao;
 import com.bjtu.dao.TeacherDao;
 import com.bjtu.exception.ServiceException;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.Teacher;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.util.TokenUtils;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
@@ -97,10 +95,6 @@ public class TeacherServiceImpl implements TeacherService {
         if(teacher == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-//            teacherDao.updatePassword(id,password);
-//            teacherDao.deleteByNum(teacher.getId());
-//            teacher.setPassword(password);
-//            teacherDao.insert(teacher);
             teacher.setPassword(password);
             teacherDao.updatePassword(teacher);
             return RspObject.success("密码修改成功！");
@@ -116,6 +110,37 @@ public class TeacherServiceImpl implements TeacherService {
         }else{
             teacherDao.updateInfo(teacher1);
             return RspObject.success("密码修改成功！");
+        }
+    }
+    @Override
+    public RspObject<List<Map<String, Object>>> findCourse(String id){
+        try {
+            List<Map<String, Object>> courses = teacherDao.findCourse(id);
+
+            if (courses.isEmpty()) {
+                return RspObject.fail("无课程信息！");
+            }
+
+            return RspObject.success("查询成功！",courses);
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
+        }
+    }
+
+    @Override
+    public RspObject<List<Homework>> findHWbyCno(String cno) {
+        try {
+            List<Homework> homeworks = teacherDao.findHWbyCno(cno);
+
+            if (homeworks.isEmpty()) {
+                return RspObject.fail("无作业信息！");
+            }
+
+            return RspObject.success("查询成功！",homeworks);
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
         }
     }
 }

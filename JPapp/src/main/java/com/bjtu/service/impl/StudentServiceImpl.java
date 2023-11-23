@@ -2,9 +2,7 @@ package com.bjtu.service.impl;
 
 import com.bjtu.dao.StudentDao;
 import com.bjtu.exception.ServiceException;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -32,6 +31,7 @@ public class StudentServiceImpl implements StudentService  {
             System.out.println(password);
             return RspObject.fail("密码错误!");
         } else {
+            System.out.println(student.getPassword());
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
@@ -102,10 +102,6 @@ public class StudentServiceImpl implements StudentService  {
         }else{
             student.setPassword(password);
             studentDao.updatePassword(student);
-//            studentDao.updatePassword(id,password);
-//            studentDao.deleteByNum(student.getId());
-//            student.setPassword(password);
-//            studentDao.insert(student);
             return RspObject.success("密码修改成功!");
         }
     }
@@ -125,5 +121,36 @@ public class StudentServiceImpl implements StudentService  {
 //    public RspObject<List<Student>> findAll(){
 //        return RspObject.success("查询成功！",studentDao.findAll());
 //    }
+
+
+    public RspObject<List<Map<String, Object>>> findCourse(String id){
+        try {
+            List<Map<String, Object>> courses = studentDao.findCourse(id);
+
+            if (courses.isEmpty()) {
+                return RspObject.fail("无课程信息！");
+            }
+            return RspObject.success("查询成功！",studentDao.findCourse(id));
+        } catch (Exception e) {
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
+    @Override
+    public RspObject<List<Homework>> findHWbyCno(String id, String cno) {
+        try {
+            List<Homework> contents = studentDao.findHWbyCno(id,cno);
+
+            if (contents.isEmpty()) {
+                return RspObject.fail("无作业信息！");
+            }
+
+            return RspObject.success("查询成功！",contents);
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
+        }
+    }
+
 
 }

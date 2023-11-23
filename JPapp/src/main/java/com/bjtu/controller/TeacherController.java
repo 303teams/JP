@@ -1,14 +1,31 @@
 package com.bjtu.controller;
 
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.Teacher;
+import cn.hutool.core.io.FileUtil;
+import com.bjtu.config.AuthAccess;
+import com.bjtu.pojo.*;
+import com.bjtu.service.ContentService;
+import com.bjtu.service.HomeworkService;
 import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
+import com.bjtu.util.FileUtils;
+import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("teacher")
@@ -16,16 +33,13 @@ public class TeacherController {
 
     @Autowired
     TeacherService teacherService;
+    @Autowired
+    HomeworkService homeworkService;
+    @Autowired
+    ContentService contentService;
+    @Resource
+    FileUtils fileUtils;
 
-//    @PostMapping("modifyEmail")
-//    public RspObject<String> modifyEmail(String email){
-//        return teacherService.modifyEmail(email);
-//    }
-//
-//    @PostMapping("modifyPassword")
-//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-//        return teacherService.modifyPassword(newPassword,oldPassword);
-//    }
 
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){
@@ -33,4 +47,22 @@ public class TeacherController {
         return teacherService.modifyInfo(teacher);
     }
 
+//    教师查看自己的课程列表
+    @AuthAccess
+    @PostMapping("/findCourse")
+    public RspObject<List<Map<String, Object>>> CourseList() {
+        User user = TokenUtils.getCurrentUser();
+        return teacherService.findCourse(user.getId());
+    }
+
+//    教师查看本课程布置的所有作业的列表
+    @AuthAccess
+    @PostMapping("/findHWbyCno")
+    public RspObject<List<Homework>> findHWbyCno(@RequestParam String cno) {
+
+        User user = TokenUtils.getCurrentUser();
+
+        return teacherService.findHWbyCno(cno);
+
+    }
 }

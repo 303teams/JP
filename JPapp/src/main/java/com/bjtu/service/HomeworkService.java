@@ -12,8 +12,10 @@ public interface HomeworkService {
 
     RspObject<List<Homework>> findAll();
 
-    RspObject<List<Homework>> findById(String id);
 
-    RspObject<Boolean> submitHomework(String id,String homeworkId,String cno,String url);
+//    返回一个课程下的所有学生的作业
+    Homework findHWById(String id);
+
+    void addHomework(Homework homework);
 
 }

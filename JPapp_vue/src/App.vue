@@ -25,12 +25,17 @@ export default {
   margin-top: 0px;
 }
 
+
 body{
   margin:0;
   padding:0;
-  border:0
+  border:0;
+  overflow: hidden;
 }
 
+html{
+  overflow: hidden;
+}
 
 #pic1 {
   width: 150px;

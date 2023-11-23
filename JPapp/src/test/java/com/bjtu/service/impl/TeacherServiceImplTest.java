@@ -26,6 +26,11 @@ class TeacherServiceImplTest {
 
     @Test
     void insert(){
-        System.out.println(teacherService.insert(new Teacher("777","666","lzq","12345","男",35)));
+        System.out.println(teacherService.insert(new Teacher("222","222","lzq","12345","男",35)));
+    }
+
+    @Test
+    void findCourse() {
+        System.out.println(teacherService.findCourse("21001001"));
     }
 }

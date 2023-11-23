@@ -9,6 +9,12 @@ import HomManagement from "@/AdminManagement/AdminActivity/HomManagement.vue";
 import CouManagement from "@/AdminManagement/AdminActivity/CouManagement.vue";
 import StuManagement from "@/AdminManagement/AdminActivity/StuManagement.vue";
 import AdminfoPage from "@/AdminManagement/AdminHome/AdminfoPage.vue";
+import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
+import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
+import TeaCourseList from "@/TeacherManagement/TeacherHomework/TeacherCourseList.vue";
+import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList.vue";
+import HomeworkSubmitList from "@/TeacherManagement/TeacherHomework/HomeworkSubmitList.vue";
+
 const routerHistory = createWebHistory();
 
 
@@ -37,9 +43,24 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'viewHomework',
+                    path: 'viewCourse',
+                    name:'ViewCourse',
+                    component: CourseList,
+                    props: true,
+                },
+
+                {
+                    path: 'viewHomework/:cno',
                     name:'ViewHomework',
-                    component: HomeworkList
+                    component: HomeworkList,
+                    props: true,
+                },
+
+                {
+                    path: 'HomeworkSubmit/:cno/:homeworkID',
+                    name:'HomeworkSubmit',
+                    component: HomeworkSubmit,
+                    props: true,
                 }
             ]
         },
@@ -53,6 +74,26 @@ const router = createRouter({
                     name:'TeacherInfoPage',
                     component: TeaInfoPage
                 },
+                {
+                    path: 'ViewMyCourse',
+                    name:'ViewMyCourse',
+                    component: TeaCourseList,
+                    props: true,
+                },
+
+                {
+                    path: 'ViewMyHomework/:cno',
+                    name:'ViewMyHomework',
+                    component: TeaHomeworkList,
+                    props: true,
+                },
+
+                {
+                    path: 'ViewHomeworkSubmit/:cno/:homeworkID',
+                    name:'ViewHomeworkSubmit',
+                    component: HomeworkSubmitList,
+                    props: true,
+                }
             ]
         },
         {
@@ -89,11 +130,6 @@ const router = createRouter({
             ]
         },
 
-        {
-            path: '/hh',
-            name: 'hh',
-            component: HomeworkList,
-        }
 
         // {
         //     path: '/adminHome',
