@@ -79,7 +79,7 @@
     </el-dialog>
 
     <!--修改密码的对话框-->
-    <el-dialog title="修改密码" :close-on-click-modal="false" v-model="resetPasswordDialogVis" :width="'40%'">
+    <el-dialog title="修改密码" :close-on-click-modal="false" v-model="resetPasswordDialogVis" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="resetPasswordForm" ref="ResetPasswordRef" label-width="80px" :rules="passwordResetRules">
           <el-form-item label="新密码" prop="newPassword">
