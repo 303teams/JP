@@ -22,8 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("homework")
@@ -54,7 +60,7 @@ public class HomeworkController {
 //    老师上传作业
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName) throws IOException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
 
@@ -63,8 +69,9 @@ public class HomeworkController {
                 .setTno(user.getId())
                 .setFileName(name)
                 .setCno(cno)
-                .setSubmitDdl(new DateTime(submitDdl))
-                .setScoreDdl(new DateTime(scoreDdl));
+                .setSubmitDdl(submitDdl)
+                .setScoreDdl(scoreDdl)
+                .setName(HWName);
         homeworkService.addHomework(homework);
         return RspObject.success("上传成功，当前thId：" , homework);
     }

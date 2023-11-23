@@ -29,8 +29,14 @@ public class Homework {
         this.tno = tno;
     }
 
-    private DateTime submitDdl;
-    private DateTime scoreDdl;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String submitDdl;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String scoreDdl;
+
 
     private String teacherName;
     private String contentID;

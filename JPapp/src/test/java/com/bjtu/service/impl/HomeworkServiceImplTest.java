@@ -22,7 +22,7 @@ class HomeworkServiceImplTest {
                         .setContent(null)
                         .setCno("1001")
                         .setFileName("123.txt")
-                        .setScoreDdl(new DateTime("2001-1-10"))
+//                        .setScoreDdl("2001-1-10")
         );
     }
 
