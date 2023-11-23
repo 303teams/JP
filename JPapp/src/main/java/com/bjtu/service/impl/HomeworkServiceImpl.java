@@ -23,7 +23,7 @@ public class HomeworkServiceImpl implements HomeworkService {
         return RspObject.success("查询成功！",homeworkDao.findAll());
     }
 
-    @Override
+
     public Homework findHWById(Integer id) {
         return homeworkDao.findHWById(id);
     }

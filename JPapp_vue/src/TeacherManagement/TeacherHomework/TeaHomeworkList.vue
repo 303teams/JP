@@ -20,7 +20,7 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large" column_width="60px"
+                size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" sortable prop="name" />
@@ -33,7 +33,7 @@
                 :download="scope.row.fileName"
                 style="color: dodgerblue; text-decoration: underline;"
             >
-              下载作业
+              查看作业
             </el-link>
           </template>
         </el-table-column>
@@ -41,7 +41,7 @@
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
-            20 / 30
+            {{ scope.row.submitAmount }} / {{ scope.row.totalAmount }}
             <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
@@ -163,17 +163,18 @@ const filterTableData = computed(() =>
 const fetchData = () => {
 
   return new Promise((resolve, reject) => {
-    axios.post(
-        'http://localhost:8081/teacher/findCTByHId',
-        {
-          cno: props.cno,
-          },
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'token': token,
+    axios
+        .post(
+            'http://localhost:8081/teacher/findHWbyCno',
+            {
+              cno: props.cno,
             },
-          }
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'token': token,
+              },
+            }
         )
         .then(res1 => {
 
@@ -199,7 +200,7 @@ const fetchData = () => {
                   }
               ).then(res2 => {
                 console.log(res2)
-                const blob = new Blob([res2.data], { type: 'application/octet-stream' });
+                const blob = new Blob([res2.data], {type: 'application/octet-stream'});
                 const blobUrl = URL.createObjectURL(blob);
 
                 // 给每项作业分配url用来下载
@@ -217,7 +218,7 @@ const fetchData = () => {
           }
         })
         .then(() => {
-          resolve({ success: true, message: 'Data fetched successfully' });
+          resolve({success: true, message: 'Data fetched successfully'});
         })
         .catch(error => {
           console.error("发生未知错误！");
@@ -289,6 +290,7 @@ const assignHomework = () => {
                 window.alert("上传成功");
                 dialogTableVisible.value = false;
                 resetFormData();
+                fetchData();
               } else {
                 window.alert("上传失败:" + res.data.msg);
                 resetFormData();

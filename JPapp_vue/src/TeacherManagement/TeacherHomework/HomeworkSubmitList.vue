@@ -23,21 +23,29 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large" column_width="60px"
+                size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="学生学号" sortable prop="name" />
-        <el-table-column label="学生姓名" sortable prop="submitDdl" />
-        <el-table-column label="提交时间" sortable prop="scoreDdl" />
-        <el-table-column label="作业提交内容" prop="content" >
+        <el-table-column label="学生学号" sortable prop="sno" />
+        <el-table-column label="学生姓名" sortable prop="sname" />
+        <el-table-column label="提交时间" width="200px" sortable prop="submitTime" />
+        <el-table-column label="作业提交内容">
           <template v-slot="scope">
-          <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
+          <el-link
+              v-if="scope.row.contentID !== null"
+              :href="scope.row.blobUrl"
+              :download="scope.row.fileName"
+              style="color: dodgerblue; text-decoration: underline"
+          >
+            下载作业
+          </el-link>
+          <span v-else>未提交</span>
           </template>
         </el-table-column>
         <el-table-column label="作业成绩" sortable prop="score" />
         <el-table-column label="操作">
           <template v-slot="scope">
-          <el-button size="large" v-if="scope.row.contentID === null" @click="modifyScore(scope.row.contentID)">修改成绩</el-button>
+          <el-button size="large" v-if="scope.row.contentID !== null" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
           <span v-else>未提交</span>
           </template>
         </el-table-column>
@@ -58,7 +66,19 @@
 
     </div>
 
+    <el-dialog title="修改成绩" :close-on-click-modal="false" v-model="modifyScoreDia" width="30%">
+        <div>
+          <p>当前分数：{{ currentScore }}</p>
+          <el-input v-model="newScore" style="width: 150px;" placeholder="输入新的分数"></el-input>
+        </div>
 
+      <template #footer>
+        <span>
+          <el-button @click="modifyScoreDia = false">取 消</el-button>
+          <el-button type="primary" @click="modiScoreSubmit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -76,8 +96,12 @@ const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
 const token = localStorage.getItem('token');
-const props = defineProps(['cno']);
+const props = defineProps(['cno','homeworkID']);
 const router = useRouter();
+const modifyScoreDia = ref(false);
+const currentContentID = ref(0);    // 当前作业ID
+const currentScore = ref(0);       // 当前分数
+const newScore = ref(0);           // 新的分数
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -89,34 +113,72 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/findHWbyCno',
-          {
-            cno: props.cno,
-          },
 
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
+  return new Promise((resolve, reject) => {
+    axios
+        .post(
+            'http://localhost:8081/teacher/findCTByHId',
+            {
+              homeworkID: props.homeworkID,
             },
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'token': token,
+              },
+            }
+        )
+        .then(res1 => {
+
+          if (res1.data.code === 200) {
+            console.log(props.cno);
+            tableData.data = res1.data.data;
+            console.log(res1);
+
+            // 使用promise实现多个接口的调用
+            const promises = tableData.data.map(item => {
+              return axios.post(
+                  'http://localhost:8081/content/downloadCT',
+                  null,
+                  {
+                    params: {
+                      contentID: item.contentID,
+                    },
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'token': token,
+                    },
+                    responseType: 'blob',
+                  }
+              ).then(res2 => {
+                console.log(res2)
+                const blob = new Blob([res2.data], {type: 'application/octet-stream'});
+                const blobUrl = URL.createObjectURL(blob);
+
+                // 给每项作业分配url用来下载
+                item.blobUrl = blobUrl;
+                updateFilteredData(); // 更新过滤后的数据
+              });
+            });
+
+            console.log(tableData.data)
+            // 使用Promise.all来执行promises数组里的所有promise
+            return Promise.all(promises);
+          } else {
+            window.alert("获取信息失败:" + res1.data.msg);
+            reject("获取信息失败:" + res1.data.msg);
           }
-      )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(props.cno);
-          tableData.data = res.data.data;
-          console.log(res)
-          updateFilteredData(); // 更新过滤后的数据
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
-        }
-      })
-      .catch((err) => {
-        console.error("发生未知错误！");
-        console.log(err);
-      });
+        })
+        .then(() => {
+          resolve({success: true, message: 'Data fetched successfully'});
+        })
+        .catch(error => {
+          console.error("发生未知错误！");
+          console.log(error);
+
+          reject("发生未知错误！");
+        });
+  });
 };
 
 const updateFilteredData = () => {
@@ -127,6 +189,44 @@ const updateFilteredData = () => {
           data.sname.toLowerCase().includes(search.value.toLowerCase())
   );
 };
+
+const modifyScore = (contentId,score) => {
+  modifyScoreDia.value = true;
+  currentScore.value = score;
+  newScore.value = score;
+  currentContentID.value = contentId;
+};
+
+const modiScoreSubmit = () => {
+  axios
+      .post(
+          'http://localhost:8081/teacher/setCTScore',
+          {
+            contentID: currentContentID.value,
+            score: newScore.value,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'token': token,
+            },
+          }
+      )
+      .then((res) => {
+        if (res.data.code === 200) {
+          console.log(res)
+          modifyScoreDia.value = false;
+          fetchData();
+        } else {
+          window.alert("修改失败:" + res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+};
+
 
 const clickSearch = () => {
   updateFilteredData();

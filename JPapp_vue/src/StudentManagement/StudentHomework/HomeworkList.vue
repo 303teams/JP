@@ -18,14 +18,14 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large" column_width="60px"
+                size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" sortable prop="name" />
         <el-table-column label="课程名称" sortable prop="courseName" />
         <el-table-column label="发布人" sortable prop="teacherName" />
-        <el-table-column label="截止时间" sortable prop="submitDdl" />
-        <el-table-column label="互评任务" sortable prop="submitDdl" />
+        <el-table-column label="截止时间" width="200px" sortable prop="submitDdl" />
+        <el-table-column label="互评任务" width="200px" sortable prop="submitDdl" />
         <el-table-column label="提交作业">
           <template v-slot="scope">
           <el-button size="large" v-if="scope.row.contentID === null" @click="handleSubmit(props.cno, scope.row.homeworkID)">提交</el-button>
