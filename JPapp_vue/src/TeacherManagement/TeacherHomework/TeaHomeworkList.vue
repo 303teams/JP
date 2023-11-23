@@ -41,7 +41,7 @@
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
-            20 / 30
+            {{ scope.row.submitAmount }} / {{ scope.row.totalAmount }}
             <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
@@ -161,19 +161,12 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
-<<<<<<< HEAD
   return new Promise((resolve, reject) => {
-    axios.post(
-        'http://localhost:8081/homework/findByTeaId',
-        {
-          cno: props.cno,
-=======
   axios
       .post(
           'http://localhost:8081/teacher/findHWbyCno',
           {
             cno: props.cno,
->>>>>>> lzc
           },
         {
           headers: {
@@ -296,6 +289,7 @@ const assignHomework = () => {
                 window.alert("上传成功");
                 dialogTableVisible.value = false;
                 resetFormData();
+                fetchData();
               } else {
                 window.alert("上传失败:" + res.data.msg);
                 resetFormData();

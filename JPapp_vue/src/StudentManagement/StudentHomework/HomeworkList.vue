@@ -18,7 +18,7 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large" column_width="60px"
+                size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" sortable prop="name" />
