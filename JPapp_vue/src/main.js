@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios'
 import * as ElIconModules from '@element-plus/icons'
 import store from '@/store'
 import "lib-flexible-computer";
+import '@/utils/validator.js'
 
 const app = createApp(App)
 //  统一注册el-icon图标

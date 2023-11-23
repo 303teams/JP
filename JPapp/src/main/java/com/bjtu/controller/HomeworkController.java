@@ -84,23 +84,4 @@ public class HomeworkController {
         return RspObject.success("上传成功，当前thId：" , homework);
     }
 
-    @AuthAccess
-    @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,
-                                      @RequestParam String cno,
-                                      @RequestParam String homeworkID) throws IOException {
-        Content content = new Content();
-        User user = TokenUtils.getCurrentUser();
-        System.out.println(cno+" "+homeworkID+" "+user.getId());
-        String name = file.getOriginalFilename();
-        System.out.println("filename: "+name);
-
-        content.setContent(file.getBytes())
-                .setHomeworkID(homeworkID)
-                .setCname(name)
-                .setSno(user.getId())
-                .setCno(cno) ;
-        contentService.addContent(content);
-        return RspObject.success("上传成功，当前thId：" , content);
-    }
 }

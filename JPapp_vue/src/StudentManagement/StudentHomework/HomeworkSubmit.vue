@@ -108,7 +108,7 @@ const submitHomework = () => {
     if (valid) {
       axios
           .post(
-              'http://localhost:8081/homework/uploadCT',
+              'http://localhost:8081/content/uploadCT',
               formData,
               {
                 headers: {

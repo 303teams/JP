@@ -91,7 +91,7 @@ const filterTableData = computed(() =>
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/student/findCTByCno',
+          'http://localhost:8081/teacher/findHWbyCno',
           {
             cno: props.cno,
           },

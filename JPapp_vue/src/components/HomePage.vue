@@ -21,15 +21,8 @@ import SideBar from "./SideBarComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 export default {
   components: { SideBar , HeaderComponent},
-  data() {
-    return {
-      isCollapse: false,
-      isChange: false,
-      isDelete: false,
-    }
-  },
-  methods: {
-  }
+  data() {},
+  methods: {}
 }
 
 </script>

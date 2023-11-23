@@ -238,7 +238,7 @@ const updateFilteredData = () => {
 };
 
 const handleClick = (row) => {
-  router.push(`/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.id}`);
+  router.push(`/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.homeworkID}`);
 };
 
 const uploadHomework = () => {

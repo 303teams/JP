@@ -5,10 +5,21 @@
         <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
           <h3 style="color:white">欢迎登录!</h3>
           <el-form-item label="用户名:" label-width="5em" prop="username">
-            <el-input prefix-icon="user" v-model="user.username" placeholder="请输入用户名"></el-input>
+            <el-input
+                prefix-icon="user"
+                @keydown.enter="login"
+                v-model="user.username"
+                placeholder="请输入用户名"/>
           </el-form-item>
           <el-form-item label="密 码:" label-width="5em" prop="password">
-            <el-input show-password type="password" prefix-icon="lock" v-model="user.password" placeholder="请输入密码"></el-input>
+            <el-input
+                show-password
+                type="password"
+                @keydown.enter="login"
+                prefix-icon="lock"
+                v-model="user.password"
+                placeholder="请输入密码"
+            />
           </el-form-item>
           <el-radio-group v-model="user.role" @change = "clickChange">
             <el-radio label="admin">管理员</el-radio>
@@ -17,7 +28,7 @@
           </el-radio-group>
           <el-button type="primary" style = "width: 80%; margin: 15px" @click="login">登录</el-button>
           <div style="flex: 1; font-size: 12px;">
-            <span style="letter-spacing: 2px;color:white">密码忘记了？点此处</span>
+            <span style="letter-spacing: 2px;color:black">密码忘记了？点此处</span>
             <span style="color: #4682B4; cursor: pointer" @click="EmailVerify">
               找回密码
             </span>
@@ -31,14 +42,26 @@
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="UserEmailVerifyRef" label-width="80px" style = "padding-right: 20px" :model="UserEmailVerifyForm" :rules="EmailRules">
           <el-form-item label="用户名" prop="username">
-            <el-input prefix-icon="user" v-model="UserEmailVerifyForm.username" placeholder="请输入用户名"></el-input>
+            <el-input
+                prefix-icon="user"
+                @keydown.enter="confirmEmail"
+                v-model="UserEmailVerifyForm.username"
+                placeholder="请输入用户名"/>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input prefix-icon="message" v-model="UserEmailVerifyForm.email" placeholder="请输入邮箱"></el-input>
+            <el-input
+                prefix-icon="message"
+                @keydown.enter="confirmEmail"
+                v-model="UserEmailVerifyForm.email"
+                placeholder="请输入邮箱"/>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
-              <el-input v-model="UserEmailVerifyForm.code" placeholder="请输入验证码" style="flex: 1;"></el-input>
+              <el-input
+                  @keydown.enter="confirmEmail"
+                  v-model="UserEmailVerifyForm.code"
+                  placeholder="请输入验证码"
+                  style="flex: 1;"/>
               <el-button v-if="codeShow" type="text" @click="sendVerificationCode" style="margin-left: 15px; width: 80px;">
                 发送验证码
               </el-button>
@@ -60,10 +83,22 @@
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="resetPasswordForm" ref="ResetPasswordRef" label-width="80px" :rules="passwordResetRules">
           <el-form-item label="新密码" prop="newPassword">
-            <el-input show-password v-model="resetPasswordForm.newPassword" style="width: 200px" placeholder="请输入新密码" type="password"></el-input>
+            <el-input
+                show-password
+                @keydown.enter="changePassword"
+                v-model="resetPasswordForm.newPassword"
+                style="width: 200px"
+                placeholder="请输入新密码"
+                type="password"/>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmPassword">
-            <el-input show-password v-model="resetPasswordForm.confirmPassword" style="width: 200px" placeholder="确认新密码" type="password"></el-input>
+            <el-input
+                show-password
+                @keydown.enter="changePassword"
+                v-model="resetPasswordForm.confirmPassword"
+                style="width: 200px"
+                placeholder="确认新密码"
+                type="password"/>
           </el-form-item>
         </el-form>
       </div>
@@ -129,14 +164,17 @@ export default {
           {required: true, message: "请输入用户名", trigger: "blur"},
         ],
         email: [
-          {required: true, message: "请输入邮箱", trigger: "blur"},
+          {required: true, type: "email", trigger: "blur"},
         ],
         code: [
           {required: true, message: "请输入验证码", trigger: "blur"},
         ],
       },
       passwordResetRules: {
-        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        newPassword: [
+            { required: true, message: '请输入新密码', trigger: 'blur' },
+            { min: 7, message: '新密码长度必须大于6位', trigger: 'blur' }
+        ],
         confirmPassword: [
           { required: true, validator: validatePass2, trigger: 'blur' },
         ],
@@ -253,8 +291,13 @@ export default {
     },
     //发送验证码
     sendVerificationCode: function () {
-      if(this.UserEmailVerifyForm.email === ""||this.UserEmailVerifyForm.username === ""){
-        this.$message.warning("请填写完整！");
+      if(this.UserEmailVerifyForm.username === ""){
+        this.$message.warning("请填写用户名！");
+        return;
+      }
+
+      if(this.UserEmailVerifyForm.email === "") {
+        this.$message.warning("请填写邮箱！");
         return;
       }
       //邮箱格式验证
@@ -274,7 +317,6 @@ export default {
               'Content-Type': 'application/x-www-form-urlencoded'
             }}).then(res => {
         if (res.data.code === 200) {
-          this.$message.success("验证码发送成功！");
           this.CountDown();
         } else {
           this.$message.warning("验证码发送失败:" + res.data.msg)
@@ -289,25 +331,31 @@ export default {
       if(this.$refs.ResetPasswordRef !== undefined){
         this.$refs.ResetPasswordRef.resetFields();
       }
-      let vm = this;
-      this.axios.post('http://localhost:8081/user/verify', {'code': vm.UserEmailVerifyForm.code},
-          {headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }}).then(res => {
-        if (res.data.code === 200) {
-          vm.EmailVerifyDialogVis = false;
-          vm.resetPasswordDialogVis = true;
-          vm.$message.success("验证成功！");
-        } else {
-          vm.$message.warning("验证失败:" + res.data.msg)
-        }
-      }).catch(err => {
-        this.$message.error("发生未知错误！");
-        console.log(err);
-      });
 
+
+      let vm = this;
+      this.$refs.UserEmailVerifyRef.validate((valid) => {
+        if(valid){
+          this.axios.post('http://localhost:8081/user/verify', {'code': vm.UserEmailVerifyForm.code},
+              {headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }}).then(res => {
+            if (res.data.code === 200) {
+              vm.EmailVerifyDialogVis = false;
+              vm.resetPasswordDialogVis = true;
+              vm.$message.success("验证成功！");
+            } else {
+              vm.$message.warning("验证失败:" + res.data.msg)
+            }
+          }).catch(err => {
+            this.$message.error("发生未知错误！");
+            console.log(err);
+          });
+        }
+      })
     },
-  }
+  },
+
 }
 </script>
 
@@ -315,7 +363,7 @@ export default {
 
 /*背景图片*/
 .background{
-  background:url("../assets/background.jpg");
+  background:url("../assets/1.jpg");
   width:100%;
   height:100%;
   display: flex;
@@ -327,11 +375,11 @@ export default {
 
 .login {
   display: flex;
-  background-color:rgba(29,45,59,0.7);
+  background-color: rgba(247, 250, 252, 0.6);
   height:50%;
   width: 50%;
   border-radius: 5px;
-  box-shadow: 5px 5px 5px rgb(99,122,119);
+  box-shadow: 5px 5px 5px rgb(99, 122, 100);
   overflow: hidden;
   margin: 0;
   padding: 0;
