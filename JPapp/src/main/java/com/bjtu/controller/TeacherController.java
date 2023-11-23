@@ -59,10 +59,15 @@ public class TeacherController {
     @AuthAccess
     @PostMapping("/findHWbyCno")
     public RspObject<List<Homework>> findHWbyCno(@RequestParam String cno) {
-
-        User user = TokenUtils.getCurrentUser();
-
         return teacherService.findHWbyCno(cno);
-
     }
+
+//    教师点击某课程的某作业得到班级名单
+    @AuthAccess
+    @PostMapping("/findCTByHId")
+    public RspObject<List<Content>> findCTByHId(@RequestParam Integer homeworkId){
+        System.out.println("in");
+        return teacherService.findCTByHId(homeworkId);
+    }
+
 }

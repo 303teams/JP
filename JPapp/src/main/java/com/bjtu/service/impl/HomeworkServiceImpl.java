@@ -25,7 +25,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Override
     public Homework findHWById(String id) {
-        return homeworkDao.findHWbyId(id);
+        return homeworkDao.findHWById(id);
     }
 
     @Override

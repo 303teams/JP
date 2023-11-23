@@ -134,13 +134,27 @@ public class TeacherServiceImpl implements TeacherService {
             List<Homework> homeworks = teacherDao.findHWbyCno(cno);
 
             if (homeworks.isEmpty()) {
-                return RspObject.fail("无作业信息！");
+                return RspObject.success("无作业信息！");
             }
 
             return RspObject.success("查询成功！",homeworks);
         } catch (Exception e) {
             e.printStackTrace(); // 记录异常
             return RspObject.fail("查询失败！");
+        }
+    }
+
+    @Override
+    public RspObject<List<Content>> findCTByHId(Integer homeworkId) {
+        try{
+            List<Content> contents = teacherDao.findCTByHId(homeworkId);
+
+            if (contents.isEmpty()){
+                return RspObject.success("无作业信息！");
+            }
+            return RspObject.success("查询成功！",contents);
+        }catch (Exception e){
+            throw new ServiceException(500,"查询失败！");
         }
     }
 }

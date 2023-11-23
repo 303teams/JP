@@ -1,10 +1,12 @@
 package com.bjtu.dao;
 
+import com.bjtu.pojo.Content;
 import com.bjtu.pojo.Homework;
 import com.bjtu.pojo.Teacher;
 import com.bjtu.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Map;
 
@@ -32,5 +34,7 @@ public interface TeacherDao{
 
 //    老师查看某一课程的学生作业提交列表
     public List<Homework> findHWbyCno(String cno);
+
+    public List<Content> findCTByHId(Integer homeworkId);
 
 }

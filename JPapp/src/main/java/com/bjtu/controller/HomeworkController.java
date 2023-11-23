@@ -58,22 +58,6 @@ public class HomeworkController {
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
-
-//    @AuthAccess
-        @PostMapping("/findById")
-        public RspObject<List<Homework>> ByIdList(String cno) {
-            System.out.println(cno);
-            User user = TokenUtils.getCurrentUser();
-            return homeworkService.findById(user.getId(),cno);
-        }
-
-    @PostMapping("/findByTeaId")
-    public RspObject<List<Homework>> ByTeaIdList(String cno) {
-        System.out.println(cno);
-        User user = TokenUtils.getCurrentUser();
-        return homeworkService.findByTeaId(user.getId(),cno);
-    }
-
 //    老师上传作业
     @AuthAccess
     @PostMapping("/uploadHW")

@@ -33,4 +33,9 @@ class TeacherServiceImplTest {
     void findCourse() {
         System.out.println(teacherService.findCourse("21001001"));
     }
+
+    @Test
+    void findCTByHId() {
+        System.out.println(teacherService.findCTByHId(1));
+    }
 }

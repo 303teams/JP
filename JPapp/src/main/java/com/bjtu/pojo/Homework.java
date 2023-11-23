@@ -40,6 +40,7 @@ public class Homework {
 
     private String teacherName;
     private String contentID;
+    private String courseName;
 
 //    总人数和提交人数
     private Integer totalAmount;
