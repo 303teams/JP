@@ -190,14 +190,6 @@ const fetchData = () => {
 
         blobUrl.value = URL.createObjectURL(blob);
 
-        // downloadLink.href = blobUrl;
-        // downloadLink.download =fileName;
-        // document.body.appendChild(downloadLink);
-        // downloadLink.click();
-        //
-        // // Cleanup
-        // document.body.removeChild(downloadLink);
-        // URL.revokeObjectURL(blobUrl);
       })
       .catch((err) => {
         console.error("发生未知错误！");

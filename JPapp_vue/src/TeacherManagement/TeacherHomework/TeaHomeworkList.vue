@@ -166,16 +166,16 @@ const fetchData = () => {
         'http://localhost:8081/homework/findByTeaId',
         {
           cno: props.cno,
-        },
+          },
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'token': token,
-          },
-        }
-    )
+            },
+          }
+        )
         .then(res1 => {
-          // Process the response of the first request
+
           if (res1.data.code === 200) {
             console.log(props.cno);
             tableData.data = res1.data.data;
@@ -201,14 +201,14 @@ const fetchData = () => {
                 const blob = new Blob([res2.data], { type: 'application/octet-stream' });
                 const blobUrl = URL.createObjectURL(blob);
 
-                // Assign the generated blob URL to the data item
+                // 给每项作业分配url用来下载
                 item.blobUrl = blobUrl;
                 updateFilteredData(); // 更新过滤后的数据
               });
             });
 
             console.log(tableData.data)
-            // Use Promise.all to wait for all promises to resolve
+            // 使用Promise.all来执行promises数组里的所有promise
             return Promise.all(promises);
           } else {
             window.alert("获取信息失败:" + res1.data.msg);
@@ -216,14 +216,12 @@ const fetchData = () => {
           }
         })
         .then(() => {
-          // Resolve the promise with any necessary data
           resolve({ success: true, message: 'Data fetched successfully' });
         })
         .catch(error => {
           console.error("发生未知错误！");
           console.log(error);
 
-          // Reject the promise with an error message
           reject("发生未知错误！");
         });
   });
