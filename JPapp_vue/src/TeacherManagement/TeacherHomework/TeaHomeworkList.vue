@@ -162,11 +162,11 @@ const filterTableData = computed(() =>
 
 const fetchData = () => {
 
-  axios
-      .post(
-          'http://localhost:8081/teacher/findHWbyCno',
-          {
-            cno: props.cno,
+  return new Promise((resolve, reject) => {
+    axios.post(
+        'http://localhost:8081/teacher/findCTByHId',
+        {
+          cno: props.cno,
           },
         {
           headers: {
@@ -225,6 +225,7 @@ const fetchData = () => {
 
           reject("发生未知错误！");
         });
+  });
 };
 
 const updateFilteredData = () => {
