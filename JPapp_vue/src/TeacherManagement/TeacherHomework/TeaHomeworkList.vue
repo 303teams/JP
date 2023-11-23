@@ -72,10 +72,10 @@
             <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
           </el-form-item>
           <el-form-item label="提交截止日期:" prop="submitDdl" >
-            <el-date-picker v-model="homeworkData.submitDdl" type="datetime" placeholder="选择日期和时间"/>
+            <el-date-picker v-model="homeworkData.submitDdl" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="互评截止日期:" prop="scoreDdl" >
-            <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" placeholder="选择日期和时间"/>
+            <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="上传文件" prop="content">
             <el-upload
@@ -161,11 +161,19 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
+<<<<<<< HEAD
   return new Promise((resolve, reject) => {
     axios.post(
         'http://localhost:8081/homework/findByTeaId',
         {
           cno: props.cno,
+=======
+  axios
+      .post(
+          'http://localhost:8081/teacher/findHWbyCno',
+          {
+            cno: props.cno,
+>>>>>>> lzc
           },
         {
           headers: {
@@ -260,10 +268,9 @@ const assignHomework = () => {
   const formData = new FormData();
   formData.set('file', homeworkData.content);
   formData.set('cno', props.cno)
-  formData.set('name', homeworkData.name);
-
-  // formData.set('submit_ddl', homeworkData.submitDdl);
-  // formData.set('score_ddl', homeworkData.scoreDdl);
+  formData.set('HWName', homeworkData.name);
+  formData.set('scoreDdl', homeworkData.scoreDdl);
+  formData.set('submitDdl', homeworkData.submitDdl);
 
   console.log(homeworkData.name)
 
@@ -271,9 +278,10 @@ const assignHomework = () => {
 
   HomeworkFormRef.value.validate((valid) => {
       if (valid) {
+        console.log(formData.get('scoreDdl'))
         axios
             .post(
-                'http://localhost:8081/teacher/uploadHW',
+                'http://localhost:8081/homework/uploadHW',
                 formData,
                 {
                   headers: {

@@ -24,17 +24,8 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public RspObject<List<Homework>> findById(String id,String cno){
-        return RspObject.success("查询成功！",homeworkDao.findById(id,cno));
-    }
-
-    @Override
-    public RspObject<List<Homework>> findByTeaId(String id,String cno){
-        return RspObject.success("查询成功！",homeworkDao.findByTeaId(id,cno));
-    }
-    @Override
-    public Homework findHWById(String id){
-        return homeworkDao.findHWById(id);
+    public Homework findHWById(String id) {
+        return homeworkDao.findHWbyId(id);
     }
 
     @Override

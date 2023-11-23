@@ -27,4 +27,6 @@ public interface StudentService {
     public RspObject<List<Map<String, Object>>> findCourse(String id);
 
 //    RspObject<List<Student>> findAll();
+    RspObject<List<Homework>> findHWbyCno(String id,String cno);
+
 }

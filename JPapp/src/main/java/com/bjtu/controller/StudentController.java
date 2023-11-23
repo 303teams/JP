@@ -33,8 +33,6 @@ public class StudentController {
     HomeworkService homeworkService;
     @Autowired
     ContentService contentService;
-    @Resource
-    FileUtils fileUtils;
 
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Student student){
@@ -53,9 +51,9 @@ public class StudentController {
     @AuthAccess
     @PostMapping("/findCTByCno")
     public RspObject<List<Homework>> findCTByCno(String cno) {
-        System.out.println(cno);
+//        System.out.println(cno);
         User user = TokenUtils.getCurrentUser();
-        return homeworkService.findById(user.getId(),cno);
+        return studentService.findHWbyCno(user.getId(),cno);
     }
 
 
