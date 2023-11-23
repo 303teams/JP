@@ -23,12 +23,12 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large" column_width="60px"
+                size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="学生学号" sortable prop="name" />
         <el-table-column label="学生姓名" sortable prop="submitDdl" />
-        <el-table-column label="提交时间" sortable prop="scoreDdl" />
+        <el-table-column label="提交时间" width="200px" sortable prop="scoreDdl" />
         <el-table-column label="作业提交内容" prop="content" >
           <template v-slot="scope">
           <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
