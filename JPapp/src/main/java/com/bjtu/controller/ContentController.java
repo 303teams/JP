@@ -33,7 +33,7 @@ public class ContentController {
     @PostMapping("/uploadCT")
     public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,
                                       @RequestParam String cno,
-                                      @RequestParam String homeworkID,
+                                      @RequestParam Integer homeworkID,
                                       HttpServletResponse response) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
@@ -57,7 +57,7 @@ public class ContentController {
 //    学生/老师 下载 学生的作业
     @AuthAccess
     @PostMapping("/downloadCT")
-    public ResponseEntity<byte[]> downloadCT(@RequestParam String contentID) {
+    public ResponseEntity<byte[]> downloadCT(@RequestParam Integer contentID) {
         System.out.println("hh"+ contentID);
         Content content1 = contentService.findById(contentID);
 
