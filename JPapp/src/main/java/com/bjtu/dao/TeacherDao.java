@@ -29,12 +29,4 @@ public interface TeacherDao{
 
     public void updateEmail(String id, String email);
 
-//    查询教师课程
-    public List<Map<String, Object>> findCourse(String id);
-
-//    老师查看某一课程的学生作业提交列表
-    public List<Homework> findHWbyCno(String cno);
-
-    public List<Content> findCTByHId(Integer homeworkId);
-
 }

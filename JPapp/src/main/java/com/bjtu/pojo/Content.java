@@ -9,10 +9,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Accessors(chain = true)
 public class Content {
 
-    private int contentID;
+    private Integer contentID;
     private String cno;
     private String sno;
-    private String homeworkID;
+    private Integer homeworkID;
     private byte[] content;
     private String fileName;
 

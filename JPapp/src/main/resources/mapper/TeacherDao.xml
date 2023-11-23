@@ -27,38 +27,6 @@
         where id = #{id}
     </update>
 
-    <select id="findCourse" resultType="java.util.Map" parameterType="string">
-        SELECT course.*
-        FROM teacher
-        JOIN course ON teacher.id = course.tno
-        WHERE teacher.id = #{id}
-    </select>
-
-    <select id="findHWbyCno" resultType="com.bjtu.pojo.Homework">
-        SELECT
-            H.*,
-            COUNT(DISTINCT sc.sno) AS totalAmount,
-            COUNT(DISTINCT C.sno) AS submitAmount
-        FROM
-            homework H
-                JOIN sc ON H.cno = sc.cno
-                LEFT JOIN content C ON H.homeworkID = C.homeworkID AND sc.sno = C.sno
-        WHERE
-            H.cno = #{cno}
-        GROUP BY
-            H.homeworkID, H.content, H.cno;
-
-    </select>
-    <select id="findCTByHId" resultType="com.bjtu.pojo.Content">
-        SELECT DISTINCT c.contentID as contentID, s.id as sno, s.name as sname, c.submitTime as submitTime, c.score as score, c.filename as fileName
-        FROM student s
-                 JOIN sc ON s.id = sc.sno
-                 LEFT JOIN content c ON s.id = c.sno AND c.homeworkID = #{homeworkId}
-        WHERE sc.cno IN (SELECT homework.cno FROM homework WHERE homework.homeworkID = #{homeworkId})
-           OR c.homeworkID IS NULL;
-
-    </select>
-
     <update id="updateEmail">
         update teacher set email = #{email}
         where id = #{id}

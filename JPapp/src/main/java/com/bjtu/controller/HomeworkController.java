@@ -41,7 +41,7 @@ public class HomeworkController {
 //    学生/老师 下载 作业
     @AuthAccess
     @PostMapping("/downloadHW")
-    public ResponseEntity<byte[]> downloadHW(String homeworkId){
+    public ResponseEntity<byte[]> downloadHW(Integer homeworkId){
         System.out.println("hh"+homeworkId);
         Homework homework = homeworkService.findHWById(homeworkId);
 

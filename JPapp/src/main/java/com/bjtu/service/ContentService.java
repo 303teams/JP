@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ContentService {
 
-    Content findById(String id);
+    Content findById(Integer id);
 
     void addContent(Content content);
 

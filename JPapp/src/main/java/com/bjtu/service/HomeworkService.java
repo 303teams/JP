@@ -14,7 +14,7 @@ public interface HomeworkService {
 
 
 //    返回一个课程下的所有学生的作业
-    Homework findHWById(String id);
+    Homework findHWById(Integer id);
 
     void addHomework(Homework homework);
 

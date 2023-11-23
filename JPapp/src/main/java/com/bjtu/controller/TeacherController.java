@@ -37,8 +37,6 @@ public class TeacherController {
     HomeworkService homeworkService;
     @Autowired
     ContentService contentService;
-    @Resource
-    FileUtils fileUtils;
 
 
     @PostMapping("modifyInfo")
@@ -65,9 +63,15 @@ public class TeacherController {
 //    教师点击某课程的某作业得到班级名单
     @AuthAccess
     @PostMapping("/findCTByHId")
-    public RspObject<List<Content>> findCTByHId(@RequestParam Integer homeworkId){
-        System.out.println("in");
-        return teacherService.findCTByHId(homeworkId);
+    public RspObject<List<Content>> findCTByHId(@RequestParam Integer homeworkID){
+        return teacherService.findCTByHId(homeworkID);
+    }
+
+//    教师修改学生分数
+    @AuthAccess
+    @PostMapping("/setCTScore")
+    public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Integer score){
+        return teacherService.setCTScore(contentID,score);
     }
 
 }

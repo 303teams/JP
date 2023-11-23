@@ -28,4 +28,6 @@ public interface TeacherService {
     RspObject<List<Homework>> findHWbyCno(String cno);
 
     RspObject<List<Content>> findCTByHId(Integer homeworkId);
+
+    RspObject<Boolean> setCTScore(Integer contentId,Integer score);
 }
