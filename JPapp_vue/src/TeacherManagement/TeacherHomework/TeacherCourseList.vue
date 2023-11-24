@@ -10,10 +10,10 @@
           <img
               src="@/assets/img.png"
               class="image"
-              @click="courseEnter(item.cno)"
+              @click="courseEnter(item.cno,item.cname)"
           />
           <div class="info-content">
-            <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
+            <span class="course_name" @click="courseEnter(item.cno,item.cname)">{{item.cname}}</span>
             <span class="course_id">课程号: {{item.cno}}</span>
           </div>
 
