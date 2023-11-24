@@ -168,18 +168,20 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<List<Content>> findCTsByCID(Integer contentID) {
+        Student student = (Student) TokenUtils.getCurrentUser();
+        String id = student.getId();
         try {
             Content content = contentDao.findCTById(contentID);
             List<Content> contents = new ArrayList<>();
-            contents.add(contentDao.findxCTById(content.getContent1()));
-            contents.add(contentDao.findxCTById(content.getContent2()));
-            contents.add(contentDao.findxCTById(content.getContent3()));
-            contents.add(contentDao.findxCTById(content.getContent4()));
-            contents.add(contentDao.findxCTById(content.getContent5()));
-            contents.add(contentDao.findxCTById(content.getContent6()));
+            contents.add(contentDao.findxCTById(content.getContent1(),id));
+            contents.add(contentDao.findxCTById(content.getContent2(),id));
+            contents.add(contentDao.findxCTById(content.getContent3(),id));
+            contents.add(contentDao.findxCTById(content.getContent4(),id));
+            contents.add(contentDao.findxCTById(content.getContent5(),id));
+            contents.add(contentDao.findxCTById(content.getContent6(),id));
             return RspObject.success("查询成功！", contents);
         }catch (Exception e){
-            throw new ServiceException(500,"查询失败！");
+            throw new ServiceException(500,"查询失败！!");
         }
     }
 

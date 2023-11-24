@@ -31,6 +31,8 @@ public class Content {
 //    学生姓名
     private String sname;
 
+    private String comment;
+
 
     public Content(){
 

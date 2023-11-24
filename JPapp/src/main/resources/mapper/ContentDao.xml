@@ -27,9 +27,19 @@
     </select>
 
     <select id="findxCTById" resultType="com.bjtu.pojo.Content">
-        SELECT contentID,fileName
-        FROM content
-        WHERE content.contentID = #{id}
+        SELECT
+            c.contentID,
+            c.fileName as fileName,
+            score.score as score,
+            score.content as comment
+        FROM
+            content c
+                LEFT JOIN score ON
+                c.contentID = score.contentID
+                AND c.sno = score.sno
+        WHERE
+            c.contentID = #{contentID} AND c.sno = #{sno}
+
     </select>
 
     <update id="setCTScore"  parameterType="integer">

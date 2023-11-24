@@ -15,6 +15,6 @@ public interface ContentDao {
 
     public void setCTScore(Integer contentID,Integer score);
 
-    public Content findxCTById(Integer contentID);
+    public Content findxCTById(Integer contentID,String sno);
 
 }
