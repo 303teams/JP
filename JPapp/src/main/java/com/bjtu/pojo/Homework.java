@@ -46,6 +46,8 @@ public class Homework {
     private Integer totalAmount;
     private Integer submitAmount;
 
+    private Integer score;
+
     public Homework() {
     }
 
