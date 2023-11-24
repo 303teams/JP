@@ -19,7 +19,7 @@
     </div>
 
 
-    <el-dialog title="提交作业" :close-on-click-modal="false" v-model="dialogTableVisible" width="40%">
+    <el-dialog title="提交作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="submitHomeworkForm" ref="SubmitHomeworkRef" label-width="80px" :rules="rules">
           <el-form-item label="作业附件" prop="file">

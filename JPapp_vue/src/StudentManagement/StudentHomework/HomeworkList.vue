@@ -21,12 +21,12 @@
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" sortable prop="name" />
-        <el-table-column label="课程名称" sortable prop="courseName" />
-        <el-table-column label="发布人" sortable prop="teacherName" />
+        <el-table-column label="作业名称" width="150px" sortable prop="name" />
+        <el-table-column label="课程名称" width="150px" sortable prop="courseName" />
+        <el-table-column label="发布人" width="120px" prop="teacherName" />
         <el-table-column label="截止时间" width="200px" sortable prop="submitDdl" />
         <el-table-column label="互评任务" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="提交作业">
+        <el-table-column label="提交作业" width="120px">
           <template v-slot="scope">
           <el-button size="large" v-if="scope.row.contentID === null" @click="handleSubmit(props.cno, scope.row.homeworkID)">提交</el-button>
           <span v-else>已提交</span>
@@ -172,6 +172,7 @@ onMounted(() => {
   margin-top: -10px;
 }
 
+
 .search-container {
   display: flex;
   width: auto;
@@ -202,7 +203,7 @@ onMounted(() => {
 }
 
 .HomeworkList{
-  width: 100vh;
+  width: 100%;
 }
 
 
