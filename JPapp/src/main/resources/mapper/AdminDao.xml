@@ -22,16 +22,6 @@
         select * from admin where id = #{num}
     </select>
 
-    <update id="updateInfo" parameterType="Admin">
-        update admin set name = #{name}
-        where id = #{id}
-    </update>
-
-    <update id="updatePassword">
-        update admin set password = #{password}
-        where id = #{id}
-    </update>
-
     <update id="updateEmail">
         update admin set email = #{email}
         where id = #{id}

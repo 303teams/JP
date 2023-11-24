@@ -1,5 +1,7 @@
 package com.bjtu.service.impl;
 
+import com.bjtu.dao.CourseDao;
+import com.bjtu.dao.HomeworkDao;
 import com.bjtu.dao.StudentDao;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
@@ -18,6 +20,12 @@ public class StudentServiceImpl implements StudentService  {
 
     @Autowired
     StudentDao studentDao;
+
+    @Autowired
+    CourseDao courseDao;
+
+    @Autowired
+    HomeworkDao homeworkDao;
 
     @Override
     public RspObject<User> login(String id, String password) {
@@ -125,12 +133,12 @@ public class StudentServiceImpl implements StudentService  {
 
     public RspObject<List<Map<String, Object>>> findCourse(String id){
         try {
-            List<Map<String, Object>> courses = studentDao.findCourse(id);
+            List<Map<String, Object>> courses = courseDao.findSTCourse(id);
 
             if (courses.isEmpty()) {
                 return RspObject.fail("无课程信息！");
             }
-            return RspObject.success("查询成功！",studentDao.findCourse(id));
+            return RspObject.success("查询成功！",courses);
         } catch (Exception e) {
             throw new ServiceException(500,e.getMessage());
         }
@@ -139,7 +147,7 @@ public class StudentServiceImpl implements StudentService  {
     @Override
     public RspObject<List<Homework>> findHWbyCno(String id, String cno) {
         try {
-            List<Homework> contents = studentDao.findHWbyCno(id,cno);
+            List<Homework> contents = homeworkDao.findHWbyCno(id,cno);
 
             if (contents.isEmpty()) {
                 return RspObject.fail("无作业信息！");
