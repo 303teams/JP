@@ -27,6 +27,7 @@
                         teacher.name as teacherName,
                         course.cname as courseName ,
                         content.contentID as contentID
+                        contain.score as score
         FROM student
                  JOIN sc ON student.id = sc.sno
                  JOIN homework ON sc.cno = homework.cno

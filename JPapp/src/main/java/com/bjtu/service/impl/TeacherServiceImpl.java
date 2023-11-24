@@ -155,7 +155,6 @@ public class TeacherServiceImpl implements TeacherService {
     public RspObject<List<Content>> findCTByHId(Integer homeworkID) {
         try{
             List<Content> contents = contentDao.findCTByHId(homeworkID);
-
             if (contents.isEmpty()){
                 return RspObject.success("无作业信息！");
             }
