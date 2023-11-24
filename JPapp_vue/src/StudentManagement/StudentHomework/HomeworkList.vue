@@ -25,13 +25,20 @@
         <el-table-column label="课程名称" width="150px" sortable prop="courseName" />
         <el-table-column label="发布人" width="120px" prop="teacherName" />
         <el-table-column label="截止时间" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="互评任务" width="200px" sortable prop="submitDdl" />
+        <el-table-column label="互评任务" width="200px" sortable prop="scoreDdl" />
         <el-table-column label="提交作业" width="120px">
           <template v-slot="scope">
-          <el-button size="large" v-if="scope.row.contentID === null" @click="handleSubmit(props.cno, scope.row.homeworkID)">提交</el-button>
+          <el-button
+              size="large"
+              v-if="scope.row.contentID === null"
+              @click="handleSubmit(props.cno, scope.row.homeworkID,scope.row.name,scope.row.submitDdl)"
+          >
+            提交
+          </el-button>
           <span v-else>已提交</span>
           </template>
         </el-table-column>
+        <el-table-column label="作业成绩" width="120px" sortable prop="score" />
       </el-table>
 
       <el-config-provider :locale="zhCn">
@@ -76,8 +83,14 @@ const filterTableData = computed(() =>
 );
 
 //点击提交按钮
-const handleSubmit = (cno,homeworkID) => {
-  router.push(`/studentHome/HomeworkSubmit/${cno}/${homeworkID}`);
+const handleSubmit = (cno,homeworkID,name,submitDdl) => {
+  router.push({
+    path:`/studentHome/HomeworkSubmit/${cno}/${homeworkID}`,
+    state: {
+      name,
+      submitDdl
+    }
+  });
 };
 
 const fetchData = () => {
@@ -150,8 +163,8 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: -40px;
-  left: 170px;
+  top: 0px;
+  left: 75px;
 }
 
 .title {
@@ -172,6 +185,9 @@ onMounted(() => {
   margin-top: -10px;
 }
 
+.main{
+  margin-top: 50px;
+}
 
 .search-container {
   display: flex;

@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex; flex-direction: column; justify-content: center;">
     <div class="title" style="text-align: left">
-      <h1 style="font-size: 30px; margin: 0; display: inline-block;">实验报告</h1>
-      <span style="font-size: 15px;color: red; display: inline-block; margin-left: 40px;">截止时间</span>
+      <h1 style="font-size: 30px; margin: 0; display: inline-block;">{{ name }}</h1>
+      <span style="font-size: 15px;color: red; display: inline-block; margin-left: 40px;">截止时间 {{submitDdl}}</span>
     </div>
 
     <div class="content-container">
@@ -70,6 +70,8 @@ const SubmitHomeworkRef = ref();
 const fileList = ref([]);
 const blobUrl = ref();
 const fileName = ref();
+const name = history.state.name;
+const submitDdl = history.state.submitDdl;
 const submitHomeworkForm = reactive({
   file: null,
 });
