@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-dialog title="修改个人信息" :close-on-click-modal="false" v-model="dialogVisible" width="60%" :before-close="handleClose">
+    <el-dialog title="修改个人信息"
+               :close-on-click-modal="false"
+               v-model="dialogVisible"
+               :lock-scroll="false"
+               width="60%"
+               :before-close="handleClose">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="form" :rules="rules" ref="form" label-width="150px">
           <div class="updateinfo">

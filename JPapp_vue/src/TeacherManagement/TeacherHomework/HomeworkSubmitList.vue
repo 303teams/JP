@@ -26,10 +26,10 @@
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="学生学号" sortable prop="sno" />
-        <el-table-column label="学生姓名" sortable prop="sname" />
+        <el-table-column label="学生学号" width="120px" sortable prop="sno" />
+        <el-table-column label="学生姓名" width="120px" sortable prop="sname" />
         <el-table-column label="提交时间" width="200px" sortable prop="submitTime" />
-        <el-table-column label="作业提交内容">
+        <el-table-column label="作业提交内容" width="150px">
           <template v-slot="scope">
           <el-link
               v-if="scope.row.contentID !== null"
@@ -42,8 +42,8 @@
           <span v-else>未提交</span>
           </template>
         </el-table-column>
-        <el-table-column label="作业成绩" sortable prop="score" />
-        <el-table-column label="操作">
+        <el-table-column label="作业成绩" width="120px" sortable prop="score" />
+        <el-table-column label="操作" width="130px">
           <template v-slot="scope">
           <el-button size="large" v-if="scope.row.contentID !== null" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
           <span v-else>未提交</span>
@@ -66,7 +66,7 @@
 
     </div>
 
-    <el-dialog title="修改成绩" :close-on-click-modal="false" v-model="modifyScoreDia" width="30%">
+    <el-dialog title="修改成绩" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyScoreDia" width="30%">
         <div>
           <p>当前分数：{{ currentScore }}</p>
           <el-input v-model="newScore" style="width: 150px;" placeholder="输入新的分数"></el-input>
@@ -102,6 +102,7 @@ const modifyScoreDia = ref(false);
 const currentContentID = ref(0);    // 当前作业ID
 const currentScore = ref(0);       // 当前分数
 const newScore = ref(0);           // 新的分数
+
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>

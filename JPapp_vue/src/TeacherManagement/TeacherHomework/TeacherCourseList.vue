@@ -17,7 +17,7 @@
             <span class="course_id">课程号: {{item.cno}}</span>
           </div>
 
-          <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
+          <el-button class="button" @click="courseEnter(item.cno,item.cname)">进入课程</el-button>
         </div>
 
         <el-divider />
@@ -65,8 +65,14 @@ const fetchData = async () => {
       });
 };
 
-const courseEnter = (cno) => {
-    router.push(`/teacherHome/ViewMyHomework/${cno}`);
+const courseEnter = (cno,cname) => {
+  router.push({
+    name: 'ViewMyHomework',
+    params: {
+      cno,
+      courseName: cname
+    }
+  });
 };
 
 onMounted(() => {

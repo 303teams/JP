@@ -2,6 +2,7 @@
   <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
+      <span style="font-size: 30px; font-weight: bold;">{{ courseName}}</span>
       <div class="title">课程作业</div>
     </div>
     <div class="main">
@@ -23,10 +24,10 @@
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" sortable prop="name" />
-        <el-table-column label="作业截止时间" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" sortable prop="scoreDdl" />
-        <el-table-column label="作业内容" prop="content" >
+        <el-table-column label="作业名称" width="120px" sortable prop="name" />
+        <el-table-column label="作业截止时间" width="200px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="200px" sortable prop="scoreDdl" />
+        <el-table-column label="作业内容" width="150px" prop="content" >
           <template v-slot="scope">
             <el-link
                 :href="scope.row.blobUrl"
@@ -37,7 +38,7 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="提交情况" align="center">
+        <el-table-column label="提交情况" width="200px" align="center">
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
@@ -64,18 +65,30 @@
 
     </div>
 
-    <!-- 上传文件的弹出框 -->
-    <el-dialog title="上传文件" :close-on-click-modal="false" v-model="dialogTableVisible" width="50%" >
+    <!-- 上传作业的弹出框 -->
+    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" width="50%" >
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
           <el-form-item label="作业名字:" prop="name" >
             <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
           </el-form-item>
           <el-form-item label="提交截止日期:" prop="submitDdl" >
-            <el-date-picker v-model="homeworkData.submitDdl" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" placeholder="选择日期和时间"/>
+            <el-date-picker
+                v-model="homeworkData.submitDdl"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm:ss"
+                :disabled-date="disabledSubmitDate"
+                placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="互评截止日期:" prop="scoreDdl" >
-            <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" placeholder="选择日期和时间"/>
+            <el-date-picker
+                v-model="homeworkData.scoreDdl"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm:ss"
+                :disabled-date="disabledScoreDate"
+                placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="上传文件" prop="content">
             <el-upload
@@ -116,7 +129,7 @@ import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -128,6 +141,8 @@ const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const HomeworkFormRef =ref();
 const router = useRouter();
+const route =useRoute();
+const courseName = ref('');
 const homeworkData = reactive({
   name: '',
   content: null,
@@ -159,6 +174,25 @@ const filterTableData = computed(() =>
     )
 );
 
+// 禁用日期
+const disabledSubmitDate = (time) => {
+  if(homeworkData.scoreDdl === '') {
+    return time.getTime() < new Date() - 8.64e7;
+  }else{
+    return time.getTime() > new Date(homeworkData.scoreDdl).getTime() || time.getTime() < new Date() - 8.64e7;
+  }
+};
+
+const disabledScoreDate = (time) => {
+  if(homeworkData.submitDdl === ''){
+    return time.getTime() < new Date() - 8.64e7;
+  }else{
+    return time.getTime() < new Date(homeworkData.submitDdl).getTime();
+  }
+
+};
+
+
 
 const fetchData = () => {
 
@@ -177,44 +211,45 @@ const fetchData = () => {
             }
         )
         .then(res1 => {
-
           if (res1.data.code === 200) {
-            console.log(props.cno);
-            tableData.data = res1.data.data;
-            console.log(res1);
+            // courseName.value = res1.data.data[0].courseName;
+            if(res1.data.data !==null){
+              console.log(props.cno);
+              tableData.data = res1.data.data;
+              console.log(res1);
 
-            // 使用promise实现多个接口的调用
-            const promises = tableData.data.map(item => {
-              return axios.post(
-                  'http://localhost:8081/homework/downloadHW',
-                  null,
-                  {
-                    params: {
-                      homeworkId: item.homeworkID,
-                    },
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'token': token,
-                    },
-                    responseType: 'blob',
-                  }
-              ).then(res2 => {
-                console.log(res2)
-                const blob = new Blob([res2.data], {type: 'application/octet-stream'});
-                const blobUrl = URL.createObjectURL(blob);
+              // 使用promise实现多个接口的调用
+              const promises = tableData.data.map(item => {
+                return axios.post(
+                    'http://localhost:8081/homework/downloadHW',
+                    null,
+                    {
+                      params: {
+                        homeworkId: item.homeworkID,
+                      },
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'token': token,
+                      },
+                      responseType: 'blob',
+                    }
+                ).then(res2 => {
+                  console.log(res2)
+                  const blob = new Blob([res2.data], {type: 'application/octet-stream'});
+                  const blobUrl = URL.createObjectURL(blob);
 
-                // 给每项作业分配url用来下载
-                item.blobUrl = blobUrl;
-                updateFilteredData(); // 更新过滤后的数据
+                  // 给每项作业分配url用来下载
+                  item.blobUrl = blobUrl;
+                  updateFilteredData(); // 更新过滤后的数据
+                });
               });
-            });
 
-            console.log(tableData.data)
-            // 使用Promise.all来执行promises数组里的所有promise
-            return Promise.all(promises);
+              console.log(tableData.data)
+              // 使用Promise.all来执行promises数组里的所有promise
+              return Promise.all(promises);
+            }
           } else {
-            window.alert("获取信息失败:" + res1.data.msg);
-            reject("获取信息失败:" + res1.data.msg);
+            console.log(res1.data.msg)
           }
         })
         .then(() => {
@@ -242,6 +277,7 @@ const handleClick = (row) => {
 };
 
 const uploadHomework = () => {
+  resetFormData();
   dialogTableVisible.value = true;
 };
 
@@ -287,8 +323,6 @@ const assignHomework = () => {
             .then((res) => {
               if (res.data.code === 200) {
                 console.log(res)
-                window.alert("上传成功");
-                dialogTableVisible.value = false;
                 resetFormData();
                 fetchData();
               } else {
@@ -301,13 +335,8 @@ const assignHomework = () => {
               resetFormData();
               console.log(err);
             });
-      } else {
-        console.log("error submit!!");
-        resetFormData();
-        return false;
       }
     });
-  dialogTableVisible.value = false;
 };
 const closeDia = () => {
   dialogTableVisible.value = false;
@@ -320,10 +349,13 @@ const resetFormData = () => {
   homeworkData.submitDdl = '';
   homeworkData.scoreDdl = '';
   fileList.value = [];
+  dialogTableVisible.value = false;
 };
 
 onMounted(() => {
   fetchData();
+  courseName.value=route.params.courseName;
+  console.log(route.params.courseName)
 });
 
 const Back = () => {
@@ -357,6 +389,7 @@ const Back = () => {
   padding-left: 13px;
   font-size: 20px;
   font-weight: bold;
+  margin-top: 40px;
 }
 
 .title:before {
@@ -373,6 +406,7 @@ const Back = () => {
 .search-container {
   display: flex;
   width: auto;
+  margin-top: 80px;
   margin-bottom: 10px;
 }
 
@@ -390,6 +424,7 @@ const Back = () => {
   position: absolute;
   top: 0;
   right: 170px;
+  margin-top: 80px;
   margin-bottom: 10px;
 }
 

@@ -76,7 +76,7 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'ViewMyHomework/:cno',
+                    path: 'ViewMyHomework/:cno/:courseName',
                     name:'ViewMyHomework',
                     component: TeaHomeworkList,
                     props: true,

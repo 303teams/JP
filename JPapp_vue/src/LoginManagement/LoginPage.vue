@@ -38,7 +38,7 @@
     </div>
 
     <!--输入用户名、邮箱和验证码的对话框-->
-    <el-dialog title = "忘记密码" :close-on-click-modal="false" v-model = "EmailVerifyDialogVis" width="40%">
+    <el-dialog title = "忘记密码" :close-on-click-modal="false" :lock-scroll="false" v-model = "EmailVerifyDialogVis" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="UserEmailVerifyRef" label-width="80px" style = "padding-right: 20px" :model="UserEmailVerifyForm" :rules="EmailRules">
           <el-form-item label="用户名" prop="username">
@@ -79,7 +79,7 @@
     </el-dialog>
 
     <!--修改密码的对话框-->
-    <el-dialog title="修改密码" :close-on-click-modal="false" v-model="resetPasswordDialogVis" width="40%">
+    <el-dialog title="修改密码" :close-on-click-modal="false" :lock-scroll="false" v-model="resetPasswordDialogVis" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="resetPasswordForm" ref="ResetPasswordRef" label-width="80px" :rules="passwordResetRules">
           <el-form-item label="新密码" prop="newPassword">
