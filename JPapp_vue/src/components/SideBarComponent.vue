@@ -50,7 +50,7 @@
         </el-menu-item>
         <el-menu-item index="/ViewMyCourse" :route="{ name: 'ViewMyCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>作业
+          <el-icon><message /></el-icon>已授课程
           </template>
         </el-menu-item>
         <el-menu-item>

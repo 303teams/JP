@@ -9,12 +9,18 @@ import * as ElIconModules from '@element-plus/icons'
 import store from '@/store'
 import "lib-flexible-computer";
 import '@/utils/validator.js'
+import '@/utils/detectZoom.js'
+// import {detectZoom} from "@/utils/detectZoom";
+
+// const m = detectZoom();
+// document.body.style.zoom = 100 / Number(m);
 
 const app = createApp(App)
 //  统一注册el-icon图标
 for(let iconName in ElIconModules){
     app.component(iconName,ElIconModules[iconName])
 }
+
 
 // router.beforeEach((to, from, next) => {
 //     const role = localStorage.getItem('role')
@@ -32,6 +38,7 @@ for(let iconName in ElIconModules){
 //         next()
 //     }
 // })
+
 
 app.use(router);
 app.use(ElementUI)
