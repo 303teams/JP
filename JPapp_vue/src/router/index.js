@@ -9,6 +9,7 @@ import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.v
 import TeaCourseList from "@/TeacherManagement/TeacherHomework/TeacherCourseList.vue";
 import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList.vue";
 import HomeworkSubmitList from "@/TeacherManagement/TeacherHomework/HomeworkSubmitList.vue";
+import MutualEva from "@/StudentManagement/StudentHomework/MutualEva.vue";
 const routerHistory = createWebHistory();
 
 
@@ -54,6 +55,13 @@ const router = createRouter({
                     path: 'HomeworkSubmit/:cno/:homeworkID',
                     name:'HomeworkSubmit',
                     component: HomeworkSubmit,
+                    props: true,
+                },
+
+                {
+                    path: 'MutualEva/:contentID',
+                    name:'MutualEva',
+                    component: MutualEva,
                     props: true,
                 }
             ]
