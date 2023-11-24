@@ -18,4 +18,6 @@ public interface HomeworkService {
 
     void addHomework(Homework homework);
 
+    RspObject<Boolean> setAnswer(Integer homeworkID,byte[] answer,String Afilename);
+
 }

@@ -312,7 +312,7 @@ onMounted(() => {
 }
 
 .HomeworkList{
-  width: 100vh;
+  width: 100%;
 }
 
 

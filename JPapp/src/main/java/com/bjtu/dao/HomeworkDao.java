@@ -19,5 +19,6 @@ public interface HomeworkDao {
     //    老师查看某一课程的学生作业提交列表
     public List<Homework> findHWsbyCno(String cno);
 
+    public void setAnswer (Integer homeworkID,byte[] answer,String Afilename);
 
 }

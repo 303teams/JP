@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
@@ -57,6 +58,10 @@ public class StudentController {
         return studentService.findHWbyCno(user.getId(),cno);
     }
 
-
-
+//    返回互评作业列表
+    @AuthAccess
+    @PostMapping("findCTsByCID")
+    public RspObject<List<Content>> findCTsByCID(Integer contentID){
+        return studentService.findCTsByCID(contentID);
+    }
 }

@@ -125,7 +125,7 @@ public class TeacherServiceImpl implements TeacherService {
             List<Map<String, Object>> courses = courseDao.findTHCourse(id);
 
             if (courses.isEmpty()) {
-                return RspObject.fail("无课程信息！");
+                return RspObject.success("无课程信息！");
             }
 
             return RspObject.success("查询成功！",courses);

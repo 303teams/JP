@@ -26,6 +26,7 @@ public class Content {
     private Integer content3;
     private Integer content4;
     private Integer content5;
+    private Integer content6;
 
 //    学生姓名
     private String sname;

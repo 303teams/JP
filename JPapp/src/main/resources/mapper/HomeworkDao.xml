@@ -6,6 +6,12 @@
 
 <mapper namespace="com.bjtu.dao.HomeworkDao">
 
+    <update id="setAnswer">
+        Update homework
+        Set answer = #{answer},Afilename = #{Afilename}
+        Where homeworkID = #{homeworkID}
+    </update>
+
     <select id="findAll" resultType="Homework">
         select * from homework
     </select>
