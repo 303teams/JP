@@ -7,8 +7,8 @@
 
 
     <insert id="insert" parameterType="Content" useGeneratedKeys="true" keyProperty="contentID">
-        insert into content(contentID,cno,sno,homeworkID,content,fileName)
-        values (#{contentID}, #{cno},#{sno},#{homeworkID},#{content},#{fileName})
+        insert into content(contentID,cno,sno,homeworkID,content,fileName,submitTime)
+        values (#{contentID}, #{cno},#{sno},#{homeworkID},#{content},#{fileName},#{submitTime})
     </insert>
 
     <select id="findCTById" resultType="Content">
