@@ -1,10 +1,12 @@
 package com.bjtu.service.impl;
 
+import com.bjtu.dao.ContentDao;
 import com.bjtu.dao.CourseDao;
 import com.bjtu.dao.HomeworkDao;
 import com.bjtu.dao.StudentDao;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
+import com.bjtu.service.ContentService;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +29,9 @@ public class StudentServiceImpl implements StudentService  {
 
     @Autowired
     HomeworkDao homeworkDao;
+
+    @Autowired
+    ContentDao contentDao;
 
     @Override
     public RspObject<User> login(String id, String password) {
@@ -136,7 +142,7 @@ public class StudentServiceImpl implements StudentService  {
             List<Map<String, Object>> courses = courseDao.findSTCourse(id);
 
             if (courses.isEmpty()) {
-                return RspObject.fail("无课程信息！");
+                return RspObject.success("无课程信息！");
             }
             return RspObject.success("查询成功！",courses);
         } catch (Exception e) {
@@ -150,7 +156,7 @@ public class StudentServiceImpl implements StudentService  {
             List<Homework> contents = homeworkDao.findHWbyCno(id,cno);
 
             if (contents.isEmpty()) {
-                return RspObject.fail("无作业信息！");
+                return RspObject.success("无作业信息！");
             }
 
             return RspObject.success("查询成功！",contents);
@@ -160,5 +166,21 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+    @Override
+    public RspObject<List<Content>> findCTsByCID(Integer contentID) {
+        try {
+            Content content = contentDao.findCTById(contentID);
+            List<Content> contents = new ArrayList<>();
+            contents.add(contentDao.findxCTById(content.getContent1()));
+            contents.add(contentDao.findxCTById(content.getContent2()));
+            contents.add(contentDao.findxCTById(content.getContent3()));
+            contents.add(contentDao.findxCTById(content.getContent4()));
+            contents.add(contentDao.findxCTById(content.getContent5()));
+            contents.add(contentDao.findxCTById(content.getContent6()));
+            return RspObject.success("查询成功！", contents);
+        }catch (Exception e){
+            throw new ServiceException(500,"查询失败！");
+        }
+    }
 
 }

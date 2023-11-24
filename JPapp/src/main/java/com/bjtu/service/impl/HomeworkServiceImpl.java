@@ -32,4 +32,14 @@ public class HomeworkServiceImpl implements HomeworkService {
     public void addHomework(Homework homework) {
         homeworkDao.insert(homework);
     }
+
+    @Override
+    public RspObject<Boolean> setAnswer(Integer homeworkID, byte[] answer,String Afilename) {
+        try {
+            homeworkDao.setAnswer(homeworkID,answer,Afilename);
+            return RspObject.success("添加成功",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,"添加失败！");
+        }
+    }
 }

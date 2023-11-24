@@ -78,4 +78,12 @@ public class HomeworkController {
         return RspObject.success("上传成功，当前thId：" , homework);
     }
 
+    //    教师上传正确答案
+    @AuthAccess
+    @PostMapping("/setAnswer")
+    public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
+        String name = file.getOriginalFilename();
+        return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
+    }
+
 }

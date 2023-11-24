@@ -29,4 +29,6 @@ public interface StudentService {
 //    RspObject<List<Student>> findAll();
     RspObject<List<Homework>> findHWbyCno(String id,String cno);
 
+    RspObject<List<Content>> findCTsByCID(Integer contentID);
+
 }

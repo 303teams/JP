@@ -1,6 +1,7 @@
 package com.bjtu.controller;
 
 
+import cn.hutool.core.date.DateTime;
 import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.Content;
 import com.bjtu.pojo.RspObject;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("content")
@@ -37,15 +40,18 @@ public class ContentController {
                                       HttpServletResponse response) throws IOException {
         Content content = new Content();
         User user = TokenUtils.getCurrentUser();
-    //        System.out.println(cno+" "+homeworkID+" "+user.getId());
         String name = file.getOriginalFilename();
-    //        System.out.println("filename: "+name);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
 
         content.setContent(file.getBytes())
                 .setHomeworkID(homeworkID)
                 .setFileName(name)
                 .setSno(user.getId())
-                .setCno(cno) ;
+                .setCno(cno)
+                .setSubmitTime(formattedTime);
 
         contentService.addContent(content);
         // 添加对响应头的修改
