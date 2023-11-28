@@ -11,7 +11,7 @@
         values (#{contentID}, #{cno},#{sno},#{homeworkID},#{content},#{fileName},#{submitTime})
     </insert>
 
-    <select id="findCTById" resultType="Content">
+    <select id="findCTById" resultType="com.bjtu.pojo.Content">
         SELECT *
         FROM content
         WHERE content.contentID = #{id}
@@ -26,20 +26,32 @@
            OR c.homeworkID IS NULL;
     </select>
 
+<!--    查询作业号为contentID，对应的评分人为sno的打分信息-->
     <select id="findxCTById" resultType="com.bjtu.pojo.Content">
         SELECT
             c.contentID,
             c.fileName as fileName,
-            score.score as score,
-            score.content as comment
+            COALESCE(score.score, 0) as score,
+            COALESCE(score.content, 'No comment') as comment
         FROM
             content c
-                LEFT JOIN score ON
-                c.contentID = score.contentID
-                AND c.sno = score.sno
+                LEFT JOIN score ON c.contentID = score.contentID AND score.sno = #{sno}
         WHERE
-            c.contentID = #{contentID} AND c.sno = #{sno}
+            c.contentID = #{contentID};
 
+    </select>
+
+
+    <select id="findSnoByCID" resultType="java.lang.String">
+        Select sno
+        FROM content WHERE
+        contentID = #{contentID}
+    </select>
+
+    <select id="findCTSByCID" resultType="com.bjtu.pojo.Content">
+        SELECT contentID1,contentID2,contentID3,contentID4,contentID5,contentID6
+        FROM content
+        WHERE content.contentID = #{id}
     </select>
 
     <update id="setCTScore"  parameterType="integer">
