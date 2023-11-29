@@ -98,7 +98,7 @@ const handleSubmit = () => {
 
 const fetchData = () => {
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     axios
         .post(
             'http://localhost:8081/student/findCTsByCID',
@@ -161,7 +161,6 @@ const fetchData = () => {
           console.error("发生未知错误！");
           console.log(error);
 
-          reject("发生未知错误！");
         });
   });
 };
