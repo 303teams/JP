@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -41,7 +43,7 @@ public class HomeworkController {
 //    学生/老师 下载 作业
     @AuthAccess
     @PostMapping("/downloadHW")
-    public ResponseEntity<byte[]> downloadHW(Integer homeworkId){
+    public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
         System.out.println("hh"+homeworkId);
         Homework homework = homeworkService.findHWById(homeworkId);
 
@@ -49,11 +51,14 @@ public class HomeworkController {
 
         byte[] content = homework.getContent();
         String fileName = homework.getFileName();
+        System.out.println(fileName);
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
         HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type", "application/octet-stream; charset=UTF-8");
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }

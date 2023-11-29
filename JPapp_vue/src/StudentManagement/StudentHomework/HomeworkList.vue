@@ -29,7 +29,7 @@
         <el-table-column label="互评任务" width="130px">
           <template v-slot="scope">
           <el-button
-              v-if="shouldDisplayButton(scope.row)"
+              v-if="EvaButton(scope.row)"
               @click="mutualEva(scope.row.contentID)"
           >
             前往互评
@@ -41,11 +41,12 @@
           <template v-slot="scope">
           <el-button
               size="large"
-              v-if="scope.row.contentID === null"
+              v-if="SubmitButton(scope.row)"
               @click="handleSubmit(props.cno, scope.row.homeworkID,scope.row.name,scope.row.submitDdl)"
           >
             提交
           </el-button>
+          <span v-else-if="IfSubmit(scope.row)">未提交</span>
           <span v-else>已提交</span>
           </template>
         </el-table-column>
@@ -104,12 +105,27 @@ const handleSubmit = (cno,homeworkID,name,submitDdl) => {
   });
 };
 
-const shouldDisplayButton = (row) =>{
+const EvaButton = (row) =>{
   const currentTimestamp = new Date().getTime();
   // 检查时间是否在submitDdl和scoreDdl之间
   return row.contentID !== null &&
       currentTimestamp >= new Date(row.submitDdl).getTime() &&
       currentTimestamp <= new Date(row.scoreDdl).getTime();
+};
+
+const SubmitButton = (row) =>{
+  const currentTimestamp = new Date().getTime();
+  // 检查时间是否在submitDdl之前
+  return row.contentID === null &&
+      currentTimestamp <= new Date(row.submitDdl).getTime();
+};
+
+//判断是否提交
+const IfSubmit = (row) =>{
+  const currentTimestamp = new Date().getTime();
+  // 检查时间是否在submitDdl之前
+  return row.contentID === null &&
+      currentTimestamp > new Date(row.submitDdl).getTime();
 };
 
 const mutualEva = (contentID) => {
@@ -153,7 +169,7 @@ const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
           !search.value ||
-          data.cno.toLowerCase().includes(search.value.toLowerCase())
+          data.name.toLowerCase().includes(search.value.toLowerCase())
   );
 };
 
@@ -180,7 +196,7 @@ onMounted(() => {
 .icon{
   position: absolute;
   top: -40px;
-  left: 50px;
+  left: 20px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
@@ -188,8 +204,8 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: 0px;
-  left: 55px;
+  top: 30px;
+  left: 40px;
 }
 
 .title {
@@ -211,7 +227,7 @@ onMounted(() => {
 }
 
 .main{
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .search-container {
@@ -236,7 +252,7 @@ onMounted(() => {
   align-items: center;
   position: absolute;
   margin-top: 20px;
-  right: 170px;
+  right: 40px;
 }
 
 .main_page{

@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; justify-content: center;">
+  <div style="display: flex; flex-direction: column; justify-content: center">
     <div class="title" style="text-align: left">
       <h1 style="font-size: 30px; margin: 0; display: inline-block;">{{ name }}</h1>
       <span style="font-size: 15px;color: red; display: inline-block; margin-left: 40px;">截止时间 {{submitDdl}}</span>
@@ -13,45 +13,39 @@
 
     <el-divider></el-divider>
 
-    <div>
-      <el-button @click="UploadHomework">提交作业</el-button>
-      <el-button @click="Back">返回</el-button>
+
+    <div style = "flex: 1; display: flex; align-items: center; justify-content: start">
+      <el-form :model="submitHomeworkForm" ref="SubmitHomeworkRef" :rules="rules">
+        <el-form-item label="作业附件" prop="files">
+          <el-upload
+              class="upload-demo"
+              action="#"
+              :auto-upload="false"
+              :on-change="handleChange"
+              :on-remove="handleRemove"
+              :on-exceed="handleExceed"
+              multiple
+              limit="1"
+          >
+            <el-button type="primary">上传附件</el-button>
+            <template #tip>
+            <div class="el-upload__tip">
+              文件大小不超过10Mb
+            </div>
+            </template>
+          </el-upload>
+        </el-form-item>
+        <el-form-item style="margin-top: 100px">
+          <div style="width: 1200px" label="内容" prop="info">
+            <el-input type="textarea" resize="none" :rows="10" v-model="submitHomeworkForm.info" placeholder="请输入作业内容"/>
+          </div>
+        </el-form-item>
+      </el-form>
     </div>
-
-
-    <el-dialog title="提交作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" width="40%">
-      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form :model="submitHomeworkForm" ref="SubmitHomeworkRef" label-width="80px" :rules="rules">
-          <el-form-item label="作业附件" prop="file">
-            <el-upload
-                class="upload-demo"
-                drag
-                action="#"
-                :auto-upload="false"
-                :on-change="onChange"
-                :before-remove="beforeRemove"
-                multiple
-                :file-list="fileList"
-                limit="1"
-            >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">
-                拖动文件到这或者 <em>点击上传</em>
-              </div>
-              <template #tip>
-                <div class="el-upload__tip">
-                  文件大小不超过10Mb
-                </div>
-              </template>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-      </div>
-      <span class="dialog-footer">
+    <span class="dialog-footer">
         <el-button @click="closeDia">取消</el-button>
         <el-button type="primary" @click="submitHomework">确认</el-button>
-      </span>
-      </el-dialog>
+    </span>
   </div>
 
 </template>
@@ -61,53 +55,54 @@
 import {defineProps, onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 
-const dialogTableVisible = ref(false);
 const token = localStorage.getItem('token');
 const props = defineProps(['homeworkID','cno']);
 const router = useRouter();
 const SubmitHomeworkRef = ref();
-const fileList = ref([]);
 const blobUrl = ref();
 const fileName = ref();
 const name = history.state.name;
 const submitDdl = history.state.submitDdl;
 const submitHomeworkForm = reactive({
-  file: null,
+  files: null,
+  info: null,
 });
 
 const rules = {
-  file: [
+  files: [
     { required: true, message: '请上传作业附件', trigger: 'change' },
   ],
 };
-const UploadHomework = () => {
-  dialogTableVisible.value = true;
-}
 
-const onChange = (file) => {
-  submitHomeworkForm.file = file.raw;
+const handleChange = (file,fileList) => {
+  const fileName = fileList.length > 0 ? fileList[0].name : '';
+  submitHomeworkForm.files = fileList;
+  submitHomeworkForm.info = fileName;
 };
 
-const beforeRemove = () => {
-  submitHomeworkForm.file = null;  // 取消选择文件，清空 content
-  return true;  // 返回 true 表示继续移除
+const handleRemove = (file,fileList) => {
+  submitHomeworkForm.files = fileList;  // 移除文件
+};
+
+const handleExceed = () => {
+  ElMessage.warning(`最多只能上传1个附件`);
 };
 
 const submitHomework = () => {
-  const formData = new FormData();
-  formData.set('file', submitHomeworkForm.file);
-  formData.set('cno', props.cno)
-  formData.set('homeworkID', props.homeworkID)
-
-  // formData.set('submit_ddl', homeworkData.submitDdl);
-  // formData.set('score_ddl', homeworkData.scoreDdl);
-
-
-  console.log(formData)
-
   SubmitHomeworkRef.value.validate((valid) => {
     if (valid) {
+      const formData = new FormData();
+      if(submitHomeworkForm.files){
+        for(const file of submitHomeworkForm.files){
+          if(file.raw){
+            formData.append('file', file.raw);
+          }
+        }
+      }
+      formData.set('cno', props.cno)
+      formData.set('homeworkID', props.homeworkID)
       axios
           .post(
               'http://localhost:8081/content/uploadCT',
@@ -122,7 +117,6 @@ const submitHomework = () => {
           .then((res) => {
             if (res.data.code === 200) {
               console.log(res)
-              dialogTableVisible.value = false;
               resetFormData();
               Back();
             } else {
@@ -143,16 +137,13 @@ const submitHomework = () => {
       return false;
     }
   });
-  dialogTableVisible.value = false;
 };
 
 const resetFormData = () => {
-  submitHomeworkForm.file = null;
-  fileList.value = [];
+  submitHomeworkForm.files = null;
 };
 
 const closeDia= () => {
-  dialogTableVisible.value = false;
   resetFormData();
 };
 
@@ -182,7 +173,7 @@ const fetchData = () => {
         // 提取 filename 的方法
         function extractFilename(contentDisposition) {
           const matches = contentDisposition.match(/filename="(.+?)"/);
-          return matches ? matches[1] : null;
+          return matches ? decodeURIComponent(matches[1]) : null;
         }
 
         const contentDisposition = res.headers['content-disposition'];
@@ -218,7 +209,7 @@ onMounted(() => {
 .content-container {
   text-align: left;
   margin-top: 30px;
-  margin-bottom: 200px;
+  margin-bottom: 150px;
   display: flex;
   flex-direction: column;
 }

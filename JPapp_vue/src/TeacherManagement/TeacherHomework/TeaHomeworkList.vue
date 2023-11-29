@@ -90,16 +90,16 @@
                 :disabled-date="disabledScoreDate"
                 placeholder="选择日期和时间"/>
           </el-form-item>
-          <el-form-item label="上传文件" prop="content">
+          <el-form-item label="上传附件" prop="content">
             <el-upload
                 class="upload-demo"
                 drag
                 action="#"
                 :auto-upload="false"
-                :on-change="onChange"
-                :before-remove="beforeRemove"
+                :on-change="handleChange"
+                :on-remove="handleRemove"
+                :on-exceed="handleExceed"
                 multiple
-                :file-list="fileList"
                 limit="1"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -112,6 +112,11 @@
               </div>
               </template>
             </el-upload>
+          </el-form-item>
+          <el-form-item  label="作业内容" prop="info">
+            <div style="width: 400px">
+              <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -127,7 +132,7 @@
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
-import { ElConfigProvider } from 'element-plus';
+import {ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRoute, useRouter} from "vue-router";
 
@@ -148,8 +153,8 @@ const homeworkData = reactive({
   content: null,
   submitDdl: '',
   scoreDdl: '',
+  info: '',
 });
-const fileList = ref([]);
 
 const homeFormRules = reactive({
   name: [
@@ -285,28 +290,32 @@ const clickSearch = () => {
   updateFilteredData();
 };
 
-const onChange = (file) => {
-  homeworkData.content = file.raw;
+const handleChange = (file,fileList) => {
+  homeworkData.content = fileList;
 };
 
-const beforeRemove = () => {
-  homeworkData.content = null;  // 取消选择文件，清空 content
-  return true;  // 返回 true 表示继续移除
+const handleRemove = (file,fileList) => {
+  homeworkData.content = fileList;  // 移除文件
+};
+
+const handleExceed = () => {
+  ElMessage.warning(`最多只能上传1个附件`);
 };
 
 const assignHomework = () => {
-  const formData = new FormData();
-  formData.set('file', homeworkData.content);
-  formData.set('cno', props.cno)
-  formData.set('HWName', homeworkData.name);
-  formData.set('scoreDdl', homeworkData.scoreDdl);
-  formData.set('submitDdl', homeworkData.submitDdl);
-
-  console.log(homeworkData.name)
-
-  console.log(formData)
-
   HomeworkFormRef.value.validate((valid) => {
+    const formData = new FormData();
+    if(homeworkData.content){
+      for(const file of homeworkData.content){
+        if(file.raw){
+          formData.append('file', file.raw);
+        }
+      }
+    }
+    formData.set('cno', props.cno)
+    formData.set('HWName', homeworkData.name);
+    formData.set('scoreDdl', homeworkData.scoreDdl);
+    formData.set('submitDdl', homeworkData.submitDdl);
       if (valid) {
         console.log(formData.get('scoreDdl'))
         axios
@@ -348,7 +357,7 @@ const resetFormData = () => {
   homeworkData.content = null;
   homeworkData.submitDdl = '';
   homeworkData.scoreDdl = '';
-  fileList.value = [];
+  // fileList.value = [];
   dialogTableVisible.value = false;
 };
 
