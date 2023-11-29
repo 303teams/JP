@@ -7,12 +7,13 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
 @Data
 @Accessors(chain = true)
-public class Homework {
+public class Homework implements Serializable {
 
     private Integer homeworkID;
     private String cno;

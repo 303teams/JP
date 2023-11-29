@@ -42,7 +42,6 @@ public class StudentController {
     }
 
     // 学生的课程列表
-    @AuthAccess
     @PostMapping("/findCourse")
     public RspObject<List<Map<String, Object>>> CourseList() {
         User user = TokenUtils.getCurrentUser();
@@ -50,7 +49,6 @@ public class StudentController {
     }
 
 //    学生查看自己某课程的作业列表
-    @AuthAccess
     @PostMapping("/findCTByCno")
     public RspObject<List<Homework>> findCTByCno(String cno) {
 //        System.out.println(cno);
@@ -59,9 +57,9 @@ public class StudentController {
     }
 
 //    返回互评作业列表
-    @AuthAccess
     @PostMapping("findCTsByCID")
     public RspObject<List<Content>> findCTsByCID(Integer contentID){
+        System.out.println("in1");
         return studentService.findCTsByCID(contentID);
     }
 }

@@ -9,12 +9,17 @@ public interface ContentDao {
 
 
     public Content findCTById(Integer id);
+
     void insert(Content content);
 
     public List<Content> findCTByHId(Integer homeworkID);
 
     public void setCTScore(Integer contentID,Integer score);
 
-    public Content findxCTById(Integer contentID);
+    public Content findxCTById(Integer contentID,String sno);
+
+    public String findSnoByCID(Integer contentID);
+
+    public Content findCTSByCID(Integer contentID);
 
 }
