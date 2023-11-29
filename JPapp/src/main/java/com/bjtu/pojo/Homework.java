@@ -49,6 +49,9 @@ public class Homework implements Serializable {
 
     private Integer score;
 
+    private String Afilename;
+    private byte[] answer;
+
     public Homework() {
     }
 

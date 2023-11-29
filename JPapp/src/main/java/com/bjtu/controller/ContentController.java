@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -63,18 +65,20 @@ public class ContentController {
 //    学生/老师 下载 学生的作业
     @AuthAccess
     @PostMapping("/downloadCT")
-    public ResponseEntity<byte[]> downloadCT(@RequestParam Integer contentID) {
-        System.out.println("hh"+ contentID);
+    public ResponseEntity<byte[]> downloadCT(@RequestParam Integer contentID) throws UnsupportedEncodingException {
+//        System.out.println("hh"+ contentID);
         Content content1 = contentService.findById(contentID);
 
-        System.out.println("hh"+ contentID);
+//        System.out.println("hh"+ contentID);
 
         byte[] content = content1.getContent();
         String fileName = content1.getFileName();
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }

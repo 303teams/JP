@@ -23,14 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 @RestController
 @RequestMapping("homework")
@@ -41,19 +36,19 @@ public class HomeworkController {
 //    学生/老师 下载 作业
     @AuthAccess
     @PostMapping("/downloadHW")
-    public ResponseEntity<byte[]> downloadHW(Integer homeworkId){
-        System.out.println("hh"+homeworkId);
+    public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
         Homework homework = homeworkService.findHWById(homeworkId);
-
-//        System.out.println("hh"+homeworkId);sno
 
         byte[] content = homework.getContent();
         String fileName = homework.getFileName();
 
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+
         HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
@@ -84,6 +79,24 @@ public class HomeworkController {
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
+    }
+
+    @AuthAccess
+    @PostMapping("/downloadAns")
+    public ResponseEntity<byte[]> downloadAns(@RequestParam Integer homeworkID) throws UnsupportedEncodingException {
+        Homework homework = homeworkService.findHWById(homeworkID);
+        byte[] answer = homework.getAnswer();
+        String fileName = homework.getAfilename();
+
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
+
+        return new ResponseEntity<>(answer, headers, HttpStatus.OK);
     }
 
 }
