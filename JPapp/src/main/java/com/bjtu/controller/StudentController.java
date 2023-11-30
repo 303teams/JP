@@ -8,12 +8,18 @@ import com.bjtu.service.StudentService;
 import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -30,21 +36,12 @@ public class StudentController {
     @Resource
     FileUtils fileUtils;
 
-//    @PostMapping("modifyEmail")
-//    public RspObject<String> modifyEmail(String email){
-//        return studentService.modifyEmail(email);
-//    }
-//
-//    @PostMapping("modifyPassword")
-//    public RspObject<String> modifyPassword(String newPassword,String oldPassword){
-//        return studentService.modifyPassword(newPassword,oldPassword);
-//    }
-
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Student student){
         return studentService.modifyInfo(student);
     }
 
+    // 学生的课程列表
     @AuthAccess
     @PostMapping("/findCourse")
     public RspObject<List<Map<String, Object>>> CourseList() {
@@ -52,7 +49,9 @@ public class StudentController {
         return studentService.findCourse(user.getId());
     }
 
+//    学生查看自己某课程的作业列表
     @AuthAccess
+<<<<<<< HEAD
     @GetMapping("/downloadHW/{homeworkID}")
     public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
         Homework homework = homeworkService.findHomeworkByThId(homeworkID);
@@ -76,15 +75,14 @@ public class StudentController {
         System.out.println(file.getBytes());
 
         return RspObject.success("上传成功，当前thId：" + content.getContentID() , content);
+=======
+    @PostMapping("/findCTByCno")
+    public RspObject<List<Homework>> findCTByCno(String cno) {
+        System.out.println(cno);
+        User user = TokenUtils.getCurrentUser();
+        return homeworkService.findById(user.getId(),cno);
+>>>>>>> lzc
     }
 
-    @AuthAccess
-    @GetMapping("/downloadCT/{contentID}")
-    public  RspObject<Object> downloadCT(@PathVariable String contentID, HttpServletResponse response){
-        Content content = contentService.findById(contentID);
-        if(fileUtils.downloadFile(content.getContent(), "homework_9", response))
-            return RspObject.success("成功下载学生作业", content);
-        else return RspObject.fail("学生下载失败", content);
-    }
 
 }

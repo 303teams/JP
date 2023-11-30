@@ -6,7 +6,8 @@ import TeaInfoPage from "@/TeacherManagement/TeacherHome/TeaInfoPage.vue";
 import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
 import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
 import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
-import HomeworkUpload from "@/TeacherManagement/TeacherHomework/HomeworkUpload.vue";
+import TeaCourseList from "@/TeacherManagement/TeacherHomework/TeacherCourseList.vue";
+import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList.vue";
 const routerHistory = createWebHistory();
 
 
@@ -49,7 +50,7 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'HomeworkSubmit/:homeworkID',
+                    path: 'HomeworkSubmit/:cno/:homeworkID',
                     name:'HomeworkSubmit',
                     component: HomeworkSubmit,
                     props: true,
@@ -67,19 +68,20 @@ const router = createRouter({
                     component: TeaInfoPage
                 },
                 {
-                    path: 'HomeworkUpload',
-                    name:'HomeworkUpload',
-                    component: HomeworkUpload,
+                    path: 'ViewMyCourse',
+                    name:'ViewMyCourse',
+                    component: TeaCourseList,
+                    props: true,
+                },
+
+                {
+                    path: 'ViewMyHomework/:cno',
+                    name:'ViewMyHomework',
+                    component: TeaHomeworkList,
                     props: true,
                 }
             ]
         },
-
-        {
-            path: '/wangEditor',
-            name: 'wangEditor',
-            component: () => import('@/components/wangEditor.vue')
-        }
 
 
         // {

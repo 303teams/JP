@@ -9,10 +9,18 @@ import com.bjtu.service.HomeworkService;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,18 +29,41 @@ public class HomeworkController {
     @Autowired
     HomeworkService homeworkService;
 
+//    学生/老师 下载 作业
     @AuthAccess
-    @PostMapping("/findAll")
-    public RspObject<List<Homework>> findAllList() {
-        return homeworkService.findAll();
+    @PostMapping("/downloadHW")
+    public ResponseEntity<byte[]> downloadHW(String homeworkId){
+//        System.out.println("hh"+homeworkId);
+        Homework homework = homeworkService.findHWById(homeworkId);
+
+//        System.out.println("hh"+homeworkId);sno
+
+        byte[] content = homework.getContent();
+        String fileName = homework.getFileName();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
-//    @AuthAccess
-        @PostMapping("/findById")
-        public RspObject<List<Homework>> ByIdList(String cno) {
-            System.out.println(cno);
-            User user = TokenUtils.getCurrentUser();
-            return homeworkService.findById(user.getId(),cno);
-        }
+//    老师上传作业
+    @AuthAccess
+    @PostMapping("/uploadHW")
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno) throws IOException {
+        Homework homework = new Homework();
+        String name = file.getOriginalFilename();
 
+        User user = TokenUtils.getCurrentUser();
+        homework.setContent(file.getBytes())
+                .setTno(user.getId())
+                .setFileName(name)
+                .setCno(cno);
+    // .setSubmitDdl(submit_ddl)
+    // .setScoreDdl(score_ddl)
+        homeworkService.addHomework(homework);
+        return RspObject.success("上传成功，当前thId：" , homework);
+    }
 }

@@ -6,6 +6,7 @@ import com.bjtu.pojo.Teacher;
 import com.bjtu.pojo.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TeacherService {
 
@@ -25,4 +26,5 @@ public interface TeacherService {
 
     public RspObject<String> modifyInfo(Teacher teacher);
 
+    RspObject<List<Map<String, Object>>> findCourse(String id);
 }

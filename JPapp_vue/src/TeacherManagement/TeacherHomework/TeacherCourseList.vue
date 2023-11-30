@@ -1,32 +1,33 @@
 <template>
-  <el-row  v-if="items.length > 0">
-    <el-col
-        v-for="(item, index) in items"
-        :key="index"
-        :span="7"
-    >
-      <div class="course_info">
-        <img
-            src="@/assets/img.png"
-            class="image"
-            @click="courseEnter(item.cno)"
-        />
-        <div class="info-content">
-          <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
-          <span class="course_id">课程号: {{item.cno}}</span>
-          <span class="teacher_name">主讲教师：{{item.teacherName}}</span>
+  <div style="">
+    <el-row v-if="items.length > 0">
+      <el-col
+          v-for="(item, index) in items"
+          :key="index"
+          :span="7"
+      >
+        <div class="course_info">
+          <img
+              src="@/assets/img.png"
+              class="image"
+              @click="courseEnter(item.cno)"
+          />
+          <div class="info-content">
+            <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
+            <span class="course_id">课程号: {{item.cno}}</span>
+          </div>
+
+          <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
         </div>
 
-        <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
-      </div>
 
+      </el-col>
       <el-divider />
-    </el-col>
+    </el-row>
 
-  </el-row>
-
-  <div v-else>
-    <el-empty description="暂无已选课程"></el-empty>
+    <div v-else>
+      <el-empty description="暂无已授课程"></el-empty>
+    </div>
   </div>
 </template>
 
@@ -42,7 +43,7 @@ const router = useRouter();
 const fetchData = async () => {
   axios
       .post(
-          'http://localhost:8081/student/findCourse',
+          'http://localhost:8081/teacher/findCourse',
           null,
           {
             headers: {
@@ -66,7 +67,7 @@ const fetchData = async () => {
 };
 
 const courseEnter = (cno) => {
-    router.push(`/studentHome/viewHomework/${cno}`);
+    router.push(`/teacherHome/ViewMyHomework/${cno}`);
 };
 
 onMounted(() => {

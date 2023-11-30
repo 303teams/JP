@@ -7,11 +7,16 @@
 
 
     <insert id="insert" parameterType="Content" useGeneratedKeys="true" keyProperty="contentID">
+<<<<<<< HEAD
         insert into content(contentID,cno,sno,homeworkID,content,cname)
         values (#{contentID},#{cno},#{sno},#{homeworkID},#{content},#{cname})
+=======
+        insert into content(contentID,cno,sno,homeworkID,content,fileName)
+        values (#{contentID}, #{cno},#{sno},#{homeworkID},#{content},#{fileName})
+>>>>>>> lzc
     </insert>
 
-    <select id="findContentById" resultType="Content">
+    <select id="findCTById" resultType="Content">
         SELECT *
         FROM content
         WHERE content.contentID = #{id}

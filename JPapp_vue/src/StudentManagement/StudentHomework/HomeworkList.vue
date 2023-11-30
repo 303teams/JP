@@ -20,17 +20,15 @@
                 size="large" column_width="60px"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="id" align="center">
-          <template v-slot="{ $index }">{{ $index + 1 }}</template>
-        </el-table-column>
         <el-table-column label="作业名称" sortable prop="name" />
         <el-table-column label="课程名称" sortable prop="courseName" />
         <el-table-column label="发布人" sortable prop="teacherName" />
         <el-table-column label="截止时间" sortable prop="submitDdl" />
-        <el-table-column align="right">
+        <el-table-column label="互评任务" sortable prop="submitDdl" />
+        <el-table-column label="提交作业">
           <template v-slot="scope">
-          <el-button size="large" @click="downloadHomework(scope.row.homeworkID)">下载作业</el-button>
-          <el-button size="large" @click="handleSubmit(scope.row.homeworkID)">提交</el-button>
+          <el-button size="large" v-if="scope.row.contentID === null" @click="handleSubmit(props.cno, scope.row.homeworkID)">提交</el-button>
+          <span v-else>已提交</span>
           </template>
         </el-table-column>
       </el-table>
@@ -49,24 +47,6 @@
       </el-config-provider>
     </div>
 
-    <!-- 上传文件的弹出框 -->
-    <el-dialog title="上传文件" v-model="dialogTableVisible" width="30%" center>
-      <el-input placeholder="输入文字或选择文件路径"></el-input>
-      <el-upload
-          class="upload-demo"
-          drag
-          action="http://localhost:8081/file/upload"
-          :headers="{'token': token}"
-          multiple
-      >
-        <template #trigger>
-        <el-button icon="el-icon-upload">选择文件</el-button>
-        </template>
-      </el-upload>
-
-      <el-button>提交</el-button>
-      <el-button>取消</el-button>
-    </el-dialog>
   </div>
 </template>
 
@@ -82,7 +62,6 @@ const pageSize = ref(10); //每页展示多少条数据
 const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
-const dialogTableVisible = ref(false);
 const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const router = useRouter();
@@ -96,42 +75,14 @@ const filterTableData = computed(() =>
 );
 
 //点击提交按钮
-const handleSubmit = (homeworkID) => {
-  router.push(`/studentHome/HomeworkSubmit/${homeworkID}`);
+const handleSubmit = (cno,homeworkID) => {
+  router.push(`/studentHome/HomeworkSubmit/${cno}/${homeworkID}`);
 };
-
-const downloadHomework = (homeworkID) => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/downloadHW',
-          {
-            homeworkID: homeworkID,
-          },
-
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(res)
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
-        }
-      })
-      .catch((err) => {
-        console.error("发生未知错误！");
-        console.log(err);
-      });
-}
 
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/homework/findById',
+          'http://localhost:8081/student/findCTByCno',
           {
             cno: props.cno,
           },

@@ -23,7 +23,7 @@ public interface StudentService {
 
     public RspObject<String> modifyInfo(Student student);
 
-    RspObject<List<String>> findAll();
+//    RspObject<List<String>> findAll();
     public RspObject<List<Map<String, Object>>> findCourse(String id);
 
 //    RspObject<List<Student>> findAll();
