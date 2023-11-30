@@ -15,7 +15,7 @@
 
         <div class="custom-text-with-checkbox">
           <p class="custom-text">已完成作业</p>
-          <input type="checkbox" id="checkbox1" name="checkbox1">
+          <input type="checkbox" id="checkbox1" name="checkbox1" v-model="ifSubmit" disabled>
         </div>
       </div>
 
@@ -42,7 +42,7 @@
     </div>
 
     <homework-submit :homeworkID="props.homeworkID" v-show="currentStage === 'submission'"/>
-    <evaluation-list ::homeworkID="props.homeworkID" :contentID="contentID" v-show="currentStage === 'peerReview'"/>
+    <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" v-show="currentStage === 'peerReview'"/>
   </div>
 
 </template>
@@ -62,7 +62,6 @@ const props = defineProps(['homeworkID','cno']);
 const remainDays = ref();
 const currentStage = ref();
 const resultPublishProgress = ref();
-const ifSubmit = ref(true);
 const currentTimestamp = new Date().getTime();
 
 const calculateRemainingDays = () => {
@@ -105,6 +104,13 @@ const Progress = computed(() => {
   }
 });
 
+const ifSubmit = computed(() => {
+  if(contentID === null){
+    return false;
+  }else {
+    return true;
+  }
+});
 
 const Back = () => {
   router.back();

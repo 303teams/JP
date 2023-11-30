@@ -114,14 +114,16 @@ const extractFilename = (contentDisposition) => {
 };
 
 const submitScore = () => {
+  console.log(props.contentID);
   axios
       .post(
-          'http://localhost:8081/teacher/grade',
+          'http://localhost:8081/student/score',
+          null,
           {
-            contentID: props.contentID,
-            score: selectedScore.value,
-          },
-          {
+            params: {
+              contentID: props.contentID,
+              score: selectedScore.value,
+            },
             headers: {
               'Content-Type': 'application/json',
               'token': token,

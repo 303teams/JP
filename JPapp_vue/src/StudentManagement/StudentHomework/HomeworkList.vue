@@ -94,7 +94,6 @@ const filterTableData = computed(() =>
     )
 );
 
-//点击提交按钮
 const handleCheck = (cno,row) => {
   router.push({
     path:`/studentHome/viewHomework/${cno}/${row.homeworkID}`,

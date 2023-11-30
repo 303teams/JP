@@ -36,6 +36,7 @@
 
 <script setup>
 import {computed, onMounted, ref} from 'vue';
+import axios from "axios";
 
 const messageList = ref([
   { id: 1, title: '测试消息1', createTime: '2021-06-01 12:00:00', status: 1 },
@@ -57,6 +58,8 @@ const messageList = ref([
 const cur = ref(0);
 const pageSize = 10;
 const currentPage = ref(1);
+const token = localStorage.getItem('token');
+const tableData = ref([]);  //储存后端传来的数据
 
 
 const visibleMessages = computed(() => {
@@ -69,8 +72,33 @@ const handleCurrentChange = (newPage) => {
   currentPage.value = newPage;
 };
 
+const fetchData = () => {
+  axios
+      .post(
+          'http://localhost:8081/student/findCourse',
+          null,
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'token': token,
+            },
+          }
+      ).then((res) => {
+    if (res.data.code === 200) {
+      tableData.value = res.data.data;
+      console.log(res)
+    } else {
+      window.alert("获取信息失败:" + res.data.msg);
+    }
+  })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+};
+
 onMounted(() => {
-  console.log('messageList', messageList);
+  fetchData()
 });
 
 const goRead = (item) => {

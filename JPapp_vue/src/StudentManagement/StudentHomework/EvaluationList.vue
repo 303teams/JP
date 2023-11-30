@@ -15,7 +15,7 @@
         <el-table-column label="你的评分" width="200px">
           <template v-slot="scope">
           <span v-if="scope.row.score === null">{{ scope.row.score }}</span>
-          <el-button v-else type="text" style="color: #3796EC;" @click="MutualEvaluate(scope.row)">前往互评</el-button>
+          <el-button v-else type="text" style="color: #3796EC;" @click="MutualEvaluate(props.homeworkID,scope.row)">前往互评</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -33,10 +33,10 @@ import axios from 'axios';
 const tableData = ref( []);  //储存后端传来的数据
 const token = localStorage.getItem('token');
 const props = defineProps(['homeworkID', 'contentID']);
- const router = useRouter();
+const router = useRouter();
 
-const MutualEvaluate = (row) =>{
-  router.push(`/studentHome/MutualEva/${props.homeworkID}/${row.contentID}`);
+const MutualEvaluate = (homeworkID,row) =>{
+  router.push(`/studentHome/MutualEva/${homeworkID}/${row.contentID}`);
 }
 
 const fetchData = () => {
