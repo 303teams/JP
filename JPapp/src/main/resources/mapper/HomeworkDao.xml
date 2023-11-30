@@ -23,7 +23,7 @@
     </select>
 
     <select id="findHWbyCno" resultType="com.bjtu.pojo.Homework">
-        SELECT DISTINCT homework.*,
+        SELECT DISTINCT homework.homeworkID, homework.name,homework.submitDdl,homework.scoreDdl
                         teacher.name as teacherName,
                         course.cname as courseName ,
                         content.contentID as contentID,
@@ -40,7 +40,7 @@
     </select>
     <select id="findHWsbyCno" resultType="com.bjtu.pojo.Homework">
         SELECT
-            H.*,
+            H.homeworkID,H.submitDdl,H.scoreDdl,H.fileName,H.Afilename,
             COUNT(DISTINCT sc.sno) AS totalAmount,
             COUNT(DISTINCT C.sno) AS submitAmount
         FROM
