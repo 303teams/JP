@@ -10,6 +10,7 @@ import store from '@/store'
 import "lib-flexible-computer";
 import '@/utils/validator.js'
 import '@/utils/detectZoom.js'
+
 // import {detectZoom} from "@/utils/detectZoom";
 
 // const m = detectZoom();

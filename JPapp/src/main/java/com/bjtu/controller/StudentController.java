@@ -59,7 +59,7 @@ public class StudentController {
 //    返回互评作业列表
     @PostMapping("findCTsByCID")
     public RspObject<List<Content>> findCTsByCID(Integer contentID){
-        System.out.println("in1");
+        System.out.println("in1"+contentID);
         return studentService.findCTsByCID(contentID);
     }
 }

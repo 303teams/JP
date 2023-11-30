@@ -10,9 +10,7 @@
       <a style="font-size: 15px;margin-top:50px" :href="blobUrl" :download="fileName">{{fileName}}</a>
     </div>
 
-
     <el-divider></el-divider>
-
 
     <div style = "flex: 1; display: flex; align-items: center; justify-content: start">
       <el-form :model="submitHomeworkForm" ref="SubmitHomeworkRef" :rules="rules">
@@ -36,7 +34,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item style="margin-top: 100px">
-          <div style="width: 1200px" label="内容" prop="info">
+          <div style="width: 1100px" label="内容" prop="info">
             <el-input type="textarea" resize="none" :rows="10" v-model="submitHomeworkForm.info" placeholder="请输入作业内容"/>
           </div>
         </el-form-item>
@@ -75,6 +73,7 @@ const rules = {
     { required: true, message: '请上传作业附件', trigger: 'change' },
   ],
 };
+
 
 const handleChange = (file,fileList) => {
   const fileName = fileList.length > 0 ? fileList[0].name : '';
@@ -208,16 +207,15 @@ onMounted(() => {
 <style scoped>
 .title {
   height: 100px;
-  width: 1150px;
+  width: 1100px;
   padding: 10px;
-  background-color: rgb(233, 233, 233);
-  border-radius: 10px;
 }
 
 .content-container {
   text-align: left;
   margin-top: 30px;
   margin-bottom: 150px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
 }

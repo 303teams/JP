@@ -21,6 +21,8 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
+                v-loading = "loading"
+                element-loading-text = "拼命加载中"
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
@@ -158,6 +160,7 @@ import {ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRoute, useRouter} from "vue-router";
 
+const loading = ref(true);
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
 const search = ref('');  // 搜索关键字
@@ -413,6 +416,7 @@ const resetFormData = () => {
 
 onMounted(() => {
   fetchData();
+  loading.value = false;
   courseName.value=route.params.courseName;
   console.log(route.params.courseName)
 });

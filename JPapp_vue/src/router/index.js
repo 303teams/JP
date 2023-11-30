@@ -11,6 +11,9 @@ import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList
 import HomeworkSubmitList from "@/TeacherManagement/TeacherHomework/HomeworkSubmitList.vue";
 import MutualEva from "@/StudentManagement/StudentHomework/MutualEva.vue";
 import MessagePage from "@/TeacherManagement/TeacherMessage/MessagePage.vue";
+import GradeDetail from "@/StudentManagement/StudentHomework/GradeDetail.vue";
+import ViewHomework from "@/StudentManagement/StudentHomework/ViewHomework.vue";
+import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
 const routerHistory = createWebHistory();
 
 
@@ -46,9 +49,16 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'viewHomework/:cno',
-                    name:'ViewHomework',
+                    path: 'viewHomeworkList/:cno',
+                    name:'ViewHomeworkList',
                     component: HomeworkList,
+                    props: true,
+                },
+
+                {
+                    path: 'viewHomework/:cno/:homeworkID',
+                    name:'ViewHomework',
+                    component: ViewHomework,
                     props: true,
                 },
 
@@ -60,9 +70,23 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'MutualEva/:contentID',
+                    path: 'EvaluationList/:contentID',
+                    name:'EvaluationList',
+                    component: EvaluationList,
+                    props: true,
+                },
+
+                {
+                    path: 'MutualEva/:homeworkID/:contentID',
                     name:'MutualEva',
                     component: MutualEva,
+                    props: true,
+                },
+
+                {
+                    path: 'GradeDetail/:contentID',
+                    name:'GradeDetail',
+                    component: GradeDetail,
                     props: true,
                 }
             ]
@@ -103,7 +127,8 @@ const router = createRouter({
                     name:'MessagePage',
                     component: MessagePage,
                     props: true,
-                }
+                },
+
             ]
         },
 

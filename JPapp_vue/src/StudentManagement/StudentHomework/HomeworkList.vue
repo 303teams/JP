@@ -19,6 +19,8 @@
       <el-table :data="filterTableData"
                 class="HomeworkList"
                 size="large"
+                v-loading = "loading"
+                element-loading-text = "拼命加载中"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" width="150px" sortable prop="name" />
@@ -26,31 +28,28 @@
         <el-table-column label="发布人" width="120px" prop="teacherName" />
         <el-table-column label="提交截止时间" width="170px" sortable prop="submitDdl" />
         <el-table-column label="互评截止时间" width="170px" sortable prop="scoreDdl" />
-        <el-table-column label="互评任务" width="130px">
+        <el-table-column label="查看作业" width="130px" align="center">
           <template v-slot="scope">
           <el-button
-              v-if="EvaButton(scope.row)"
-              @click="mutualEva(scope.row.contentID)"
-          >
-            前往互评
-          </el-button>
-          <span v-else>未开放</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="提交作业" width="120px">
-          <template v-slot="scope">
-          <el-button
+              @click="handleCheck(cno,scope.row)"
               size="large"
-              v-if="SubmitButton(scope.row)"
-              @click="handleSubmit(props.cno, scope.row.homeworkID,scope.row.name,scope.row.submitDdl)"
           >
-            提交
+            查看作业
           </el-button>
-          <span v-else-if="IfSubmit(scope.row)">未提交</span>
-          <span v-else>已提交</span>
           </template>
         </el-table-column>
-        <el-table-column label="作业成绩" width="120px" sortable prop="score" />
+        <el-table-column label="作业成绩" width="120px" align="center">
+          <template v-slot="scope">
+          <el-tooltip v-if="scope.row.score !== null" class="item" effect="dark" content="查看详情" placement="top">
+          <span @click="ClickGrade(scope.row)" style="cursor: pointer; color:dodgerblue">
+            {{ scope.row.score }}
+            <el-icon><Search /></el-icon>
+          </span>
+          </el-tooltip>
+
+          <span v-else>--</span>
+          </template>
+        </el-table-column>
       </el-table>
 
       <el-config-provider :locale="zhCn">
@@ -85,6 +84,7 @@ const filteredData = ref([]); // 新的变量用于存储过滤后的数据
 const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const router = useRouter();
+const loading = ref(true);
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -95,43 +95,23 @@ const filterTableData = computed(() =>
 );
 
 //点击提交按钮
-const handleSubmit = (cno,homeworkID,name,submitDdl) => {
+const handleCheck = (cno,row) => {
   router.push({
-    path:`/studentHome/HomeworkSubmit/${cno}/${homeworkID}`,
+    path:`/studentHome/viewHomework/${cno}/${row.homeworkID}`,
     state: {
-      name,
-      submitDdl
+      name:row.name,
+      submitDdl:row.submitDdl,
+      scoreDdl:row.scoreDdl,
+      contentID:row.contentID
     }
   });
 };
 
-const EvaButton = (row) =>{
-  const currentTimestamp = new Date().getTime();
-  // 检查时间是否在submitDdl和scoreDdl之间
-  return row.contentID !== null &&
-      currentTimestamp >= new Date(row.submitDdl).getTime() &&
-      currentTimestamp <= new Date(row.scoreDdl).getTime();
-};
 
-const SubmitButton = (row) =>{
-  const currentTimestamp = new Date().getTime();
-  // 检查时间是否在submitDdl之前
-  return row.contentID === null &&
-      currentTimestamp <= new Date(row.submitDdl).getTime();
-};
-
-//判断是否提交
-const IfSubmit = (row) =>{
-  const currentTimestamp = new Date().getTime();
-  // 检查时间是否在submitDdl之前
-  return row.contentID === null &&
-      currentTimestamp > new Date(row.submitDdl).getTime();
-};
-
-const mutualEva = (contentID) => {
+const ClickGrade = (row) => {
   router.push({
-    path:`/studentHome/MutualEva/${contentID}`,
-  });
+    path:`/studentHome/GradeDetail/${row.contentID}`,
+  })
 };
 
 const fetchData = () => {
@@ -183,6 +163,7 @@ const Back = () => {
 
 onMounted(() => {
   fetchData();
+  loading.value = false;
 });
 
 
