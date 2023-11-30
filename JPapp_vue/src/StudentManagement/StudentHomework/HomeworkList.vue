@@ -255,9 +255,6 @@ onMounted(() => {
   right: 40px;
 }
 
-.main_page{
-  margin-top: 80px;
-}
 
 .HomeworkList{
   width: 100%;

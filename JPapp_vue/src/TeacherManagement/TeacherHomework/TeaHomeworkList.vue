@@ -1,5 +1,5 @@
 <template>
-  <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
+  <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <span style="font-size: 30px; font-weight: bold;">{{ courseName}}</span>
@@ -25,9 +25,9 @@
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" width="120px" sortable prop="name" />
-        <el-table-column label="作业截止时间" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="200px" sortable prop="scoreDdl" />
-        <el-table-column label="作业内容" width="150px" prop="content" >
+        <el-table-column label="作业截止时间" width="170px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="170px" sortable prop="scoreDdl" />
+        <el-table-column label="作业内容" width="100px" prop="content" >
           <template v-slot="scope">
             <el-link
                 :href="scope.row.blobUrl"
@@ -38,7 +38,7 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="提交情况" width="200px" align="center">
+        <el-table-column label="提交情况" width="150px" align="center">
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
@@ -46,6 +46,28 @@
             <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="上传答案" width="160px">
+          <template v-slot="scope">
+          <el-upload
+              v-if="scope.row.afilename === null"
+              class="upload-demo"
+              action="http://localhost:8081/homework/setAnswer"
+              :http-request="(params) => uploadAnswer(params, scope.row)"
+              :before-upload="beforeUpload"
+              :on-success="successHandle"
+              show-file-list="false"
+              limit="1"
+          >
+            <el-button type="primary">上传答案</el-button>
+            <template #tip>
+            <div class="el-upload__tip">
+              文件大小不超过100Mb
+            </div>
+            </template>
+          </el-upload>
+          <span v-else>已上传</span>
           </template>
         </el-table-column>
       </el-table>
@@ -99,7 +121,7 @@
                 :on-change="handleChange"
                 :on-remove="handleRemove"
                 :on-exceed="handleExceed"
-                multiple
+                :before-upload="beforeUpload"
                 limit="1"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -108,7 +130,7 @@
               </div>
               <template #tip>
               <div class="el-upload__tip">
-                文件大小不超过10Mb
+                文件大小不超过100Mb
               </div>
               </template>
             </el-upload>
@@ -302,6 +324,13 @@ const handleExceed = () => {
   ElMessage.warning(`最多只能上传1个附件`);
 };
 
+const beforeUpload = (file) => {
+  const isLt10M = file.size / 1024 / 1024 < 100;
+  if (!isLt10M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+  }
+  return isLt10M;
+}
 const assignHomework = () => {
   HomeworkFormRef.value.validate((valid) => {
     const formData = new FormData();
@@ -352,6 +381,27 @@ const closeDia = () => {
   resetFormData();
 };
 
+const form = new FormData();
+const uploadAnswer = (params,row) =>{
+
+  form.set('file', params.file);
+  form.set('homeworkID', row.homeworkID)
+  return axios({
+    url: 'http://localhost:8081/homework/setAnswer',
+    method: 'post',
+    data: form,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'token': token,
+    }
+  })
+};
+
+const successHandle = () => {
+  ElMessage.success('上传成功');
+  console.log(form.homeworkID)
+};
+
 const resetFormData = () => {
   homeworkData.name = '';
   homeworkData.content = null;
@@ -376,6 +426,9 @@ const Back = () => {
 <style scoped>
 .homeListMain{
   margin-top: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center
 }
 
 .icon{
@@ -444,10 +497,6 @@ const Back = () => {
   position: absolute;
   margin-top: 20px;
   right: 170px;
-}
-
-.main_page{
-  margin-top: 80px;
 }
 
 .HomeworkList{

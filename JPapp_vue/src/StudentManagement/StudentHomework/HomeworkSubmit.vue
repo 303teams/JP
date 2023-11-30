@@ -24,13 +24,13 @@
               :on-change="handleChange"
               :on-remove="handleRemove"
               :on-exceed="handleExceed"
-              multiple
+              :before-upload="beforeUpload"
               limit="1"
           >
             <el-button type="primary">上传附件</el-button>
             <template #tip>
             <div class="el-upload__tip">
-              文件大小不超过10Mb
+              文件大小不超过100Mb
             </div>
             </template>
           </el-upload>
@@ -89,6 +89,14 @@ const handleRemove = (file,fileList) => {
 const handleExceed = () => {
   ElMessage.warning(`最多只能上传1个附件`);
 };
+
+const beforeUpload = (file) => {
+  const isLt10M = file.size / 1024 / 1024 < 100;
+  if (!isLt10M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+  }
+  return isLt10M;
+}
 
 const submitHomework = () => {
   SubmitHomeworkRef.value.validate((valid) => {
