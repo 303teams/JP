@@ -14,27 +14,10 @@ public interface HomeworkService {
 
 
 //    返回一个课程下的所有学生的作业
-    Homework findHWById(String id);
+    Homework findHWById(Integer id);
 
     void addHomework(Homework homework);
 
-    RspObject<List<Homework>> findById(String id,String cno);
-    RspObject<List<Homework>> findByTeaId(String id,String cno);
-//    public RspObject<User> login(String id, String password);
-//    public RspObject<Boolean> insert(Student student);
-//
-//    // public RspObject<List<Student>> searchAll();
-//
-//    public RspObject<Boolean> deleteOne(String id);
-//
-//    public RspObject<String> modifyEmail(String email);
-//
-//    public RspObject<String> modifyPassword(String newPassword, String oldPassword);
-//
-//    public RspObject<String> changePassword(String id,String password);
-//
-//    public RspObject<String> modifyInfo(Student student);
-
-//    RspObject<Boolean> submitHomework(String id,String homeworkId,String cno,String url);
+    RspObject<Boolean> setAnswer(Integer homeworkID,byte[] answer,String Afilename);
 
 }

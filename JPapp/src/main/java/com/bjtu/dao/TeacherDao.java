@@ -1,9 +1,12 @@
 package com.bjtu.dao;
 
+import com.bjtu.pojo.Content;
+import com.bjtu.pojo.Homework;
 import com.bjtu.pojo.Teacher;
 import com.bjtu.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +18,6 @@ public interface TeacherDao{
 
     //    查询
     public List<Teacher> findAll();
-    public List<Map<String, Object>> findCourse(String id);
 
     public Teacher findByNum(String id);
 

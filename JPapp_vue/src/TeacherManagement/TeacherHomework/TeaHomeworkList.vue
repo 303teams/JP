@@ -1,6 +1,8 @@
 <template>
-  <div class="homeListMain" style="position: relative">
+  <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
+    <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
+      <span style="font-size: 30px; font-weight: bold;">{{ courseName}}</span>
       <div class="title">课程作业</div>
     </div>
     <div class="main">
@@ -19,23 +21,29 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
-                size="large" column_width="60px"
+                size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" sortable prop="name" />
-        <el-table-column label="作业截止时间" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" sortable prop="scoreDdl" />
-        <el-table-column label="作业内容" prop="content" >
+        <el-table-column label="作业名称" width="120px" sortable prop="name" />
+        <el-table-column label="作业截止时间" width="200px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="200px" sortable prop="scoreDdl" />
+        <el-table-column label="作业内容" width="150px" prop="content" >
           <template v-slot="scope">
-            <el-link :href="blobUrl" :download="scope.row.fileName">下载</el-link>
+            <el-link
+                :href="scope.row.blobUrl"
+                :download="scope.row.fileName"
+                style="color: dodgerblue; text-decoration: underline;"
+            >
+              查看作业
+            </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="提交情况" align="center">
+        <el-table-column label="提交情况" width="200px" align="center">
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
-          <span @click="handleClick(scope.row)" style="cursor: pointer;">
-            {{ scope.row.submittedCount }} / {{ scope.row.totalCount }}
-            <i class="el-icon-search" style="margin-left: 5px;"></i>
+          <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
+            {{ scope.row.submitAmount }} / {{ scope.row.totalAmount }}
+            <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
           </template>
@@ -57,18 +65,30 @@
 
     </div>
 
-    <!-- 上传文件的弹出框 -->
-    <el-dialog title="上传文件" :close-on-click-modal="false" v-model="dialogTableVisible" width="50%" >
+    <!-- 上传作业的弹出框 -->
+    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" width="50%" >
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
           <el-form-item label="作业名字:" prop="name" >
             <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
           </el-form-item>
           <el-form-item label="提交截止日期:" prop="submitDdl" >
-            <el-date-picker v-model="homeworkData.submitDdl" type="datetime" placeholder="选择日期和时间"/>
+            <el-date-picker
+                v-model="homeworkData.submitDdl"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm:ss"
+                :disabled-date="disabledSubmitDate"
+                placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="互评截止日期:" prop="scoreDdl" >
-            <el-date-picker v-model="homeworkData.scoreDdl" type="datetime" placeholder="选择日期和时间"/>
+            <el-date-picker
+                v-model="homeworkData.scoreDdl"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm:ss"
+                :disabled-date="disabledScoreDate"
+                placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="上传文件" prop="content">
             <el-upload
@@ -96,7 +116,7 @@
         </el-form>
       </div>
       <span class="dialog-footer">
-        <el-button @click="submitHomework">提交</el-button>
+        <el-button @click="assignHomework">提交</el-button>
         <el-button @click="closeDia">取消</el-button>
       </span>
     </el-dialog>
@@ -109,6 +129,7 @@ import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
+import {useRoute, useRouter} from "vue-router";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -119,6 +140,9 @@ const dialogTableVisible = ref(false);
 const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const HomeworkFormRef =ref();
+const router = useRouter();
+const route =useRoute();
+const courseName = ref('');
 const homeworkData = reactive({
   name: '',
   content: null,
@@ -126,7 +150,6 @@ const homeworkData = reactive({
   scoreDdl: '',
 });
 const fileList = ref([]);
-const blobUrl = ref();
 
 const homeFormRules = reactive({
   name: [
@@ -151,52 +174,110 @@ const filterTableData = computed(() =>
     )
 );
 
+// 禁用日期
+const disabledSubmitDate = (time) => {
+  if(homeworkData.scoreDdl === '') {
+    return time.getTime() < new Date() - 8.64e7;
+  }else{
+    return time.getTime() > new Date(homeworkData.scoreDdl).getTime() || time.getTime() < new Date() - 8.64e7;
+  }
+};
+
+const disabledScoreDate = (time) => {
+  if(homeworkData.submitDdl === ''){
+    return time.getTime() < new Date() - 8.64e7;
+  }else{
+    return time.getTime() < new Date(homeworkData.submitDdl).getTime();
+  }
+
+};
+
+
 
 const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/homework/findByTeaId',
-          {
-            cno: props.cno,
-          },
 
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
+  return new Promise((resolve, reject) => {
+    axios
+        .post(
+            'http://localhost:8081/teacher/findHWbyCno',
+            {
+              cno: props.cno,
             },
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'token': token,
+              },
+            }
+        )
+        .then(res1 => {
+          if (res1.data.code === 200) {
+            // courseName.value = res1.data.data[0].courseName;
+            if(res1.data.data !==null){
+              console.log(props.cno);
+              tableData.data = res1.data.data;
+              console.log(res1);
 
+              // 使用promise实现多个接口的调用
+              const promises = tableData.data.map(item => {
+                return axios.post(
+                    'http://localhost:8081/homework/downloadHW',
+                    null,
+                    {
+                      params: {
+                        homeworkId: item.homeworkID,
+                      },
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'token': token,
+                      },
+                      responseType: 'blob',
+                    }
+                ).then(res2 => {
+                  console.log(res2)
+                  const blob = new Blob([res2.data], {type: 'application/octet-stream'});
+                  const blobUrl = URL.createObjectURL(blob);
+
+                  // 给每项作业分配url用来下载
+                  item.blobUrl = blobUrl;
+                  updateFilteredData(); // 更新过滤后的数据
+                });
+              });
+
+              console.log(tableData.data)
+              // 使用Promise.all来执行promises数组里的所有promise
+              return Promise.all(promises);
+            }
+          } else {
+            console.log(res1.data.msg)
           }
-      )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(props.cno);
-          tableData.data = res.data.data;
-          console.log(res)
+        })
+        .then(() => {
+          resolve({success: true, message: 'Data fetched successfully'});
+        })
+        .catch(error => {
+          console.error("发生未知错误！");
+          console.log(error);
 
-          const blob = new Blob([res.data.data.content]);
-
-          blobUrl.value = URL.createObjectURL(blob);
-          updateFilteredData(); // 更新过滤后的数据
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
-        }
-      })
-      .catch((err) => {
-        console.error("发生未知错误！");
-        console.log(err);
-      });
+          reject("发生未知错误！");
+        });
+  });
 };
 
 const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
           !search.value ||
-          data.cno.toLowerCase().includes(search.value.toLowerCase())
+          data.name.toLowerCase().includes(search.value.toLowerCase())
   );
 };
 
+const handleClick = (row) => {
+  router.push(`/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.homeworkID}`);
+};
+
 const uploadHomework = () => {
+  resetFormData();
   dialogTableVisible.value = true;
 };
 
@@ -213,14 +294,13 @@ const beforeRemove = () => {
   return true;  // 返回 true 表示继续移除
 };
 
-const submitHomework = () => {
+const assignHomework = () => {
   const formData = new FormData();
   formData.set('file', homeworkData.content);
   formData.set('cno', props.cno)
-  formData.set('name', homeworkData.name);
-
-  // formData.set('submit_ddl', homeworkData.submitDdl);
-  // formData.set('score_ddl', homeworkData.scoreDdl);
+  formData.set('HWName', homeworkData.name);
+  formData.set('scoreDdl', homeworkData.scoreDdl);
+  formData.set('submitDdl', homeworkData.submitDdl);
 
   console.log(homeworkData.name)
 
@@ -228,9 +308,10 @@ const submitHomework = () => {
 
   HomeworkFormRef.value.validate((valid) => {
       if (valid) {
+        console.log(formData.get('scoreDdl'))
         axios
             .post(
-                'http://localhost:8081/teacher/uploadHW',
+                'http://localhost:8081/homework/uploadHW',
                 formData,
                 {
                   headers: {
@@ -242,9 +323,8 @@ const submitHomework = () => {
             .then((res) => {
               if (res.data.code === 200) {
                 console.log(res)
-                window.alert("上传成功");
-                dialogTableVisible.value = false;
                 resetFormData();
+                fetchData();
               } else {
                 window.alert("上传失败:" + res.data.msg);
                 resetFormData();
@@ -255,13 +335,8 @@ const submitHomework = () => {
               resetFormData();
               console.log(err);
             });
-      } else {
-        console.log("error submit!!");
-        resetFormData();
-        return false;
       }
     });
-  dialogTableVisible.value = false;
 };
 const closeDia = () => {
   dialogTableVisible.value = false;
@@ -274,12 +349,18 @@ const resetFormData = () => {
   homeworkData.submitDdl = '';
   homeworkData.scoreDdl = '';
   fileList.value = [];
+  dialogTableVisible.value = false;
 };
 
 onMounted(() => {
   fetchData();
+  courseName.value=route.params.courseName;
+  console.log(route.params.courseName)
 });
 
+const Back = () => {
+  router.back();
+};
 
 </script>
 
@@ -288,11 +369,19 @@ onMounted(() => {
   margin-top: 50px;
 }
 
+.icon{
+  position: absolute;
+  top: -40px;
+  left: 50px;
+  font-size: 30px;
+  color: #3796EC;
+  cursor: pointer;
+}
 
 .base_title {
   position: absolute;
   top: -40px;
-  left: 0;
+  left: 170px;
 }
 
 .title {
@@ -300,6 +389,7 @@ onMounted(() => {
   padding-left: 13px;
   font-size: 20px;
   font-weight: bold;
+  margin-top: 40px;
 }
 
 .title:before {
@@ -316,6 +406,7 @@ onMounted(() => {
 .search-container {
   display: flex;
   width: auto;
+  margin-top: 80px;
   margin-bottom: 10px;
 }
 
@@ -332,9 +423,9 @@ onMounted(() => {
 .upload-button {
   position: absolute;
   top: 0;
-  right: 0;
-  margin-top: 10px;
-  margin-right: 10px;
+  right: 170px;
+  margin-top: 80px;
+  margin-bottom: 10px;
 }
 
 .demo-pagination-block{
@@ -343,7 +434,7 @@ onMounted(() => {
   align-items: center;
   position: absolute;
   margin-top: 20px;
-  right: 0;
+  right: 170px;
 }
 
 .main_page{
@@ -353,6 +444,5 @@ onMounted(() => {
 .HomeworkList{
   width: 100vh;
 }
-
 
 </style>

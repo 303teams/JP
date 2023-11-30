@@ -23,22 +23,23 @@ public class HomeworkServiceImpl implements HomeworkService {
         return RspObject.success("查询成功！",homeworkDao.findAll());
     }
 
-    @Override
-    public RspObject<List<Homework>> findById(String id,String cno){
-        return RspObject.success("查询成功！",homeworkDao.findById(id,cno));
-    }
 
-    @Override
-    public RspObject<List<Homework>> findByTeaId(String id,String cno){
-        return RspObject.success("查询成功！",homeworkDao.findByTeaId(id,cno));
-    }
-    @Override
-    public Homework findHWById(String id){
+    public Homework findHWById(Integer id) {
         return homeworkDao.findHWById(id);
     }
 
     @Override
     public void addHomework(Homework homework) {
         homeworkDao.insert(homework);
+    }
+
+    @Override
+    public RspObject<Boolean> setAnswer(Integer homeworkID, byte[] answer,String Afilename) {
+        try {
+            homeworkDao.setAnswer(homeworkID,answer,Afilename);
+            return RspObject.success("添加成功",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,"添加失败！");
+        }
     }
 }

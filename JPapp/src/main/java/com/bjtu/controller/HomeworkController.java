@@ -1,7 +1,9 @@
 package com.bjtu.controller;
 
 
+import cn.hutool.core.date.DateTime;
 import com.bjtu.config.AuthAccess;
+import com.bjtu.pojo.Content;
 import com.bjtu.pojo.Homework;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.User;
@@ -21,7 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 @RestController
 @RequestMapping("homework")
@@ -32,27 +36,28 @@ public class HomeworkController {
 //    学生/老师 下载 作业
     @AuthAccess
     @PostMapping("/downloadHW")
-    public ResponseEntity<byte[]> downloadHW(String homeworkId){
-//        System.out.println("hh"+homeworkId);
+    public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
         Homework homework = homeworkService.findHWById(homeworkId);
-
-//        System.out.println("hh"+homeworkId);sno
 
         byte[] content = homework.getContent();
         String fileName = homework.getFileName();
 
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+
         HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
+
 //    老师上传作业
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName) throws IOException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
 
@@ -60,10 +65,38 @@ public class HomeworkController {
         homework.setContent(file.getBytes())
                 .setTno(user.getId())
                 .setFileName(name)
-                .setCno(cno);
-    // .setSubmitDdl(submit_ddl)
-    // .setScoreDdl(score_ddl)
+                .setCno(cno)
+                .setSubmitDdl(submitDdl)
+                .setScoreDdl(scoreDdl)
+                .setName(HWName);
         homeworkService.addHomework(homework);
         return RspObject.success("上传成功，当前thId：" , homework);
     }
+
+    //    教师上传正确答案
+    @AuthAccess
+    @PostMapping("/setAnswer")
+    public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
+        String name = file.getOriginalFilename();
+        return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
+    }
+
+    @AuthAccess
+    @PostMapping("/downloadAns")
+    public ResponseEntity<byte[]> downloadAns(@RequestParam Integer homeworkID) throws UnsupportedEncodingException {
+        Homework homework = homeworkService.findHWById(homeworkID);
+        byte[] answer = homework.getAnswer();
+        String fileName = homework.getAfilename();
+
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
+
+        return new ResponseEntity<>(answer, headers, HttpStatus.OK);
+    }
+
 }

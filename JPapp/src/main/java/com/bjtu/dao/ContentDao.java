@@ -1,6 +1,5 @@
 package com.bjtu.dao;
 import com.bjtu.pojo.Content;
-import com.bjtu.pojo.Homework;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -9,6 +8,18 @@ import java.util.List;
 public interface ContentDao {
 
 
-    public Content findCTById(String id);
+    public Content findCTById(Integer id);
+
     void insert(Content content);
+
+    public List<Content> findCTByHId(Integer homeworkID);
+
+    public void setCTScore(Integer contentID,Integer score);
+
+    public Content findxCTById(Integer contentID,String sno);
+
+    public String findSnoByCID(Integer contentID);
+
+    public Content findCTSByCID(Integer contentID);
+
 }

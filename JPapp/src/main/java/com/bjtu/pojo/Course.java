@@ -2,8 +2,10 @@ package com.bjtu.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Course {
+public class Course implements Serializable {
 
     private String cno;
     private String tno;

@@ -1,9 +1,6 @@
 package com.bjtu.service;
 
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.Teacher;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +24,10 @@ public interface TeacherService {
     public RspObject<String> modifyInfo(Teacher teacher);
 
     RspObject<List<Map<String, Object>>> findCourse(String id);
+
+    RspObject<List<Homework>> findHWbyCno(String cno);
+
+    RspObject<List<Content>> findCTByHId(Integer homeworkId);
+
+    RspObject<Boolean> setCTScore(Integer contentId,Integer score);
 }

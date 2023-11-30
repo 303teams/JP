@@ -8,7 +8,10 @@
       </el-header>
 
       <el-main>
-        <router-view></router-view>
+        <el-scrollbar>
+          <router-view></router-view>
+        </el-scrollbar>
+
       </el-main>
     </el-container>
   </el-container>
@@ -21,15 +24,8 @@ import SideBar from "./SideBarComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 export default {
   components: { SideBar , HeaderComponent},
-  data() {
-    return {
-      isCollapse: false,
-      isChange: false,
-      isDelete: false,
-    }
-  },
-  methods: {
-  }
+  data() {},
+  methods: {}
 }
 
 </script>
@@ -48,8 +44,6 @@ export default {
 }
 
 .layout-container-demo .el-main {
-  display: flex;
-  justify-content: center;
   height: 100%;
   width: 100%;
 }

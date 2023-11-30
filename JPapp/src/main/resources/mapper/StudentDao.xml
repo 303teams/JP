@@ -38,24 +38,5 @@
         sex = #{sex} where id = #{id}
     </update>
 
-    <select id="findCourse" resultType="java.util.Map" parameterType="string">
-        SELECT course.*,teacher.name as teacherName
-        FROM student
-        JOIN sc ON student.id = sc.sno
-        JOIN course ON sc.cno = course.cno
-        JOIN teacher ON course.tno = teacher.id
-        WHERE student.id = #{id}
-    </select>
 
-    <!--    <select id="findByStudentNum" resultType="student">-->
-    <!--        select * from student where sno = #{sno}-->
-    <!--    </select>-->
-
-    <!--    <select id="findByTeacherNum" resultType="teacher">-->
-    <!--        select * from teacher where tno = #{tno}-->
-    <!--    </select>-->
-
-    <!--    <select id="findByAdminNum" resultType="admin">-->
-    <!--        select * from admin where id = #{mno}-->
-    <!--    </select>-->
 </mapper>

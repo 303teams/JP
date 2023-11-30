@@ -1,5 +1,5 @@
 <template>
-  <div style="">
+  <div>
     <el-row v-if="items.length > 0">
       <el-col
           v-for="(item, index) in items"
@@ -10,19 +10,18 @@
           <img
               src="@/assets/img.png"
               class="image"
-              @click="courseEnter(item.cno)"
+              @click="courseEnter(item.cno,item.cname)"
           />
           <div class="info-content">
-            <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
+            <span class="course_name" @click="courseEnter(item.cno,item.cname)">{{item.cname}}</span>
             <span class="course_id">课程号: {{item.cno}}</span>
           </div>
 
-          <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
+          <el-button class="button" @click="courseEnter(item.cno,item.cname)">进入课程</el-button>
         </div>
 
-
+        <el-divider />
       </el-col>
-      <el-divider />
     </el-row>
 
     <div v-else>
@@ -66,8 +65,14 @@ const fetchData = async () => {
       });
 };
 
-const courseEnter = (cno) => {
-    router.push(`/teacherHome/ViewMyHomework/${cno}`);
+const courseEnter = (cno,cname) => {
+  router.push({
+    name: 'ViewMyHomework',
+    params: {
+      cno,
+      courseName: cname
+    }
+  });
 };
 
 onMounted(() => {

@@ -37,8 +37,6 @@ public class TeacherController {
     HomeworkService homeworkService;
     @Autowired
     ContentService contentService;
-    @Resource
-    FileUtils fileUtils;
 
 
     @PostMapping("modifyInfo")
@@ -55,12 +53,25 @@ public class TeacherController {
         return teacherService.findCourse(user.getId());
     }
 
-//    教师查看本课程所有学生提交的作业列表
+//    教师查看本课程布置的所有作业的列表
     @AuthAccess
     @PostMapping("/findHWbyCno")
     public RspObject<List<Homework>> findHWbyCno(@RequestParam String cno) {
-        User user = TokenUtils.getCurrentUser();
-        return homeworkService.findById(user.getId(),cno);
+        return teacherService.findHWbyCno(cno);
+    }
+
+//    教师点击某课程的某作业得到班级名单
+    @AuthAccess
+    @PostMapping("/findCTByHId")
+    public RspObject<List<Content>> findCTByHId(@RequestParam Integer homeworkID){
+        return teacherService.findCTByHId(homeworkID);
+    }
+
+//    教师修改学生分数
+    @AuthAccess
+    @PostMapping("/setCTScore")
+    public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Integer score){
+        return teacherService.setCTScore(contentID,score);
     }
 
 }

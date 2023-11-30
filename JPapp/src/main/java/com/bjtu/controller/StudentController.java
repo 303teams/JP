@@ -1,5 +1,6 @@
 package com.bjtu.controller;
 
+import cn.hutool.json.JSONObject;
 import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.*;
 import com.bjtu.service.ContentService;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
@@ -33,8 +35,6 @@ public class StudentController {
     HomeworkService homeworkService;
     @Autowired
     ContentService contentService;
-    @Resource
-    FileUtils fileUtils;
 
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Student student){
@@ -42,7 +42,6 @@ public class StudentController {
     }
 
     // 学生的课程列表
-    @AuthAccess
     @PostMapping("/findCourse")
     public RspObject<List<Map<String, Object>>> CourseList() {
         User user = TokenUtils.getCurrentUser();
@@ -50,13 +49,17 @@ public class StudentController {
     }
 
 //    学生查看自己某课程的作业列表
-    @AuthAccess
     @PostMapping("/findCTByCno")
     public RspObject<List<Homework>> findCTByCno(String cno) {
-        System.out.println(cno);
+//        System.out.println(cno);
         User user = TokenUtils.getCurrentUser();
-        return homeworkService.findById(user.getId(),cno);
+        return studentService.findHWbyCno(user.getId(),cno);
     }
 
-
+//    返回互评作业列表
+    @PostMapping("findCTsByCID")
+    public RspObject<List<Content>> findCTsByCID(Integer contentID){
+        System.out.println("in1");
+        return studentService.findCTsByCID(contentID);
+    }
 }

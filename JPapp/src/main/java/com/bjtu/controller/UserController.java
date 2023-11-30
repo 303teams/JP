@@ -157,9 +157,9 @@ public class UserController {
         if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
         }else if(user.getClass() == Admin.class){
-            return teacherService.modifyEmail(email);
-        }else if(user.getClass() == Teacher.class){
             return adminService.modifyEmail(email);
+        }else if(user.getClass() == Teacher.class){
+            return teacherService.modifyEmail(email);
         }else{
             return RspObject.fail("修改邮箱失败！");
         }
