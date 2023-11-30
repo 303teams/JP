@@ -65,11 +65,7 @@ public class StudentController {
         return studentService.findCTsByCID(contentID);
     }
 
-//   // 学生打分
-//    @PostMapping("/setScore")
-//    public RspObject<Boolean> setScore(@RequestParam Integer contentID,Integer score,String sno){
-//        return studentService.setScore(contentID,score,sno);
-//    }
+
 
     //学生打分
     @PostMapping("score")

@@ -19,6 +19,27 @@
         AND sno = #{sno}
     </update>
 
+   <select id="findAppeal" resultType="java.util.Map" parameterType="string">
+        SELECT h.name,co.cname,a.*,c.sno
+        FROM appeal a
+        JOIN content c ON a.contentID = c.contentID
+        JOIN homework h ON c.homeworkID = h.homeworkID
+        JOIN course co ON h.cno = co.cno
+        WHERE co.tno = #{id};
+    </select>
+
+    <select id="findAPByID" resultType="Appeal">
+        SELECT *
+        FROM appeal
+        WHERE appeal.contentID = #{contentID};
+    </select>
+
+    <update id="setAP">
+        update appeal
+        SET status = #{num}
+        WHERE contentID = #{contentID}
+    </update>
+
 
 
 </mapper>
