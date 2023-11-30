@@ -43,4 +43,9 @@ class ContentDaoTest {
     void findCTSByCID() {
         System.out.println(contentDao.findCTSByCID(2));
     }
+
+    @Test
+    void getScoreDistribution() {
+        System.out.println(contentDao.getScoreDistribution(21));
+    }
 }
