@@ -129,19 +129,6 @@ public class UserController {
         }else{
             return RspObject.fail("修改密码失败！");
         }
-//        String id = session.getAttribute("id").toString();
-//        System.out.println("当前用户："+id);
-//        String role = Utils.getUserType(id);
-//        if(role.equals("admin")){
-//            return adminService.modifyPassword(newPassword,oldPassword);
-//        }else if(role.equals("student")){
-//            return studentService.modifyPassword(newPassword,oldPassword);
-//        }else if(role.equals("teacher")) {
-//            return teacherService.modifyPassword(newPassword, oldPassword);
-//        }else{
-//            return RspObject.fail("修改密码失败！");
-//        }
-
 
     }
 
@@ -177,15 +164,6 @@ public class UserController {
             throw new ServiceException("验证码未发送至您的邮箱");
         }
     }
-
-//    @AuthAccess
-//    @PostMapping ("/findAll")
-//    public RspObject<List<String>> findAllStudentsList() {
-//
-//        return studentService.findAll();
-//    }
-
-
 
 
 }

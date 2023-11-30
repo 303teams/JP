@@ -60,5 +60,15 @@
         WHERE contentID = #{contentID}
     </update>
 
+    <select id="getScoreDistribution" resultType="java.util.Map">
+        SELECT
+            COUNT(CASE WHEN score = 0 THEN 1 END) as score_0,
+            COUNT(CASE WHEN score BETWEEN 1 AND 3 THEN 1 END) as score_1_3,
+            COUNT(CASE WHEN score BETWEEN 4 AND 6 THEN 1 END) as score_4_6,
+            COUNT(CASE WHEN score BETWEEN 7 AND 9 THEN 1 END) as score_7_9,
+            COUNT(CASE WHEN score = 10 THEN 1 END) as score_10
+        FROM content
+        WHERE homeworkID = #{homeworkID};
+    </select>
 
 </mapper>

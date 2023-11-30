@@ -1,9 +1,11 @@
 package com.bjtu.dao;
 
 import com.bjtu.pojo.Homework;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface HomeworkDao {
@@ -20,5 +22,4 @@ public interface HomeworkDao {
     public List<Homework> findHWsbyCno(String cno);
 
     public void setAnswer (Integer homeworkID,byte[] answer,String Afilename);
-
 }
