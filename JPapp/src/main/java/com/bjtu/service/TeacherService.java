@@ -30,4 +30,12 @@ public interface TeacherService {
     RspObject<List<Content>> findCTByHId(Integer homeworkId);
 
     RspObject<Boolean> setCTScore(Integer contentId,Integer score);
+
+    RspObject<List<Map<String, Object>>> findAppeal(String id);
+    
+    Content findCTByID(int contentID);
+
+    Appeal findAPByID(int contentID);
+
+    RspObject<Boolean> setAP(int contentID,int num);
 }

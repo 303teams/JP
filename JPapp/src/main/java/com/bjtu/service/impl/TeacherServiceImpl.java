@@ -3,7 +3,6 @@ package com.bjtu.service.impl;
 import com.bjtu.dao.*;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
-import com.bjtu.service.AdminService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
@@ -24,6 +23,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     HomeworkDao homeworkDao;
+    @Autowired
+    AppealDao appealDao;
 
     @Autowired
     ContentDao contentDao;
@@ -172,5 +173,38 @@ public class TeacherServiceImpl implements TeacherService {
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
         }
+    }
+
+    @Override
+    public RspObject<List<Map<String, Object>>> findAppeal(String id){
+        try {
+            List<Map<String, Object>> appeals = appealDao.findAppeal(id);
+
+            if (appeals.isEmpty()) {
+                return RspObject.success("无申诉信息！");
+            }
+
+            return RspObject.success("查询成功！",appeals);
+        } catch (Exception e) {
+            e.printStackTrace(); // 记录异常
+            return RspObject.fail("查询失败！");
+        }
+    }
+
+    @Override
+    public Content findCTByID(int contentID){
+
+        return contentDao.findCTById(contentID);
+    }
+
+    @Override
+    public  Appeal findAPByID(int contentID){
+        return appealDao.findAPByID(contentID);
+    }
+
+    @Override
+    public RspObject<Boolean> setAP(int contentID,int num){
+        appealDao.setAP(contentID,num);
+        return RspObject.success("修改成功！",Boolean.TRUE);
     }
 }

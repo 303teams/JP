@@ -9,6 +9,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
 import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,34 @@ public class TeacherController {
     @PostMapping("/setCTScore")
     public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Integer score){
         return teacherService.setCTScore(contentID,score);
+    }
+
+    //教师查看学生申诉信息
+    @AuthAccess
+    @PostMapping("/findAppeal")
+    public RspObject<List<Map<String, Object>>> findAppeal(){
+
+        User user = TokenUtils.getCurrentUser();
+        return teacherService.findAppeal(user.getId());
+    }
+
+    //教师点击申诉信息,改变staus值：0-1
+    @AuthAccess
+    @PostMapping("/ClickAppeal")
+    public RspObject<Boolean> ClickAppeal(int contentID){
+
+        System.out.println("contentID: "+contentID);
+        Appeal appeal = new Appeal();
+        appeal = teacherService.findAPByID(contentID);
+
+        int num =1;
+        if(appeal.getStatus()==0){
+            System.out.println("contentID: "+contentID);
+
+            return teacherService.setAP(contentID,num);
+        }
+
+        else  return RspObject.success("已处理！");
     }
 
 }
