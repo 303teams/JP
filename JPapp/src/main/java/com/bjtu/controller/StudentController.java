@@ -51,37 +51,11 @@ public class StudentController {
 
 //    学生查看自己某课程的作业列表
     @AuthAccess
-<<<<<<< HEAD
-    @GetMapping("/downloadHW/{homeworkID}")
-    public  RspObject<Object> downloadHW(@PathVariable String homeworkID, HttpServletResponse response){
-        Homework homework = homeworkService.findHomeworkByThId(homeworkID);
-        if(fileUtils.downloadFile(homework.getContent(), homework.getName(), response))
-            return RspObject.success("成功下载", homework);
-        else return RspObject.fail("下载失败", homework);
-    }
-    @AuthAccess
-    @PostMapping("/uploadCT")
-    public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,String cno) throws IOException {
-        Content content = new Content();
-        User user = TokenUtils.getCurrentUser();
-        System.out.println("hh");
-        content.setContent(file.getBytes())
-                .setSno("21301001")
-                .setCno(cno)
-                .setHomeworkID(1)
-                .setCname("Math");
-        System.out.println(file.getBytes());
-        contentService.addContent(content);
-        System.out.println(file.getBytes());
-
-        return RspObject.success("上传成功，当前thId：" + content.getContentID() , content);
-=======
     @PostMapping("/findCTByCno")
     public RspObject<List<Homework>> findCTByCno(String cno) {
         System.out.println(cno);
         User user = TokenUtils.getCurrentUser();
         return homeworkService.findById(user.getId(),cno);
->>>>>>> lzc
     }
 
 

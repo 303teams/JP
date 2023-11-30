@@ -49,27 +49,10 @@ public class TeacherController {
 
 //    教师查看自己的课程列表
     @AuthAccess
-<<<<<<< HEAD
-    @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno) throws IOException {
-        Homework homework = new Homework();
-        String name = file.getOriginalFilename();
-
-        User user = TokenUtils.getCurrentUser();
-        homework.setContent(file.getBytes())
-                .setTno(user.getId())
-                .setName(name)
-                .setCno(cno);
-//                .setSubmitDdl(submit_ddl)
-//                .setScoreDdl(score_ddl)
-        homeworkService.addHomework(homework);
-        return RspObject.success("上传成功，当前thId："  , homework);
-=======
     @PostMapping("/findCourse")
     public RspObject<List<Map<String, Object>>> CourseList() {
         User user = TokenUtils.getCurrentUser();
         return teacherService.findCourse(user.getId());
->>>>>>> lzc
     }
 
 //    教师查看本课程所有学生提交的作业列表
