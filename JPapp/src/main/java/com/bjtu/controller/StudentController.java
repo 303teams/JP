@@ -22,6 +22,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class StudentController {
     ContentService contentService;
 
     @PostMapping("modifyInfo")
-    public RspObject<String> modifyInfo(Student student){
+    public RspObject<String> modifyInfo(Student student) {
         return studentService.modifyInfo(student);
     }
 
@@ -48,18 +50,54 @@ public class StudentController {
         return studentService.findCourse(user.getId());
     }
 
-//    学生查看自己某课程的作业列表
+    //    学生查看自己某课程的作业列表
     @PostMapping("/findCTByCno")
     public RspObject<List<Homework>> findCTByCno(String cno) {
 //        System.out.println(cno);
         User user = TokenUtils.getCurrentUser();
-        return studentService.findHWbyCno(user.getId(),cno);
+        return studentService.findHWbyCno(user.getId(), cno);
     }
 
-//    返回互评作业列表
+    //    返回互评作业列表
     @PostMapping("findCTsByCID")
-    public RspObject<List<Content>> findCTsByCID(Integer contentID){
+    public RspObject<List<Content>> findCTsByCID(Integer contentID) {
         System.out.println("in1");
         return studentService.findCTsByCID(contentID);
+    }
+
+//   // 学生打分
+//    @PostMapping("/setScore")
+//    public RspObject<Boolean> setScore(@RequestParam Integer contentID,Integer score,String sno){
+//        return studentService.setScore(contentID,score,sno);
+//    }
+
+    //学生打分
+    @PostMapping("score")
+    public RspObject<Boolean> score(String sno,int contentID,double score) {
+        Score s= new Score();
+        s.setSno(sno);
+        s.setContentID(contentID);
+        s.setScore(score);
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+        s.setTime(formattedTime);
+        return studentService.insertScore(s);
+    }
+
+    //发送申诉请求
+    @PostMapping("sendAppeal")
+    public RspObject<Boolean> sendAppeal(int contentID, String appealContent) {
+        System.out.println("in2");
+        Appeal appeal = new Appeal();
+        appeal.setContentID(contentID);
+        appeal.setAppealContent(appealContent);
+        appeal.setStatus(0);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+        appeal.setTime(formattedTime);
+        return studentService.insertAppeal(appeal);
     }
 }

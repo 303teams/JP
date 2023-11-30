@@ -1,19 +1,14 @@
 package com.bjtu.service.impl;
 
-import com.bjtu.dao.ContentDao;
-import com.bjtu.dao.CourseDao;
-import com.bjtu.dao.HomeworkDao;
-import com.bjtu.dao.StudentDao;
+import com.bjtu.dao.*;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
-import com.bjtu.service.ContentService;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +18,10 @@ public class StudentServiceImpl implements StudentService  {
 
     @Autowired
     StudentDao studentDao;
-
+    @Autowired
+    AppealDao appealDao;
+    @Autowired
+    ScoreDao scoreDao;
     @Autowired
     CourseDao courseDao;
 
@@ -182,4 +180,33 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+    @Override
+    public RspObject<Boolean> setScore(Integer contentID, Integer score, String sno) {
+        try {
+            scoreDao.setCTScore(contentID,score,sno);
+            return RspObject.success("修改成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
+    @Override
+    public RspObject<Boolean> insertScore(Score score) {
+        try {
+            scoreDao.insertScore(score);
+            return RspObject.success("插入成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
+    @Override
+    public RspObject<Boolean> insertAppeal(Appeal appeal) {
+        try {
+            appealDao.insertAppeal(appeal);
+            return RspObject.success("插入成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
 }
