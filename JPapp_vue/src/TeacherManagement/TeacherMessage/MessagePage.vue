@@ -11,10 +11,10 @@
         >
           <div class="item-content">
             <div class="appeal-info">
-              <p class="title">课程：{{ item.cname }}  作业名：{{item.name}}申诉请求</p>
+              <p class="title">课程：{{ item.cname }}  作业名：{{item.hname}}申诉请求</p>
               <div class="content">
                 <div class="item-dot" v-if="item.status === 0"/>
-                <span></span>
+                <p style="margin-left: 12px">{{item.sname}}</p>
                 <p style="margin-left: 20px">{{ item.appealContent }}</p>
               </div>
             </div>
