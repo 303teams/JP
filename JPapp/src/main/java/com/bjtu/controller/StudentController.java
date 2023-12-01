@@ -70,12 +70,13 @@ public class StudentController {
 
     //学生打分
     @PostMapping("score")
-    public RspObject<Boolean> score(Integer contentID,Double score) {
+    public RspObject<Boolean> score(Integer contentID,Double score,String content) {
         User user = TokenUtils.getCurrentUser();
         Score s= new Score();
         s.setSno(user.getId());
         s.setContentID(contentID);
         s.setScore(score);
+        s.setContent(content);
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedTime = currentTime.format(formatter);

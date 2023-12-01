@@ -7,8 +7,8 @@
 
     <!--    插入作业号为contentID，对应的评分人为sno的score-->
     <insert id="insertScore" parameterType="Score" useGeneratedKeys="true" keyProperty="id">
-        insert into score(contentID,sno,score,content)
-        values (#{contentID}, #{sno},#{score},#{content})
+        insert into score(contentID,sno,score,time,content)
+        values (#{contentID}, #{sno},#{score},#{time},#{content})
     </insert>
 
 
