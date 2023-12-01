@@ -31,4 +31,9 @@ public interface StudentService {
 
     RspObject<List<Content>> findCTsByCID(Integer contentID);
 
+    RspObject<Boolean> setScore(Integer contentID, Integer score, String sno);
+    public RspObject<Boolean> insertScore(Score score);
+
+    public RspObject<Boolean> insertAppeal(Appeal appeal);
+
 }

@@ -65,7 +65,7 @@ const fetchData = async () => {
 };
 
 const courseEnter = (cno) => {
-    router.push(`/studentHome/viewHomework/${cno}`);
+    router.push(`/studentHome/viewHomeworkList/${cno}`);
 };
 
 onMounted(() => {

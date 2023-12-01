@@ -40,7 +40,7 @@
     </select>
     <select id="findHWsbyCno" resultType="com.bjtu.pojo.Homework">
         SELECT
-            H.homeworkID,H.submitDdl,H.scoreDdl,H.fileName,H.Afilename,
+            H.homeworkID,H.name,H.submitDdl,H.scoreDdl,H.fileName,H.Afilename,
             COUNT(DISTINCT sc.sno) AS totalAmount,
             COUNT(DISTINCT C.sno) AS submitAmount
         FROM

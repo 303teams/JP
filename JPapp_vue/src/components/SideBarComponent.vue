@@ -53,11 +53,9 @@
           <el-icon><message /></el-icon>已授课程
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item  index="/MessagePage" :route="{ name: 'MessagePage' }">
           <template #title>
-          <div>
-            <span>学生列表</span>
-          </div>
+          <el-icon><bell/></el-icon>消息
           </template>
         </el-menu-item>
         <el-menu-item>

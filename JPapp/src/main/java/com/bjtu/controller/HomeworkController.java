@@ -25,6 +25,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 @RestController
@@ -37,18 +45,21 @@ public class HomeworkController {
     @AuthAccess
     @PostMapping("/downloadHW")
     public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
+        System.out.println("hh"+homeworkId);
+
         Homework homework = homeworkService.findHWById(homeworkId);
 
         byte[] content = homework.getContent();
         String fileName = homework.getFileName();
-
+        System.out.println(fileName);
         String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
         HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", encodedFileName);
-        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
+        headers.set("Content-Type", "application/octet-stream; charset=UTF-8");
+
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
@@ -78,6 +89,7 @@ public class HomeworkController {
     @PostMapping("/setAnswer")
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
+        System.out.println("name"+name);
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
     }
 

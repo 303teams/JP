@@ -20,6 +20,7 @@ public class ChartController {
 
     @PostMapping("getScoreDistribution")
     public RspObject<Map<String,Object>> getScoreDistribution(Integer homeworkID){
+        System.out.println("getScoreDistribution: "+homeworkID);
         return chartService.getScoreDistribution(homeworkID);
     }
 

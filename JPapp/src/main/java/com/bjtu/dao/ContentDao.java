@@ -10,7 +10,7 @@ import java.util.Map;
 public interface ContentDao {
 
 
-    public Content findCTById(Integer id);
+    public Content findCTById(int id);
 
     void insert(Content content);
 

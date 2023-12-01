@@ -1,5 +1,5 @@
 <template>
-  <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
+  <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <span style="font-size: 30px; font-weight: bold;">{{ courseName}}</span>
@@ -21,13 +21,15 @@
       </div>
       <el-table :data="filterTableData"
                 class="HomeworkList"
+                v-loading = "loading"
+                element-loading-text = "拼命加载中"
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" width="120px" sortable prop="name" />
-        <el-table-column label="作业截止时间" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="200px" sortable prop="scoreDdl" />
-        <el-table-column label="作业内容" width="150px" prop="content" >
+        <el-table-column label="作业截止时间" width="170px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="170px" sortable prop="scoreDdl" />
+        <el-table-column label="作业内容" width="100px" prop="content" >
           <template v-slot="scope">
             <el-link
                 :href="scope.row.blobUrl"
@@ -38,7 +40,7 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="提交情况" width="200px" align="center">
+        <el-table-column label="提交情况" width="150px" align="center">
           <template v-slot="scope">
           <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
@@ -46,6 +48,28 @@
             <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="上传答案" align="center" width="160px">
+          <template v-slot="scope">
+          <el-upload
+              v-if="scope.row.afilename === null"
+              class="upload-demo"
+              action="http://localhost:8081/homework/setAnswer"
+              :http-request="(params) => uploadAnswer(params, scope.row)"
+              :before-upload="beforeUpload"
+              :on-success="successHandle"
+              show-file-list="false"
+              limit="1"
+          >
+            <el-button type="primary">上传答案</el-button>
+            <template #tip>
+            <div class="el-upload__tip">
+              文件大小不超过100Mb
+            </div>
+            </template>
+          </el-upload>
+          <span v-else>已上传</span>
           </template>
         </el-table-column>
       </el-table>
@@ -90,16 +114,16 @@
                 :disabled-date="disabledScoreDate"
                 placeholder="选择日期和时间"/>
           </el-form-item>
-          <el-form-item label="上传文件" prop="content">
+          <el-form-item label="上传附件" prop="content">
             <el-upload
                 class="upload-demo"
                 drag
                 action="#"
                 :auto-upload="false"
-                :on-change="onChange"
-                :before-remove="beforeRemove"
-                multiple
-                :file-list="fileList"
+                :on-change="handleChange"
+                :on-remove="handleRemove"
+                :on-exceed="handleExceed"
+                :before-upload="beforeUpload"
                 limit="1"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -108,10 +132,15 @@
               </div>
               <template #tip>
               <div class="el-upload__tip">
-                文件大小不超过10Mb
+                文件大小不超过100Mb
               </div>
               </template>
             </el-upload>
+          </el-form-item>
+          <el-form-item  label="作业内容" prop="info">
+            <div style="width: 400px">
+              <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -127,10 +156,11 @@
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
 import axios from 'axios';
-import { ElConfigProvider } from 'element-plus';
+import {ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRoute, useRouter} from "vue-router";
 
+const loading = ref(true);
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
 const search = ref('');  // 搜索关键字
@@ -148,8 +178,8 @@ const homeworkData = reactive({
   content: null,
   submitDdl: '',
   scoreDdl: '',
+  info: '',
 });
-const fileList = ref([]);
 
 const homeFormRules = reactive({
   name: [
@@ -285,28 +315,39 @@ const clickSearch = () => {
   updateFilteredData();
 };
 
-const onChange = (file) => {
-  homeworkData.content = file.raw;
+const handleChange = (file,fileList) => {
+  homeworkData.content = fileList;
 };
 
-const beforeRemove = () => {
-  homeworkData.content = null;  // 取消选择文件，清空 content
-  return true;  // 返回 true 表示继续移除
+const handleRemove = (file,fileList) => {
+  homeworkData.content = fileList;  // 移除文件
 };
 
+const handleExceed = () => {
+  ElMessage.warning(`最多只能上传1个附件`);
+};
+
+const beforeUpload = (file) => {
+  const isLt10M = file.size / 1024 / 1024 < 100;
+  if (!isLt10M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+  }
+  return isLt10M;
+}
 const assignHomework = () => {
-  const formData = new FormData();
-  formData.set('file', homeworkData.content);
-  formData.set('cno', props.cno)
-  formData.set('HWName', homeworkData.name);
-  formData.set('scoreDdl', homeworkData.scoreDdl);
-  formData.set('submitDdl', homeworkData.submitDdl);
-
-  console.log(homeworkData.name)
-
-  console.log(formData)
-
   HomeworkFormRef.value.validate((valid) => {
+    const formData = new FormData();
+    if(homeworkData.content){
+      for(const file of homeworkData.content){
+        if(file.raw){
+          formData.append('file', file.raw);
+        }
+      }
+    }
+    formData.set('cno', props.cno)
+    formData.set('HWName', homeworkData.name);
+    formData.set('scoreDdl', homeworkData.scoreDdl);
+    formData.set('submitDdl', homeworkData.submitDdl);
       if (valid) {
         console.log(formData.get('scoreDdl'))
         axios
@@ -343,17 +384,40 @@ const closeDia = () => {
   resetFormData();
 };
 
+const form = new FormData();
+const uploadAnswer = (params,row) =>{
+
+  form.set('file', params.file);
+  form.set('homeworkID', row.homeworkID)
+  return axios({
+    url: 'http://localhost:8081/homework/setAnswer',
+    method: 'post',
+    data: form,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'token': token,
+    }
+  })
+};
+
+const successHandle = () => {
+  ElMessage.success('上传成功');
+  fetchData();
+  console.log(form.homeworkID)
+};
+
 const resetFormData = () => {
   homeworkData.name = '';
   homeworkData.content = null;
   homeworkData.submitDdl = '';
   homeworkData.scoreDdl = '';
-  fileList.value = [];
+  // fileList.value = [];
   dialogTableVisible.value = false;
 };
 
 onMounted(() => {
   fetchData();
+  loading.value = false;
   courseName.value=route.params.courseName;
   console.log(route.params.courseName)
 });
@@ -367,6 +431,9 @@ const Back = () => {
 <style scoped>
 .homeListMain{
   margin-top: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center
 }
 
 .icon{
@@ -435,10 +502,6 @@ const Back = () => {
   position: absolute;
   margin-top: 20px;
   right: 170px;
-}
-
-.main_page{
-  margin-top: 80px;
 }
 
 .HomeworkList{

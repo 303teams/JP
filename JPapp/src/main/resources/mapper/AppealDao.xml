@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjtu.dao.AppealDao">
+
+    <!--    插入作业号为contentID的appeal-->
+    <insert id="insertAppeal" parameterType="Appeal" useGeneratedKeys="true" keyProperty="contentID">
+        insert into appeal(contentID,appealContent,time,status)
+        values (#{contentID}, #{appealContent},#{time},#{status})
+    </insert>
+
+
+    <update id="setCTScore"  parameterType="integer">
+        update score
+        SET score = #{score}
+        WHERE contentID = #{contentID}
+        AND sno = #{sno}
+    </update>
+
+   <select id="findAppeal" resultType="java.util.Map" parameterType="string">
+        SELECT h.name,co.cname,a.*,c.sno
+        FROM appeal a
+        JOIN content c ON a.contentID = c.contentID
+        JOIN homework h ON c.homeworkID = h.homeworkID
+        JOIN course co ON h.cno = co.cno
+        WHERE co.tno = #{id};
+    </select>
+
+    <select id="findAPByID" resultType="Appeal">
+        SELECT *
+        FROM appeal
+        WHERE appeal.contentID = #{contentID};
+    </select>
+
+    <update id="setAP">
+        update appeal
+        SET status = #{num}
+        WHERE contentID = #{contentID}
+    </update>
+
+
+
+</mapper>

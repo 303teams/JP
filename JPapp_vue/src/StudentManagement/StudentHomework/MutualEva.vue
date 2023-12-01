@@ -1,187 +1,152 @@
 <template>
-  <div class="homeListMain"  style="position: relative; display: flex; justify-content: center">
+  <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
-    <div class="base_title">
-      <div class="title">学生互评</div>
-    </div>
     <div class="main">
-      <div class="search-container">
-        <div class="search_input">
-          <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
-        </div>
-        <el-button size="large" class="search_button" @click="clickSearch">
-          <el-icon style="vertical-align: middle">
-            <Search />
-          </el-icon>
-          <span style="vertical-align: middle"> 查询 </span>
-        </el-button>
+      <div class="content-container">
+        <span style="font-size: 20px;font-weight: bold">作业答案:</span>
+        <a style="font-size: 15px;margin-top:50px" :href="AnswerBlobUrl" :download="AnswerFileName">{{AnswerFileName}}</a>
       </div>
-      <el-table :data="filterTableData"
-                class="HomeworkList"
-                size="large"
-                stripe
-                :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="序号" align="center">
-          <template v-slot="{ $index }">{{ $index + 1 }}</template>
-        </el-table-column>
-        <el-table-column label="作业" width="150px" sortable>
-          <template v-slot="scope">
-          <el-link
-              :href="scope.row.blobUrl"
-              :download="scope.row.fileName"
-              style="color: dodgerblue; text-decoration: underline;"
-          >
-            查看作业
-          </el-link>
-          </template>
-        </el-table-column>
-        <el-table-column label="打分" width="120px" prop="teacherName" />
-        <el-table-column label="批注" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="操作" width="120px">
-          <template>
-          <el-button
-              size="large"
-              @click="handleSubmit"
-          >
-            提交
-          </el-button>
-<!--          <span v-else>已提交</span>-->
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="content-container">
+        <span style="font-size: 20px;font-weight: bold">学生答案:</span>
+        <a style="font-size: 15px;margin-top:50px" :href="ContentBlobUrl" :download="ContentFileName">{{ContentFileName}}</a>
+      </div>
 
-      <el-config-provider :locale="zhCn">
-        <div class="demo-pagination-block">
-          <el-pagination
-              v-model:current-page="currentPage"
-              v-model:page-size="pageSize"
-              :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
-              background
-              layout="total, sizes, prev, pager, next"
-              :total="filteredData.length"
-          />
+      <div style="margin-top: 20px;">
+        <label style="font-size: 16px; font-weight: bold;">打分:</label>
+        <div class="rating-container">
+          <div v-for="score in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="score" class="rating-item">
+            <input type="radio" :id="'score' + score" :name="'score'" :value="score" v-model="selectedScore" />
+            <label :for="'score' + score">{{ score }}</label>
+          </div>
         </div>
-      </el-config-provider>
+      </div>
+
+      <div style="width: 1100px;margin-top: 30px" label="内容" prop="info">
+        <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语"/>
+      </div>
     </div>
+
+    <div class="button_class">
+      <el-button type="primary" @click="submitScore">提交</el-button>
+    </div>
+
 
   </div>
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted,defineProps } from 'vue';
+import { ref, onMounted,defineProps, } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { ElConfigProvider } from 'element-plus';
-import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import {useRouter} from "vue-router";
 
-const currentPage = ref(1); // 从第一页开始
-const pageSize = ref(10); //每页展示多少条数据
-const search = ref('');  // 搜索关键字
-const tableData = reactive({ data: [] });  //储存后端传来的数据
-const filteredData = ref([]); // 新的变量用于存储过滤后的数据
-const token = localStorage.getItem('token');
-const props = defineProps(['contentID']);
 const router = useRouter();
-
-// 将表格中的数据按pageSize切片
-const filterTableData = computed(() =>
-    filteredData.value.slice(
-        (currentPage.value - 1) * pageSize.value,
-        currentPage.value * pageSize.value
-    )
-);
-
-//点击提交按钮
-const handleSubmit = () => {
-
-};
+const token = localStorage.getItem('token');
+const props = defineProps(['homeworkID', 'contentID']);
+const ContentBlobUrl = ref();
+const AnswerBlobUrl = ref();
+const ContentFileName = ref();
+const AnswerFileName = ref();
+const selectedScore = ref();
+const info = ref();
 
 const fetchData = () => {
-
-  return new Promise((resolve, reject) => {
-    axios
-        .post(
-            'http://localhost:8081/student/findCTsByCID',
-            {
-              contentID: props.contentID,
-            },
-
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token,
-              },
-            }
-        )
-        .then(res1 => {
-          if (res1.data.code === 200) {
-            // courseName.value = res1.data.data[0].courseName;
-            if(res1.data.data !==null){
-              tableData.data = res1.data.data;
-              console.log(res1);
-
-              // 使用promise实现多个接口的调用
-              const promises = tableData.data.map(item => {
-                return axios.post(
-                    'http://localhost:8081/content/downloadCT',
-                    null,
-                    {
-                      params: {
-                        contentID: item.contentID,
-                      },
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'token': token,
-                      },
-                      responseType: 'blob',
-                    }
-                ).then(res2 => {
-                  console.log(res2)
-                  const blob = new Blob([res2.data], {type: 'application/octet-stream'});
-                  const blobUrl = URL.createObjectURL(blob);
-
-                  // 给每项作业分配url用来下载
-                  item.blobUrl = blobUrl;
-                  updateFilteredData(); // 更新过滤后的数据
-                });
-              });
-
-              console.log(tableData.data)
-              // 使用Promise.all来执行promises数组里的所有promise
-              return Promise.all(promises);
-            }
-          } else {
-            console.log(res1.data.msg)
-          }
-        })
-        .then(() => {
-          resolve({success: true, message: 'Data fetched successfully'});
-        })
-        .catch(error => {
-          console.error("发生未知错误！");
-          console.log(error);
-
-          reject("发生未知错误！");
-        });
+  // 创建两个 axios 实例
+  const axiosInstance1 = axios.create({
+    baseURL: 'http://localhost:8081',
+    headers: {
+      'Content-Type': 'application/json',
+      'token': token,
+    },
+    responseType: 'blob',
   });
+
+  const axiosInstance2 = axios.create({
+    baseURL: 'http://localhost:8081',
+    headers: {
+      'Content-Type': 'application/json',
+      'token': token,
+    },
+    responseType: 'blob',
+  });
+
+  // 同时发起两个请求
+  Promise.all([
+    axiosInstance1.post('/content/downloadCT', null, {
+      params: {
+        contentID: props.contentID,
+      },
+    }),
+    axiosInstance2.post('homework/downloadAns', null, {
+      params: {
+        homeworkID: props.homeworkID,
+      },
+    }),
+  ])
+      .then(([res1, res2]) => {
+        // 处理第一个请求的响应
+        console.log(res1);
+        const blob1 = new Blob([res1.data], {type: 'application/octet-stream'});
+        const contentDisposition1 = res1.headers['content-disposition'];
+        ContentFileName.value = extractFilename(contentDisposition1);
+        console.log(ContentFileName.value)
+        ContentBlobUrl.value = URL.createObjectURL(blob1);
+        console.log(ContentBlobUrl.value)
+
+        // 处理第二个请求的响应
+        console.log(res2);
+        const blob2 = new Blob([res2.data], {type: 'application/octet-stream'});
+        const contentDisposition2 = res2.headers['content-disposition'];
+        AnswerFileName.value = extractFilename(contentDisposition2);
+        AnswerBlobUrl.value = URL.createObjectURL(blob2);
+        console.log(AnswerFileName.value)
+        console.log(AnswerBlobUrl.value)
+
+      })
+      .catch(error => {
+        // 处理错误
+        console.error('Error:', error);
+      });
 };
 
-
-const updateFilteredData = () => {
-  filteredData.value = tableData.data.filter(
-      (data) =>
-          !search.value ||
-          data.cno.toLowerCase().includes(search.value.toLowerCase())
-  );
+const extractFilename = (contentDisposition) => {
+  const matches = contentDisposition.match(/filename="(.+?)"/);
+  return matches ? decodeURIComponent(matches[1]) : null;
 };
 
-const clickSearch = () => {
-  updateFilteredData();
+const submitScore = () => {
+  console.log(props.contentID);
+  axios
+      .post(
+          'http://localhost:8081/student/score',
+          {
+            contentID: props.contentID,
+            score: selectedScore.value,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'token': token,
+            },
+          }
+      )
+      .then((res) => {
+        if (res.data.code === 200) {
+          console.log(res);
+          window.alert("评分成功");
+          Back();
+        } else {
+          window.alert("评分失败:" + res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
 };
 
-const Back = () => {
+const Back = () =>{
   router.back();
-};
+}
 
 onMounted(() => {
   fetchData();
@@ -192,79 +157,59 @@ onMounted(() => {
 
 <style scoped>
 .homeListMain{
-  margin-top: 50px;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  text-align: left;
 }
 
 .icon{
-  position: absolute;
-  top: -40px;
-  left: 50px;
+  top: 0px;
+  left: 0px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
-}
-
-.base_title {
-  position: absolute;
-  top: 0px;
-  left: 75px;
-}
-
-.title {
-  position: relative;
-  padding-left: 13px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.title:before {
-  content: "";
-  background-color: #3796EC;
-  width: 4px;
-  height: 23px;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  margin-top: -10px;
 }
 
 .main{
   margin-top: 50px;
 }
 
-.search-container {
+.content-container {
+  text-align: left;
+  margin-bottom: 100px;
+  padding: 10px;
   display: flex;
-  width: auto;
-  margin-bottom: 10px;
+  flex-direction: column;
 }
 
-.search_input{
-  width: 350px;
-  margin-right: 10px;
+.rating-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 }
 
-.search_button{
-  color: #2176d7;
-  margin-left: 10px;
+.rating-item {
+  margin-left: 20px;
+  text-align: center;
 }
 
-.demo-pagination-block{
+
+.rating-item label {
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.rating-item label:hover {
+  color: #ff9800; /* 或者你选择的其他颜色 */
+}
+
+.button_class{
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: absolute;
-  margin-top: 20px;
-  right: 170px;
-}
-
-.main_page{
   margin-top: 80px;
 }
-
-.HomeworkList{
-  width: 100%;
-}
-
-
 
 </style>
