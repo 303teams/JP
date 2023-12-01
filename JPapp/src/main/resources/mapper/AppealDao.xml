@@ -20,11 +20,12 @@
     </update>
 
    <select id="findAppeal" resultType="java.util.Map" parameterType="string">
-        SELECT h.name,co.cname,a.*,c.sno
+        SELECT h.name,co.cname,a.*,c.sno,s.name
         FROM appeal a
         JOIN content c ON a.contentID = c.contentID
         JOIN homework h ON c.homeworkID = h.homeworkID
         JOIN course co ON h.cno = co.cno
+        JOIN student s ON c.sno = s.id
         WHERE co.tno = #{id};
     </select>
 

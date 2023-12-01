@@ -96,11 +96,19 @@ public class TeacherController {
         int num =1;
         if(appeal.getStatus()==0){
             System.out.println("contentID: "+contentID);
-
             return teacherService.setAP(contentID,num);
         }
-
         else  return RspObject.success("已处理！");
     }
+
+    //    申诉后教师修改学生分数
+    @AuthAccess
+    @PostMapping("/changeCTScore")
+    public RspObject<Boolean> changeCTScore(Integer contentID,Integer score){
+
+        teacherService.setAP(contentID,2);
+        return teacherService.setCTScore(contentID,score);
+    }
+
 
 }

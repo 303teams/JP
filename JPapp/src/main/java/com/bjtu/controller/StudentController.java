@@ -69,9 +69,10 @@ public class StudentController {
 
     //学生打分
     @PostMapping("score")
-    public RspObject<Boolean> score(String sno,int contentID,double score) {
+    public RspObject<Boolean> score(Integer contentID,Double score) {
+        User user = TokenUtils.getCurrentUser();
         Score s= new Score();
-        s.setSno(sno);
+        s.setSno(user.getId());
         s.setContentID(contentID);
         s.setScore(score);
         LocalDateTime currentTime = LocalDateTime.now();
@@ -83,7 +84,7 @@ public class StudentController {
 
     //发送申诉请求
     @PostMapping("sendAppeal")
-    public RspObject<Boolean> sendAppeal(int contentID, String appealContent) {
+    public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
         System.out.println("in2");
         Appeal appeal = new Appeal();
         appeal.setContentID(contentID);

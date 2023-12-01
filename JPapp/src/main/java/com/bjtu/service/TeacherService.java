@@ -33,9 +33,9 @@ public interface TeacherService {
 
     RspObject<List<Map<String, Object>>> findAppeal(String id);
     
-    Content findCTByID(int contentID);
+    Content findCTByID(Integer contentID);
 
-    Appeal findAPByID(int contentID);
+    Appeal findAPByID(Integer contentID);
 
-    RspObject<Boolean> setAP(int contentID,int num);
+    RspObject<Boolean> setAP(Integer contentID,int num);
 }
