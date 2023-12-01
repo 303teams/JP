@@ -81,7 +81,7 @@ public class TeacherController {
     public RspObject<List<Map<String, Object>>> findAppeal(){
 
         User user = TokenUtils.getCurrentUser();
-        return teacherService.findAppeal(user.getId());
+        return teacherService.findAppeal("21001001");
     }
 
     //教师点击申诉信息,改变staus值：0-1
@@ -96,11 +96,19 @@ public class TeacherController {
         int num =1;
         if(appeal.getStatus()==0){
             System.out.println("contentID: "+contentID);
-
             return teacherService.setAP(contentID,num);
         }
-
         else  return RspObject.success("已处理！");
     }
+
+    //    申诉后教师修改学生分数
+    @AuthAccess
+    @PostMapping("/changeCTScore")
+    public RspObject<Boolean> changeCTScore(Integer contentID,Integer score){
+
+        teacherService.setAP(contentID,2);
+        return teacherService.setCTScore(contentID,score);
+    }
+
 
 }
