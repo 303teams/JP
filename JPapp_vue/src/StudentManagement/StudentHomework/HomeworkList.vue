@@ -109,7 +109,11 @@ const handleCheck = (cno,row) => {
 
 const ClickGrade = (row) => {
   router.push({
-    path:`/studentHome/GradeDetail/${row.contentID}`,
+    path:`/studentHome/GradeDetail/${row.homeworkID}`,
+    state:{
+      contentID:row.contentID,
+      score:row.score
+    }
   })
 };
 

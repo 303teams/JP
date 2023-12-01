@@ -50,7 +50,7 @@
           </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="上传答案" width="160px">
+        <el-table-column label="上传答案" align="center" width="160px">
           <template v-slot="scope">
           <el-upload
               v-if="scope.row.afilename === null"
@@ -402,6 +402,7 @@ const uploadAnswer = (params,row) =>{
 
 const successHandle = () => {
   ElMessage.success('上传成功');
+  fetchData();
   console.log(form.homeworkID)
 };
 

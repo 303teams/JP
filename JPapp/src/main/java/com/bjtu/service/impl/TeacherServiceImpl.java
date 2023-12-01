@@ -184,6 +184,8 @@ public class TeacherServiceImpl implements TeacherService {
                 return RspObject.success("无申诉信息！");
             }
 
+            System.out.println(appeals);
+
             return RspObject.success("查询成功！",appeals);
         } catch (Exception e) {
             e.printStackTrace(); // 记录异常

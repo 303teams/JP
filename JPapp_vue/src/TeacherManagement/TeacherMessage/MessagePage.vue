@@ -4,15 +4,21 @@
       <div class="message-main" style="width: 1150px">
         <div
             class="message-item"
-            v-for="(item, index) in visibleMessages"
-            :key="item.id"
-            :class="{ 'active': cur === index }"
+            v-for="(item) in visibleMessages"
+            :key="item.contentID"
+            :class="{ 'active': item.status === 0 }"
             @click="goRead(item)"
         >
-          <div class="item-dot" v-if="item.status === 1"></div>
           <div class="item-content">
-            <p class="time">{{ item.createTime }}</p>
-            <p class="title">{{ item.title }}</p>
+            <div class="appeal-info">
+              <p class="title">课程：{{ item.cname }}  作业名：{{item.name}}申诉请求</p>
+              <div class="content">
+                <div class="item-dot" v-if="item.status === 0"/>
+                <span></span>
+                <p style="margin-left: 20px">{{ item.appealContent }}</p>
+              </div>
+            </div>
+            <p style="margin-top: 40px">{{ item.time }}</p>
           </div>
         </div>
       </div>
@@ -23,7 +29,7 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-size="pageSize"
-            :total="messageList.length"
+            :total="tableData.length"
             layout="prev, pager, next"
         />
       </div>
@@ -38,24 +44,7 @@
 import {computed, onMounted, ref} from 'vue';
 import axios from "axios";
 
-const messageList = ref([
-  { id: 1, title: '测试消息1', createTime: '2021-06-01 12:00:00', status: 1 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-  { id: 2, title: '测试消息2', createTime: '2021-06-02 12:30:00', status: 0 },
-]);
 
-const cur = ref(0);
 const pageSize = 10;
 const currentPage = ref(1);
 const token = localStorage.getItem('token');
@@ -65,7 +54,7 @@ const tableData = ref([]);  //储存后端传来的数据
 const visibleMessages = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
   const end = start + pageSize;
-  return messageList.value.slice(start, end);
+  return tableData.value.slice(start, end);
 });
 
 const handleCurrentChange = (newPage) => {
@@ -75,7 +64,7 @@ const handleCurrentChange = (newPage) => {
 const fetchData = () => {
   axios
       .post(
-          'http://localhost:8081/student/findCourse',
+          'http://localhost:8081/teacher/findAppeal',
           null,
           {
             headers: {
@@ -131,22 +120,39 @@ const goRead = (item) => {
 }
 
 .item-dot {
-  width: 10px;
-  height: 10px;
-  background-color: red; /* Change the color to red */
-  margin-right: 10px; /* Add some spacing between dot and content */
-  border-radius: 50%; /* Make it a circle */
+  width: 7px;
+  height: 7px;
+  background-color: red;
+  margin-top: 15px;
+  margin-left: -10px;
+  border-radius: 50%;
 }
 
 .title{
   font-size: 17px;
+  margin-left: 20px;
+}
+
+.content{
+  font-size: 12px;
+  display: flex;
+  justify-content: left;
+  margin-top: -13px;
+  margin-left: 10px;
 }
 
 .item-content {
   flex-grow: 1;
   display: flex;
   justify-content: space-between;
-  flex-direction: row-reverse; /* Reverse the order of the items */
+  flex-direction: row;
+}
+
+
+.appeal-info{
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
 }
 
 .pagination {

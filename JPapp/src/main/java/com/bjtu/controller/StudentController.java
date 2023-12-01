@@ -61,7 +61,7 @@ public class StudentController {
     //    返回互评作业列表
     @PostMapping("findCTsByCID")
     public RspObject<List<Content>> findCTsByCID(Integer contentID) {
-        System.out.println("in1");
+        System.out.println("in1"+contentID);
 
         return studentService.findCTsByCID(contentID);
     }
@@ -70,7 +70,7 @@ public class StudentController {
 
     //学生打分
     @PostMapping("score")
-    public RspObject<Boolean> score(@RequestParam Integer contentID,@RequestParam Double score) {
+    public RspObject<Boolean> score(Integer contentID, Double score) {
         System.out.println(contentID+" "+score);
         User user = TokenUtils.getCurrentUser();
         Score s= new Score();
@@ -86,8 +86,9 @@ public class StudentController {
 
     //发送申诉请求
     @PostMapping("sendAppeal")
-    public RspObject<Boolean> sendAppeal(int contentID, String appealContent) {
+    public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
         System.out.println("in2");
+        System.out.println(contentID+" "+appealContent);
         Appeal appeal = new Appeal();
         appeal.setContentID(contentID);
         appeal.setAppealContent(appealContent);

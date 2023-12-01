@@ -10,10 +10,10 @@ import java.util.Date;
 public class Appeal {
 
     private String appealContent;
-    private int contentID;
+    private Integer contentID;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private String time;
-    private int status;
+    private Integer status;
 
 }

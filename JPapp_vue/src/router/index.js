@@ -84,7 +84,7 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'GradeDetail/:contentID',
+                    path: 'GradeDetail/:homeworkID',
                     name:'GradeDetail',
                     component: GradeDetail,
                     props: true,

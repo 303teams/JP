@@ -118,14 +118,13 @@ const submitScore = () => {
   axios
       .post(
           'http://localhost:8081/student/score',
-          null,
           {
-            params: {
-              contentID: props.contentID,
-              score: selectedScore.value,
-            },
+            contentID: props.contentID,
+            score: selectedScore.value,
+          },
+          {
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded',
               'token': token,
             },
           }
