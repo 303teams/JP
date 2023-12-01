@@ -194,18 +194,19 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Content findCTByID(int contentID){
+    public Content findCTByID(Integer contentID){
 
         return contentDao.findCTById(contentID);
     }
 
     @Override
-    public  Appeal findAPByID(int contentID){
+    public  Appeal findAPByID(Integer contentID){
+
         return appealDao.findAPByID(contentID);
     }
 
     @Override
-    public RspObject<Boolean> setAP(int contentID,int num){
+    public RspObject<Boolean> setAP(Integer contentID,int num){
         appealDao.setAP(contentID,num);
         return RspObject.success("修改成功！",Boolean.TRUE);
     }
