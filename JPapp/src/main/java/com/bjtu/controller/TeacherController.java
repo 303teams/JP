@@ -81,7 +81,7 @@ public class TeacherController {
     public RspObject<List<Map<String, Object>>> findAppeal(){
 
         User user = TokenUtils.getCurrentUser();
-        return teacherService.findAppeal(user.getId());
+        return teacherService.findAppeal("21001001");
     }
 
     //教师点击申诉信息,改变staus值：0-1

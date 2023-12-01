@@ -20,7 +20,7 @@
     </update>
 
    <select id="findAppeal" resultType="java.util.Map" parameterType="string">
-        SELECT h.name,co.cname,a.*,c.sno,s.name
+        SELECT h.name,co.cname,a.contentID,a.appealContent,a.status,c.sno,s.name,DATE_FORMAT(a.time, '%Y-%m-%d %H:%i:%s') as time
         FROM appeal a
         JOIN content c ON a.contentID = c.contentID
         JOIN homework h ON c.homeworkID = h.homeworkID
