@@ -1,27 +1,13 @@
 package com.bjtu.controller;
 
-import cn.hutool.json.JSONObject;
-import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.*;
 import com.bjtu.service.ContentService;
 import com.bjtu.service.HomeworkService;
 import com.bjtu.service.StudentService;
-import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

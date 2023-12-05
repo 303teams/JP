@@ -18,15 +18,9 @@
 </template>
 
 
-<script>
-
+<script setup>
 import SideBar from "./SideBarComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
-export default {
-  components: { SideBar , HeaderComponent},
-  data() {},
-  methods: {}
-}
 
 </script>
 
@@ -44,6 +38,7 @@ export default {
 }
 
 .layout-container-demo .el-main {
+  padding: 0 0 30px 0;
   height: 100%;
   width: 100%;
 }

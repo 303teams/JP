@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 20px">
     <el-row v-if="items.length > 0">
       <el-col
           v-for="(item, index) in items"

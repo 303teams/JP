@@ -42,7 +42,6 @@ public class TeacherController {
 
     @PostMapping("modifyInfo")
     public RspObject<String> modifyInfo(Teacher teacher){
-        System.out.println("modifyInfo: "+teacher);
         return teacherService.modifyInfo(teacher);
     }
 
