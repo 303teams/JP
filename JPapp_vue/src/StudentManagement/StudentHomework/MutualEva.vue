@@ -121,6 +121,7 @@ const submitScore = () => {
           {
             contentID: props.contentID,
             score: selectedScore.value,
+            content: info.value,
           },
           {
             headers: {

@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://8.141.4.25:3306/jp
     username: root
-    password: 123456
+    password: Lizhichao12
   servlet:
     multipart:
       enabled: true

@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <homework-submit :homeworkID="props.homeworkID" v-show="currentStage === 'submission'"/>
+    <homework-submit :homeworkID="props.homeworkID" :cno="props.cno" v-show="currentStage === 'submission'"/>
     <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" v-show="currentStage === 'peerReview'"/>
   </div>
 

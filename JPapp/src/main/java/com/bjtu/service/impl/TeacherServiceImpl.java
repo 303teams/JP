@@ -112,12 +112,13 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public RspObject<String> modifyInfo(Teacher teacher) {
-        Teacher teacher1 = teacherDao.findByNum(teacher.getId());
-        if(teacher == null){
+        Teacher teacher1 = (Teacher) TokenUtils.getCurrentUser();
+        if(teacher1 == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
-            teacherDao.updateInfo(teacher1);
-            return RspObject.success("密码修改成功！");
+            teacher.setId(teacher1.getId());
+            teacherDao.updateInfo(teacher);
+            return RspObject.success("信息修改成功！");
         }
     }
     @Override

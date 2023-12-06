@@ -120,10 +120,12 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<String> modifyInfo(Student student) {
-        Student student1 = studentDao.findByNum(student.getId());
+        System.out.println("modifyInfo: "+student);
+        Student student1 = (Student) TokenUtils.getCurrentUser();
         if(student1 == null){
             throw new ServiceException(500,"用户不存在！");
         }else{
+            student.setId(student1.getId());
             studentDao.updateInfo(student);
             return RspObject.success("信息修改成功!");
         }

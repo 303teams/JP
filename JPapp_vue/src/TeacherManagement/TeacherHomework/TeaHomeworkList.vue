@@ -90,7 +90,7 @@
     </div>
 
     <!-- 上传作业的弹出框 -->
-    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" width="50%" >
+    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" @close="closeDia" width="50%" >
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
           <el-form-item label="作业名字:" prop="name" >
@@ -124,6 +124,7 @@
                 :on-remove="handleRemove"
                 :on-exceed="handleExceed"
                 :before-upload="beforeUpload"
+                :file-list="homeworkData.content"
                 limit="1"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -175,7 +176,7 @@ const route =useRoute();
 const courseName = ref('');
 const homeworkData = reactive({
   name: '',
-  content: null,
+  content: [],
   submitDdl: '',
   scoreDdl: '',
   info: '',
@@ -186,7 +187,7 @@ const homeFormRules = reactive({
     { required: true, message: '请输入作业名字', trigger: 'blur' },
   ],
   content: [
-    { required: true, message: '请输入作业内容', trigger: 'blur' },
+    { required: true, message: '请上传附件', trigger: 'blur' },
   ],
   submitDdl: [
     { required: true, message: '请选择提交截止日期', trigger: 'blur' },
@@ -225,7 +226,6 @@ const disabledScoreDate = (time) => {
 
 
 const fetchData = () => {
-
   return new Promise((resolve, reject) => {
     axios
         .post(
@@ -328,11 +328,11 @@ const handleExceed = () => {
 };
 
 const beforeUpload = (file) => {
-  const isLt10M = file.size / 1024 / 1024 < 100;
-  if (!isLt10M) {
+  const isLt100M = file.size / 1024 / 1024 < 100;
+  if (!isLt100M) {
     ElMessage.error('上传文件大小不能超过 100MB!');
   }
-  return isLt10M;
+  return isLt100M;
 }
 const assignHomework = () => {
   HomeworkFormRef.value.validate((valid) => {
@@ -382,6 +382,7 @@ const assignHomework = () => {
 const closeDia = () => {
   dialogTableVisible.value = false;
   resetFormData();
+  HomeworkFormRef.value.resetFields();
 };
 
 const form = new FormData();
@@ -408,10 +409,9 @@ const successHandle = () => {
 
 const resetFormData = () => {
   homeworkData.name = '';
-  homeworkData.content = null;
+  homeworkData.content = [];
   homeworkData.submitDdl = '';
   homeworkData.scoreDdl = '';
-  // fileList.value = [];
   dialogTableVisible.value = false;
 };
 
