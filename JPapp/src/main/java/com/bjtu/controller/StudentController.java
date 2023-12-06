@@ -8,6 +8,7 @@ import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -47,12 +48,10 @@ public class StudentController {
     //    返回互评作业列表
     @PostMapping("findCTsByCID")
     public RspObject<List<Content>> findCTsByCID(Integer contentID) {
-        System.out.println("in1"+contentID);
+//        System.out.println("in1"+contentID);
 
         return studentService.findCTsByCID(contentID);
     }
-
-
 
     //学生打分
     @PostMapping("score")
@@ -63,27 +62,28 @@ public class StudentController {
         s.setContentID(contentID);
         s.setScore(score);
         s.setContent(content);
-        LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-        s.setTime(formattedTime);
+
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp currentTime = new Timestamp(currentTimeMillis);
+
+        s.setTime(currentTime);
         return studentService.insertScore(s);
     }
 
     //发送申诉请求
     @PostMapping("sendAppeal")
     public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
-        System.out.println("in2");
-        System.out.println(contentID+" "+appealContent);
+//        System.out.println("in2");
+//        System.out.println(contentID+" "+appealContent);
         Appeal appeal = new Appeal();
         appeal.setContentID(contentID);
         appeal.setAppealContent(appealContent);
         appeal.setStatus(0);
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-        appeal.setTime(formattedTime);
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp currentTime = new Timestamp(currentTimeMillis);
+
+        appeal.setTime(currentTime);
         return studentService.insertAppeal(appeal);
     }
 }
