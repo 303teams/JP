@@ -26,10 +26,10 @@
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="学生学号" width="120px" sortable prop="sno" />
-        <el-table-column label="学生姓名" width="120px" sortable prop="sname" />
-        <el-table-column label="提交时间" width="200px" sortable prop="submitTime" />
-        <el-table-column label="作业提交内容" width="150px">
+        <el-table-column label="学生学号" width="120px" align="center" sortable prop="sno" />
+        <el-table-column label="学生姓名" width="120px" align="center" sortable prop="sname" />
+        <el-table-column label="提交时间" width="200px" align="center" sortable prop="submitTime" />
+        <el-table-column label="作业提交内容" align="center" width="150px">
           <template v-slot="scope">
           <el-link
               v-if="scope.row.contentID !== null"
@@ -42,8 +42,8 @@
           <span v-else>未提交</span>
           </template>
         </el-table-column>
-        <el-table-column label="作业成绩" width="120px" sortable prop="score" />
-        <el-table-column label="操作" width="130px">
+        <el-table-column label="作业成绩" width="120px" align="center" sortable prop="score" />
+        <el-table-column label="操作" align="center" width="130px">
           <template v-slot="scope">
           <el-button size="large" v-if="scope.row.contentID !== null" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
           <span v-else>未提交</span>
@@ -131,6 +131,7 @@ const fetchData = () => {
         )
         .then(res1 => {
 
+          console.log(res1);
           if (res1.data.code === 200) {
             console.log(props.cno);
             tableData.data = res1.data.data;
@@ -261,7 +262,7 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: -40px;
+  top: 0px;
   left: 170px;
 }
 
@@ -281,6 +282,10 @@ onMounted(() => {
   left: 0;
   top: 50%;
   margin-top: -10px;
+}
+
+.main{
+  margin-top: 40px;
 }
 
 .search-container {
@@ -308,9 +313,6 @@ onMounted(() => {
   right: 170px;
 }
 
-.main_page{
-  margin-top: 80px;
-}
 
 .HomeworkList{
   width: 100%;

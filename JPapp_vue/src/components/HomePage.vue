@@ -39,7 +39,7 @@ body {
 }
 
 .layout-container-demo .el-main {
-  padding: 0 0 30px 0;
+  padding: 0 0 30px 30px;
   height: 100%;
   width: 100%;
   overflow: auto;

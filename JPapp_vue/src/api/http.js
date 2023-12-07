@@ -154,5 +154,33 @@ const http = {
         }
         return request(config)
     },
+
+
+    //下载学生作业
+    downloadCT(data){
+        const config = {
+            url:'/content/downloadCT',
+            method:'post',
+            data:data,
+            responseType: 'blob',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //教师处理作业申诉
+    readAppeal(data){
+        const config = {
+            url:'/teacher/ClickAppeal',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
 }
 export default http

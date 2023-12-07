@@ -64,6 +64,7 @@ public class TeacherController {
     @AuthAccess
     @PostMapping("/findCTByHId")
     public RspObject<List<Content>> findCTByHId(@RequestParam Integer homeworkID){
+        System.out.println("homeworkID: "+homeworkID);
         return teacherService.findCTByHId(homeworkID);
     }
 
@@ -80,13 +81,13 @@ public class TeacherController {
     public RspObject<List<Map<String, Object>>> findAppeal(){
 
         User user = TokenUtils.getCurrentUser();
-        return teacherService.findAppeal("21001001");
+        return teacherService.findAppeal(user.getId());
     }
 
     //教师点击申诉信息,改变staus值：0-1
     @AuthAccess
     @PostMapping("/ClickAppeal")
-    public RspObject<Boolean> ClickAppeal(int contentID){
+    public RspObject<Boolean> ClickAppeal(Integer contentID){
 
 //        System.out.println("contentID: "+contentID);
         Appeal appeal = new Appeal();
@@ -105,7 +106,7 @@ public class TeacherController {
     @PostMapping("/changeCTScore")
     public RspObject<Boolean> changeCTScore(Integer contentID,Integer score){
 
-        teacherService.setAP(contentID,2);
+        teacherService.setAP(contentID,score);
         return teacherService.setCTScore(contentID,score);
     }
 

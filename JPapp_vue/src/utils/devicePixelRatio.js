@@ -26,7 +26,6 @@ class DevicePixelRatio {
     }
 
     // 校正浏览器缩放比例
-    // 校正浏览器缩放比例
     _correct() {
         // 获取初始缩放率
         const initialDPR = this.initialDevicePixelRatio;
