@@ -45,7 +45,6 @@ public class HomeworkController {
 
         byte[] content = homework.getContent();
         String fileName = homework.getFileName();
-        System.out.println(fileName);
         String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
         HttpHeaders headers = new HttpHeaders();
