@@ -8,29 +8,24 @@
       </el-header>
 
       <el-main>
-        <el-scrollbar>
-          <router-view></router-view>
-        </el-scrollbar>
-
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 
-<script>
-
+<script setup>
 import SideBar from "./SideBarComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
-export default {
-  components: { SideBar , HeaderComponent},
-  data() {},
-  methods: {}
-}
 
 </script>
 
 <style scoped>
+body {
+  overflow-x: hidden;
+}
+
 .layout-container-demo {
   width: 100%;
   height: 100%;
@@ -44,8 +39,10 @@ export default {
 }
 
 .layout-container-demo .el-main {
+  padding: 0 0 30px 0;
   height: 100%;
   width: 100%;
+  overflow: auto;
 }
 
 </style>

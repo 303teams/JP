@@ -50,4 +50,5 @@ class StudentServiceImplTest {
     void testChangePassword() {
         System.out.println(studentService.changePassword("21301001","21301001"));
     }
+
 }

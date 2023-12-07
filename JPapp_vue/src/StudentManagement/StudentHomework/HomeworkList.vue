@@ -1,5 +1,5 @@
 <template>
-  <div class="homeListMain"  style="position: relative; display: flex; justify-content: center">
+  <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <div class="title">课程作业</div>
@@ -26,9 +26,9 @@
         <el-table-column label="作业名称" width="150px" sortable prop="name" />
         <el-table-column label="课程名称" width="150px" sortable prop="courseName" />
         <el-table-column label="发布人" width="120px" prop="teacherName" />
-        <el-table-column label="提交截止时间" width="170px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="170px" sortable prop="scoreDdl" />
-        <el-table-column label="查看作业" width="130px" align="center">
+        <el-table-column label="提交截止时间" width="180px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
+        <el-table-column label="查看作业" width="140px" align="center">
           <template v-slot="scope">
           <el-button
               @click="handleCheck(cno,scope.row)"
@@ -71,7 +71,7 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import axios from 'axios';
+import http from '@/api/http';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRouter} from "vue-router";
@@ -81,7 +81,6 @@ const pageSize = ref(10); //每页展示多少条数据
 const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
-const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const router = useRouter();
 const loading = ref(true);
@@ -118,31 +117,19 @@ const ClickGrade = (row) => {
 };
 
 const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/student/findCTByCno',
-          {
-            cno: props.cno,
-          },
-
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(props.cno);
-          tableData.data = res.data.data;
-          console.log(res)
-          updateFilteredData(); // 更新过滤后的数据
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
-        }
-      })
-      .catch((err) => {
+  const data = {
+    cno: props.cno,
+  }
+  http.stuHomeworkList(data).then((res) => {
+    if (res.data.code === 200) {
+      console.log(props.cno);
+      tableData.data = res.data.data;
+      console.log(res)
+      updateFilteredData(); // 更新过滤后的数据
+    } else {
+      window.alert("获取信息失败:" + res.data.msg);
+    }
+  }).catch((err) => {
         console.error("发生未知错误！");
         console.log(err);
       });
@@ -175,6 +162,9 @@ onMounted(() => {
 <style scoped>
 .homeListMain{
   margin-top: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .icon{
@@ -188,8 +178,8 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: 30px;
-  left: 40px;
+  top: 0px;
+  left: 120px;
 }
 
 .title {
@@ -211,7 +201,7 @@ onMounted(() => {
 }
 
 .main{
-  margin-top: 100px;
+  margin-top: 40px;
 }
 
 .search-container {

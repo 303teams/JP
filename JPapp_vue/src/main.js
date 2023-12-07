@@ -7,14 +7,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import * as ElIconModules from '@element-plus/icons'
 import store from '@/store'
-import "lib-flexible-computer";
-import '@/utils/validator.js'
-import '@/utils/detectZoom.js'
+import 'lib-flexible-computer'
 
-// import {detectZoom} from "@/utils/detectZoom";
-
-// const m = detectZoom();
-// document.body.style.zoom = 100 / Number(m);
 
 const app = createApp(App)
 //  统一注册el-icon图标

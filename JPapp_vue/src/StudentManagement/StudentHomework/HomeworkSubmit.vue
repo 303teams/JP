@@ -52,6 +52,7 @@
 
 import {defineProps, onMounted, reactive, ref} from "vue";
 import axios from "axios";
+import http from "@/api/http";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 
@@ -159,43 +160,29 @@ const Back = () => {
 };
 
 const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/homework/downloadHW',
-          null, // 空的请求体
-          {
-            params: {
-              homeworkId: props.homeworkID, // 将homeworkID作为查询参数添加
-            },
-            headers: {
-              'Content-Type': 'application/json',
-              'token': token,
-            },
-            responseType: 'blob',
-          })
+  const data = {
+    homeworkId: props.homeworkID,
+  }
+  http.downloadHomework(data).then((res) => {
+    const blob = new Blob([res.data], { type: 'application/octet-stream' });
 
-      .then((res) => {
-        const blob = new Blob([res.data], { type: 'application/octet-stream' });
+    // 提取 filename 的方法
+    function extractFilename(contentDisposition) {
+      const matches = contentDisposition.match(/filename="(.+?)"/);
+      return matches ? decodeURIComponent(matches[1]) : null;
+    }
 
-        // 提取 filename 的方法
-        function extractFilename(contentDisposition) {
-          const matches = contentDisposition.match(/filename="(.+?)"/);
-          return matches ? decodeURIComponent(matches[1]) : null;
-        }
+    const contentDisposition = res.headers['content-disposition'];
+    fileName.value = extractFilename(contentDisposition);
+    console.log(res)
+    console.log(fileName.value)
 
-        const contentDisposition = res.headers['content-disposition'];
-        fileName.value = extractFilename(contentDisposition);
-        console.log(res)
-        console.log(fileName.value)
+    blobUrl.value = URL.createObjectURL(blob);
 
-        blobUrl.value = URL.createObjectURL(blob);
-
-      })
+  })
       .catch((err) => {
         console.error("发生未知错误！");
         console.log(err);
-
-        console.log(err.response);
       });
 };
 
@@ -207,7 +194,7 @@ onMounted(() => {
 <style scoped>
 .title {
   height: 100px;
-  width: 1100px;
+  width: 800px;
   padding: 10px;
 }
 
