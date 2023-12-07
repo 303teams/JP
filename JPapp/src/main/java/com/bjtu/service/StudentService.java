@@ -35,4 +35,6 @@ public interface StudentService {
 
     public RspObject<Boolean> insertAppeal(Appeal appeal);
 
+    public RspObject<List<Score>> findSCByCID(Integer contentID);
+
 }

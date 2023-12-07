@@ -211,4 +211,13 @@ public class StudentServiceImpl implements StudentService  {
             throw new ServiceException(500,e.getMessage());
         }
     }
+
+    @Override
+    public RspObject<List<Score>> findSCByCID(Integer contentID) {
+        try{
+            return RspObject.success("查询成功！",scoreDao.findSCByCID(contentID));
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
 }

@@ -7,6 +7,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.scanner.ScannerImpl;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -71,8 +72,6 @@ public class StudentController {
     //发送申诉请求
     @PostMapping("sendAppeal")
     public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
-//        System.out.println("in2");
-//        System.out.println(contentID+" "+appealContent);
         Appeal appeal = new Appeal();
         appeal.setContentID(contentID);
         appeal.setAppealContent(appealContent);
@@ -84,4 +83,11 @@ public class StudentController {
         appeal.setTime(currentTime);
         return studentService.insertAppeal(appeal);
     }
+
+    @PostMapping("findSCByCID")
+    public RspObject<List<Score>> findSCByCID(Integer contentID){
+        return studentService.findSCByCID(contentID);
+    }
+
+
 }
