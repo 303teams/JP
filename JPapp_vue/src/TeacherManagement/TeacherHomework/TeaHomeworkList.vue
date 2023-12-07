@@ -27,8 +27,8 @@
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" width="120px" sortable prop="name" />
-        <el-table-column label="作业截止时间" width="170px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="170px" sortable prop="scoreDdl" />
+        <el-table-column label="作业截止时间" width="180px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
         <el-table-column label="作业内容" width="100px" prop="content" >
           <template v-slot="scope">
             <el-link

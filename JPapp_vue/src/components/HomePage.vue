@@ -8,9 +8,7 @@
       </el-header>
 
       <el-main>
-        <el-scrollbar>
-          <router-view></router-view>
-        </el-scrollbar>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -24,6 +22,10 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
 </script>
 
 <style scoped>
+body {
+  overflow-x: hidden;
+}
+
 .layout-container-demo {
   width: 100%;
   height: 100%;
@@ -40,6 +42,7 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
   padding: 0 0 30px 0;
   height: 100%;
   width: 100%;
+  overflow: auto;
 }
 
 </style>

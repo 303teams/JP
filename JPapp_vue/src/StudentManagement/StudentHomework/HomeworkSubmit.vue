@@ -194,7 +194,7 @@ onMounted(() => {
 <style scoped>
 .title {
   height: 100px;
-  width: 1100px;
+  width: 800px;
   padding: 10px;
 }
 

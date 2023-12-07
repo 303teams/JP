@@ -12,7 +12,16 @@ export default {
   name: 'App',
   components: {},
   created() {
+    this.resizeFun();
     new DevicePixelRatio().init();
+  },
+
+  methods: {
+    resizeFun () {
+      var deviceWidth = document.documentElement.clientWidth;
+      var scale = deviceWidth / 3235;
+      document.body.style.zoom = scale;
+    }
   }
 }
 </script>
