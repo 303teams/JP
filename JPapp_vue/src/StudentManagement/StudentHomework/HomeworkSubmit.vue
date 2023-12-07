@@ -7,7 +7,8 @@
 
     <div class="content-container">
       <span style="font-size: 20px;font-weight: bold">作业内容:</span>
-      <a style="font-size: 15px;margin-top:50px" :href="blobUrl" :download="fileName">{{fileName}}</a>
+      <br/>
+      <a style="font-size: 15px; margin-top: 50px; display: inline-block;" :href="blobUrl" :download="fileName">{{fileName}}</a>
     </div>
 
     <el-divider></el-divider>
@@ -199,11 +200,10 @@ onMounted(() => {
 }
 
 .content-container {
+  display: inline-block;
   text-align: left;
   margin-top: 30px;
   margin-bottom: 150px;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
 }
 </style>

@@ -201,14 +201,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public  Appeal findAPByID(Integer contentID){
+    public  Appeal findAPByID(Integer appealID){
 
-        return appealDao.findAPByID(contentID);
+        return appealDao.findAPByID(appealID);
     }
 
     @Override
-    public RspObject<Boolean> setAP(Integer contentID,int num){
-        appealDao.setAP(contentID,num);
+    public RspObject<Boolean> setAP(Integer appealID,Integer num){
+        appealDao.setAP(appealID,num);
         return RspObject.success("修改成功！",Boolean.TRUE);
     }
 

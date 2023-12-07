@@ -38,6 +38,7 @@
 import { ref, onMounted,defineProps, } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
 const token = localStorage.getItem('token');
@@ -114,7 +115,11 @@ const extractFilename = (contentDisposition) => {
 };
 
 const submitScore = () => {
-  console.log(props.contentID);
+  console.log(selectedScore.value);
+  if(selectedScore.value === undefined){
+    ElMessage.warning("请选择分数");
+    return;
+  }
   axios
       .post(
           'http://localhost:8081/student/score',

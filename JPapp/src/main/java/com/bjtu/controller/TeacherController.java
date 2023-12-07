@@ -85,25 +85,25 @@ public class TeacherController {
     //教师点击申诉信息,改变staus值：0-1
     @AuthAccess
     @PostMapping("/ClickAppeal")
-    public RspObject<Boolean> ClickAppeal(int contentID){
+    public RspObject<Boolean> ClickAppeal(Integer appealID){
 
-//        System.out.println("contentID: "+contentID);
+        System.out.println("contentID: "+appealID);
         Appeal appeal = new Appeal();
-        appeal = teacherService.findAPByID(contentID);
+        appeal = teacherService.findAPByID(appealID);
 
-        int num =1;
         if(appeal.getStatus()==0){
 //            System.out.println("contentID: "+contentID);
-            return teacherService.setAP(contentID,num);
+            return teacherService.setAP(appealID,1);
         }
-        else  return RspObject.success("已处理！");
+        else return RspObject.success("已处理！");
     }
 
     //    申诉后教师修改学生分数
     @AuthAccess
     @PostMapping("/changeCTScore")
-    public RspObject<Boolean> changeCTScore(Integer contentID,Integer score){
-        teacherService.setAP(contentID,2);
+    public RspObject<Boolean> changeCTScore(Integer appealID,Integer contentID,Integer score){
+        System.out.println("appealID"+appealID+" "+contentID+" "+score);
+        teacherService.setAP(appealID,2);
         return teacherService.setCTScore(contentID,score);
     }
 

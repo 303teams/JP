@@ -154,5 +154,61 @@ const http = {
         }
         return request(config)
     },
+
+
+    //下载学生作业
+    downloadCT(data){
+        const config = {
+            url:'/content/downloadCT',
+            method:'post',
+            data:data,
+            responseType: 'blob',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //教师点击作业申诉
+    ClickAppeal(data){
+        const config = {
+            url:'/teacher/ClickAppeal',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //老师查看作业申诉
+    readAppeal(data){
+        const config = {
+            url:'/teacher/findAPByAID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        console.log("findAppeal")
+        return request(config)
+    },
+
+    //老师处理作业申诉
+    handleAppeal(data){
+        const config = {
+            url:'/teacher/changeCTScore',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        console.log("handleAppeal")
+        return request(config)
+    },
 }
 export default http

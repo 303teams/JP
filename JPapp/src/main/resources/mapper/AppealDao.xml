@@ -7,8 +7,8 @@
 
     <!--    插入作业号为contentID的appeal-->
     <insert id="insertAppeal" parameterType="Appeal" useGeneratedKeys="true" keyProperty="contentID">
-        insert into appeal(contentID,appealContent,time,status)
-        values (#{contentID}, #{appealContent},#{time},#{status})
+        insert into appeal(sno, contentID,appealContent,time,status)
+        values (#{sno}, #{contentID}, #{appealContent},#{time},#{status})
     </insert>
 
 
@@ -33,7 +33,7 @@
     <select id="findAPByID" resultType="Appeal">
         SELECT *
         FROM appeal
-        WHERE appeal.contentID = #{contentID};
+        WHERE appeal.appealID = #{appealID};
     </select>
 
     <select id="findAPByAID" resultType="java.util.Map" parameterType="integer">
@@ -46,7 +46,7 @@
     <update id="setAP">
         update appeal
         SET status = #{num}
-        WHERE contentID = #{contentID}
+        WHERE appealID = #{appealID}
     </update>
 
 

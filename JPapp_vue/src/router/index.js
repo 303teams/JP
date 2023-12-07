@@ -14,6 +14,7 @@ import MessagePage from "@/TeacherManagement/TeacherMessage/MessagePage.vue";
 import GradeDetail from "@/StudentManagement/StudentHomework/GradeDetail.vue";
 import ViewHomework from "@/StudentManagement/StudentHomework/ViewHomework.vue";
 import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
+import MessageDetail from "@/TeacherManagement/TeacherMessage/MessageDetail.vue";
 const routerHistory = createWebHistory();
 
 
@@ -128,6 +129,13 @@ const router = createRouter({
                     component: MessagePage,
                     props: true,
                 },
+
+                {
+                    path: 'MessageDetail',
+                    name:'MessageDetail',
+                    component: MessageDetail,
+                    props: true,
+                }
 
             ]
         },

@@ -17,6 +17,7 @@ import { useRouter } from "vue-router";
 import { reactive, onMounted, defineProps, ref } from "vue";
 import * as echarts from "echarts";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
 const token = localStorage.getItem("token");
@@ -103,6 +104,7 @@ const HandleAppeal = () =>{
       )
       .then((res) => {
         if (res.data.code === 200) {
+          ElMessage.success("申诉提交成功")
           router.back();
         } else {
           window.alert("提交失败:" + res.data.msg);
