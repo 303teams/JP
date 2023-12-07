@@ -39,4 +39,6 @@ public interface TeacherService {
     Appeal findAPByID(Integer contentID);
 
     RspObject<Boolean> setAP(Integer contentID,int num);
+
+    RspObject<Map<String,Object>> findAPByAID(Integer appealID);
 }

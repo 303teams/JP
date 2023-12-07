@@ -28,7 +28,9 @@ class ContentDaoTest {
 
     @Test
     void findCTByHId() {
+        System.out.println(contentDao.findCTByHId(1));
     }
+
 
     @Test
     void setCTScore() {
@@ -48,4 +50,5 @@ class ContentDaoTest {
     void getScoreDistribution() {
         System.out.println(contentDao.getScoreDistribution(21));
     }
+
 }

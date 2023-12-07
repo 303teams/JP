@@ -211,4 +211,13 @@ public class TeacherServiceImpl implements TeacherService {
         appealDao.setAP(contentID,num);
         return RspObject.success("修改成功！",Boolean.TRUE);
     }
+
+    @Override
+    public RspObject<Map<String, Object>> findAPByAID(Integer appealID) {
+        try{
+            return RspObject.success("查询成功！",appealDao.findAPByAID(appealID));
+        }catch (Exception e){
+            throw new ServiceException(500,"查询失败!");
+        }
+    }
 }

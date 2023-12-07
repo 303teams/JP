@@ -2,6 +2,7 @@ class DevicePixelRatio {
     constructor() {
         // 尝试从 sessionStorage 中获取 initialDevicePixelRatio，如果不存在则设置为 1
         this.initialDevicePixelRatio = parseFloat(window.sessionStorage.getItem('initialDevicePixelRatio')) || 1;
+        // this.initialDevicePixelRatio = window.devicePixelRatio;
         console.log('initialDevicePixelRatio', this.initialDevicePixelRatio)
     }
 
@@ -30,6 +31,7 @@ class DevicePixelRatio {
         // 获取初始缩放率
         const initialDPR = this.initialDevicePixelRatio;
         console.log('initialDPR', initialDPR)
+        console.log('devicePixelRatio', window.devicePixelRatio)
         // 计算页面body标签zoom修改其大小，来抵消devicePixelRatio带来的变化。
         document.body.style.zoom = 1 / window.devicePixelRatio * initialDPR;
     }

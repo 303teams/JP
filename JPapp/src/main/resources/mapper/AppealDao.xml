@@ -20,7 +20,8 @@
     </update>
 
    <select id="findAppeal" resultType="java.util.Map" parameterType="string">
-        SELECT h.name as hname,co.cname,a.contentID,a.appealContent,a.status,c.sno,s.name as sname,DATE_FORMAT(a.time, '%Y-%m-%d %H:%i:%s') as time
+        SELECT h.name as hname,co.cname,a.contentID,a.appealContent,a.status,c.sno,s.name as sname,DATE_FORMAT(a.time, '%Y-%m-%d %H:%i:%s') as time,
+        appealID
         FROM appeal a
         JOIN content c ON a.contentID = c.contentID
         JOIN homework h ON c.homeworkID = h.homeworkID
@@ -33,6 +34,13 @@
         SELECT *
         FROM appeal
         WHERE appeal.contentID = #{contentID};
+    </select>
+
+    <select id="findAPByAID" resultType="java.util.Map" parameterType="integer">
+        SELECT c.score,a.appealContent
+        FROM appeal a JOIN
+            content c ON a.contentID = c.contentID
+        WHERE a.appealID = #{appealID}
     </select>
 
     <update id="setAP">
