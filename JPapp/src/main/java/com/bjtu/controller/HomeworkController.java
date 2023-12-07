@@ -21,18 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 
 @RestController
@@ -60,7 +54,6 @@ public class HomeworkController {
         headers.setContentDispositionFormData("attachment", encodedFileName);
         headers.set("Content-Type", "application/octet-stream; charset=UTF-8");
 
-
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 
@@ -68,17 +61,19 @@ public class HomeworkController {
 //    老师上传作业
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName) throws IOException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName) throws IOException, ParseException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         User user = TokenUtils.getCurrentUser();
         homework.setContent(file.getBytes())
                 .setTno(user.getId())
                 .setFileName(name)
                 .setCno(cno)
-                .setSubmitDdl(submitDdl)
-                .setScoreDdl(scoreDdl)
+                .setSubmitDdl(new Timestamp(dateFormat.parse(submitDdl).getTime()))
+                .setScoreDdl(new Timestamp(dateFormat.parse(scoreDdl).getTime()))
                 .setName(HWName);
         homeworkService.addHomework(homework);
         return RspObject.success("上传成功，当前thId：" , homework);
@@ -89,7 +84,7 @@ public class HomeworkController {
     @PostMapping("/setAnswer")
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
-        System.out.println("name"+name);
+//        System.out.println("name"+name);
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
     }
 

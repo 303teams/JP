@@ -88,13 +88,13 @@ public class TeacherController {
     @PostMapping("/ClickAppeal")
     public RspObject<Boolean> ClickAppeal(int contentID){
 
-        System.out.println("contentID: "+contentID);
+//        System.out.println("contentID: "+contentID);
         Appeal appeal = new Appeal();
         appeal = teacherService.findAPByID(contentID);
 
         int num =1;
         if(appeal.getStatus()==0){
-            System.out.println("contentID: "+contentID);
+//            System.out.println("contentID: "+contentID);
             return teacherService.setAP(contentID,num);
         }
         else  return RspObject.success("已处理！");

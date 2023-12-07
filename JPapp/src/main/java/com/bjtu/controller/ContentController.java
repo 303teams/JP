@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -44,16 +45,15 @@ public class ContentController {
         User user = TokenUtils.getCurrentUser();
         String name = file.getOriginalFilename();
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp currentTime = new Timestamp(currentTimeMillis);
 
         content.setContent(file.getBytes())
                 .setHomeworkID(homeworkID)
                 .setFileName(name)
                 .setSno(user.getId())
                 .setCno(cno)
-                .setSubmitTime(formattedTime);
+                .setSubmitTime(currentTime);
 
         contentService.addContent(content);
         // 添加对响应头的修改

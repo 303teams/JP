@@ -19,7 +19,7 @@ class ContentDaoTest {
 
     @Test
     void findCTById() {
-        System.out.println(contentDao.findCTById(3));
+        System.out.println(contentDao.findCTById(1));
     }
 
     @Test
