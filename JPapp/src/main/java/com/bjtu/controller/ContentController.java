@@ -65,8 +65,8 @@ public class ContentController {
 //    学生/老师 下载 学生的作业
     @AuthAccess
     @PostMapping("/downloadCT")
-    public ResponseEntity<byte[]> downloadCT(@RequestParam Integer contentID) throws UnsupportedEncodingException {
-//        System.out.println("hh"+ contentID);
+    public ResponseEntity<byte[]> downloadCT(Integer contentID) throws UnsupportedEncodingException {
+        System.out.println("contentID"+ contentID);
         Content content1 = contentService.findById(contentID);
 
 //        System.out.println("hh"+ contentID);

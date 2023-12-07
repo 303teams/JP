@@ -32,7 +32,7 @@
         SELECT
             c.contentID,
             c.fileName as fileName,
-            COALESCE(score.score, 0) as score,
+            COALESCE(score.score, null) as score,
             COALESCE(score.content, 'No comment') as comment
         FROM
             content c

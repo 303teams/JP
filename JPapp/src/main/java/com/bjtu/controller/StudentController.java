@@ -73,7 +73,9 @@ public class StudentController {
     public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
 //        System.out.println("in2");
 //        System.out.println(contentID+" "+appealContent);
+        User user = TokenUtils.getCurrentUser();
         Appeal appeal = new Appeal();
+        appeal.setSno(user.getId());
         appeal.setContentID(contentID);
         appeal.setAppealContent(appealContent);
         appeal.setStatus(0);

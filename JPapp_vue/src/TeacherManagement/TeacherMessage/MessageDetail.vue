@@ -2,15 +2,28 @@
   <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="main">
+      <div style="display: flex;flex-direction: column">
+        <span style="font-size: 20px;font-weight: bold">学生学号:</span>
+        <p style="font-size: 16px">{{sno}}</p>
+        <span style="font-size: 20px;font-weight: bold">学生姓名:</span>
+        <p style="font-size: 16px">{{sname}}</p>
+        <span style="font-size: 20px;font-weight: bold">当前分数:</span>
+        <p style="font-size: 16px">{{HisScore}}</p>
+      </div>
+      <el-divider/>
       <div class="content-container">
         <span style="font-size: 20px;font-weight: bold">学生申诉内容:</span>
+        <p style="font-size: 16px; white-space: pre-wrap">{{appealContent}}</p>
       </div>
+      <el-divider/>
       <div class="content-container">
         <span style="font-size: 20px;font-weight: bold">学生答案:</span>
-        <a style="font-size: 15px;margin-top:50px" :href="ContentBlobUrl" :download="ContentFileName">{{ContentFileName}}</a>
+        <br/>
+        <a style="font-size: 15px; margin-top:30px; display: inline-block" :href="ContentBlobUrl" :download="ContentFileName">{{ContentFileName}}</a>
       </div>
+      <el-divider style="margin-top: 50px"></el-divider>
 
-      <div style="margin-top: 20px;">
+      <div style="margin-top: 50px;">
         <label style="font-size: 16px; font-weight: bold;">打分:</label>
         <div class="rating-container">
           <div v-for="score in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="score" class="rating-item">
@@ -20,13 +33,10 @@
         </div>
       </div>
 
-      <div style="width: 1100px;margin-top: 30px" label="内容" prop="info">
-        <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语"/>
-      </div>
     </div>
 
     <div class="button_class">
-      <el-button type="primary" @click="submitScore">提交</el-button>
+      <el-button type="primary" @click="handleAppeal">提交</el-button>
     </div>
 
 
@@ -36,37 +46,49 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import http from "@/api/http";
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
-const token = localStorage.getItem('token');
 const contentID = history.state.contentID;
+const appealID = history.state.appealID;
+const sno = history.state.sno;
+const sname = history.state.sname;
 const ContentBlobUrl = ref();
 const ContentFileName = ref();
 const selectedScore = ref();
-const info = ref();
+const appealContent = ref();
+const HisScore = ref();
 
 const fetchData = () => {
-  const data = {
+  const data1 = {
     contentID: contentID,
   }
 
+  const data2 = {
+    appealID: appealID,
+  }
+
   Promise.all([
-      http.readAppeal(data),
-      http.downloadCT(data),
+      http.downloadCT(data1),
+      http.readAppeal(data2),
   ])
       .then(([res1, res2]) => {
         console.log(res1);
-        const contentDisposition = res2.headers['content-disposition'];
+        const contentDisposition = res1.headers['content-disposition'];
         const filename = extractFilename(contentDisposition);
-        const blob = new Blob([res2.data], { type: 'application/octet-stream' });
+        const blob = new Blob([res1.data], { type: 'application/octet-stream' });
         const blobUrl = URL.createObjectURL(blob);
         ContentBlobUrl.value = blobUrl;
         ContentFileName.value = filename;
 
         console.log(res2);
-
+        if(res2.data.code === 200){
+          appealContent.value = res2.data.data.appealContent;
+          HisScore.value = res2.data.data.score;
+        }else{
+          ElMessage.error(res2.data.msg);
+        }
       })
       .catch(error => {
         // 处理错误
@@ -79,29 +101,23 @@ const extractFilename = (contentDisposition) => {
   return matches ? decodeURIComponent(matches[1]) : null;
 };
 
-const submitScore = () => {
-  axios
-      .post(
-          'http://localhost:8081/student/score',
-          {
-            contentID: contentID,
-            score: selectedScore.value,
-            content: info.value,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
+const handleAppeal = () => {
+  if(selectedScore.value === undefined){
+    selectedScore.value = HisScore.value
+  }
+  const data = {
+    appealID: appealID,
+    contentID: contentID,
+    score: selectedScore.value,
+  }
+  http.handleAppeal(data)
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res);
-          window.alert("评分成功");
           Back();
+          ElMessage.success("处理成功")
         } else {
-          window.alert("评分失败:" + res.data.msg);
+          ElMessage.error("处理失败:" + res.data.msg);
         }
       })
       .catch((err) => {
@@ -139,19 +155,18 @@ onMounted(() => {
 
 .main{
   margin-top: 50px;
+  margin-left: 20px;
 }
 
 .content-container {
   text-align: left;
-  margin-bottom: 100px;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
+  display: inline-block;
 }
 
 .rating-container {
   display: flex;
-  align-items: center;
+  align-items: start;
   margin-top: 10px;
 }
 

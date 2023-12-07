@@ -16,6 +16,7 @@
                 作业名：{{item.hname}}
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 申诉请求
+                <span style="color:#3bb43b" v-if="item.status === 2">(已处理)</span>
               </p>
               <div class="content">
                 <div class="item-dot" v-if="item.status === 0"></div>
@@ -106,9 +107,9 @@ onMounted(() => {
 const goRead = (item) => {
   if(item.status === 0){
     const data = {
-      contentID: item.contentID,
+      appealID: item.appealID,
     }
-    http.readAppeal(data).then((res) => {
+    http.ClickAppeal(data).then((res) => {
       if (res.data.code === 200) {
         console.log(res)
       } else {
@@ -125,6 +126,9 @@ const goRead = (item) => {
     path: 'MessageDetail',
     state: {
       contentID: item.contentID,
+      appealID: item.appealID,
+      sno: item.sno,
+      sname: item.sname,
     }
   })
 };

@@ -10,6 +10,7 @@ import java.util.Date;
 @Data
 public class Appeal {
 
+    private String sno;
     private String appealContent;
     private Integer appealID;
     private Integer contentID;

@@ -14,9 +14,9 @@ public interface AppealDao {
 
     public List<Map<String, Object>> findAppeal(String id);
 
-    Appeal findAPByID(int contentID);
+    Appeal findAPByID(Integer contentID);
 
-    public void setAP(@Param("contentID") int contentID, @Param("num") int num);
+    public void setAP(Integer appealID, Integer num);
 
     public Map<String,Object> findAPByAID(Integer appealID);
 }
