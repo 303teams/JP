@@ -1,20 +1,20 @@
 class DevicePixelRatio {
     constructor() {
-        //this.flag = false;
+        // 尝试从 sessionStorage 中获取 initialDevicePixelRatio，如果不存在则设置为 1
+        this.initialDevicePixelRatio = parseFloat(window.sessionStorage.getItem('initialDevicePixelRatio')) || 1;
+        console.log('initialDevicePixelRatio', this.initialDevicePixelRatio)
     }
 
-    //获取系统类型
+    // 获取系统类型
     _getSystem() {
-        // eslint-disable-next-line no-unused-vars
-        let flag = false;
-        var agent = navigator.userAgent.toLowerCase();
-        //现只针对windows处理，其它系统暂无该情况，如有，继续在此添加
+        let agent = navigator.userAgent.toLowerCase();
+        // 只针对 windows 处理，其他系统暂无该情况，如有，继续在此添加
         if (agent.indexOf("windows") >= 0) {
             return true;
         }
     }
 
-    //监听方法兼容写法
+    // 监听方法兼容写法
     _addHandler(element, type, handler) {
         if (element.addEventListener) {
             element.addEventListener(type, handler, false);
@@ -25,33 +25,42 @@ class DevicePixelRatio {
         }
     }
 
-    //校正浏览器缩放比例
+    // 校正浏览器缩放比例
+    // 校正浏览器缩放比例
     _correct() {
-        // eslint-disable-next-line no-unused-vars
-        let t = this;
-        //页面devicePixelRatio（设备像素比例）变化后，计算页面body标签zoom修改其大小，来抵消devicePixelRatio带来的变化。
-        document.getElementsByTagName('body')[0].style.zoom = 1 / window.devicePixelRatio * 1.5;
+        // 获取初始缩放率
+        const initialDPR = this.initialDevicePixelRatio;
+        console.log('initialDPR', initialDPR)
+        // 计算页面body标签zoom修改其大小，来抵消devicePixelRatio带来的变化。
+        document.body.style.zoom = 1 / window.devicePixelRatio * initialDPR;
     }
 
-    //监听页面缩放
+    // 监听页面缩放
     _watch() {
         let t = this;
-        t._addHandler(window, 'resize', function() {
-            //注意这个方法是解决全局有两个window.resize
-            //重新校正
+        t._addHandler(window, 'resize', function () {
+            // 注意这个方法是解决全局有两个 window.resize
+            // 重新校正
             t._correct()
-        })
+        });
     }
 
-    //初始化页面比例
+    // 初始化页面比例
     init() {
         let t = this;
-        if (t._getSystem()) { //判断设备，目前只在windows系统下校正浏览器缩放比例
-            //初始化页面校正浏览器缩放比例
+        if (t._getSystem()) { // 判断设备，目前只在 Windows 系统下校正浏览器缩放比例
+            // 获取页面加载时的 devicePixelRatio 并赋值给 initialDevicePixelRatio
+            // 将 initialDevicePixelRatio 存储到 sessionStorage 中
+            if(window.sessionStorage.getItem('initialDevicePixelRatio') === null) {
+                t.initialDevicePixelRatio = window.devicePixelRatio;
+                sessionStorage.setItem('initialDevicePixelRatio', t.initialDevicePixelRatio);
+            }
+            // 初始化页面校正浏览器缩放比例
             t._correct();
-            //开启监听页面缩放
+            // 开启监听页面缩放
             t._watch();
         }
     }
 }
+
 export default DevicePixelRatio;

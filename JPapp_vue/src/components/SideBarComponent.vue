@@ -125,7 +125,7 @@ export default {
 /*整个侧边栏背景颜色*/
 .el-side {
   background-color: rgba(101, 75, 65, 0.86);
-  height: 100vh;
+  height: 100%;
   width: 200px;
 }
 

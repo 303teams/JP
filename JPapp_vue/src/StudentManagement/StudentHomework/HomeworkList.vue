@@ -26,9 +26,9 @@
         <el-table-column label="作业名称" width="150px" sortable prop="name" />
         <el-table-column label="课程名称" width="150px" sortable prop="courseName" />
         <el-table-column label="发布人" width="120px" prop="teacherName" />
-        <el-table-column label="提交截止时间" width="170px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="170px" sortable prop="scoreDdl" />
-        <el-table-column label="查看作业" width="130px" align="center">
+        <el-table-column label="提交截止时间" width="180px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
+        <el-table-column label="查看作业" width="140px" align="center">
           <template v-slot="scope">
           <el-button
               @click="handleCheck(cno,scope.row)"

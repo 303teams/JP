@@ -2,7 +2,7 @@
   <div class = "background">
     <div class = "login">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form ref="LoginRef" :label-position="right" label-width="80px" :model="user" :rules="rules">
+        <el-form ref="LoginRef" label-width="80px" :model="user" :rules="rules">
           <h3 style="color:white">欢迎登录!</h3>
           <el-form-item label="用户名:" label-width="5em" prop="username">
             <el-input
@@ -21,7 +21,7 @@
                 placeholder="请输入密码"
             />
           </el-form-item>
-          <el-radio-group v-model="user.role" @change = "clickChange">
+          <el-radio-group v-model="user.role">
             <el-radio label="admin">管理员</el-radio>
             <el-radio label="student">学生</el-radio>
             <el-radio label="teacher">老师</el-radio>
