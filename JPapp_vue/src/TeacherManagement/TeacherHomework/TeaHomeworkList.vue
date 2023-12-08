@@ -390,6 +390,7 @@ const uploadAnswer = (params,row) =>{
 
   form.set('file', params.file);
   form.set('homeworkID', row.homeworkID)
+  console.log(row.homeworkID)
   return axios({
     url: 'http://localhost:8081/homework/setAnswer',
     method: 'post',

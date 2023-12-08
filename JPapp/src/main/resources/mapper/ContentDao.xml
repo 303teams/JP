@@ -22,9 +22,8 @@
                         c.filename as fileName
         FROM student s
                  JOIN sc ON s.id = sc.sno
-                 LEFT JOIN content c ON s.id = c.sno AND c.homeworkID = #{homeworkID}
-        WHERE sc.cno IN (SELECT homework.cno FROM homework WHERE homework.homeworkID = #{homeworkID})
-           OR c.homeworkID IS NULL;
+                 LEFT JOIN content c ON s.id = c.sno
+        WHERE c.homeworkID = #{homeworkID};
     </select>
 
 <!--    查询作业号为contentID，对应的评分人为sno的打分信息-->
