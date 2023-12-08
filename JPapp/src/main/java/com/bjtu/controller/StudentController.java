@@ -54,7 +54,7 @@ public class StudentController {
 
     //学生打分
     @PostMapping("score")
-    public RspObject<Boolean> score(Integer contentID,Double score,String content) {
+    public RspObject<Boolean> score(Integer contentID,Integer score,String content) {
         User user = TokenUtils.getCurrentUser();
         Score s= new Score();
         s.setSno(user.getId());

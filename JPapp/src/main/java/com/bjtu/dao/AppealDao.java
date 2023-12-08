@@ -19,4 +19,6 @@ public interface AppealDao {
     public void setAP(Integer appealID, Integer num);
 
     public Map<String,Object> findAPByAID(Integer appealID);
+
+    public void deleteAPByAID(Integer appealID);
 }

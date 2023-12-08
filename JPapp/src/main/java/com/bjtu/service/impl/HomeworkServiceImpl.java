@@ -39,7 +39,7 @@ public class HomeworkServiceImpl implements HomeworkService {
             homeworkDao.setAnswer(homeworkID,answer,Afilename);
             return RspObject.success("添加成功",Boolean.TRUE);
         }catch (Exception e){
-            throw new ServiceException(500,"添加失败！");
+            throw new ServiceException(500,e.getMessage());
         }
     }
 }

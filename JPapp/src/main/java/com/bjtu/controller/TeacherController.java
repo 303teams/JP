@@ -2,29 +2,22 @@ package com.bjtu.controller;
 
 import cn.hutool.core.io.FileUtil;
 import com.bjtu.config.AuthAccess;
+import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.ContentService;
 import com.bjtu.service.HomeworkService;
 import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
+import com.bjtu.task.ScheduledTask;
 import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
+
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +64,13 @@ public class TeacherController {
     @AuthAccess
     @PostMapping("/setCTScore")
     public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Integer score){
-        return teacherService.setCTScore(contentID,score);
+        try {
+            ScheduledTask.scoreSet.add(new Timestamp(System.currentTimeMillis() + 5000));
+            return teacherService.setCTScore(contentID, score);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException(500,e.getMessage());
+        }
     }
 
     //教师查看学生申诉信息
@@ -86,8 +85,6 @@ public class TeacherController {
     @AuthAccess
     @PostMapping("/ClickAppeal")
     public RspObject<Boolean> ClickAppeal(Integer appealID){
-
-        System.out.println("contentID: "+appealID);
         Appeal appeal = new Appeal();
         appeal = teacherService.findAPByID(appealID);
 
@@ -101,15 +98,20 @@ public class TeacherController {
     @AuthAccess
     @PostMapping("/changeCTScore")
     public RspObject<Boolean> changeCTScore(Integer appealID,Integer contentID,Integer score){
-        System.out.println("appealID"+appealID+" "+contentID+" "+score);
         teacherService.setAP(appealID,2);
-        return teacherService.setCTScore(contentID,score);
+        return teacherService.setCTWeightedScore(contentID,score);
     }
 
     @AuthAccess
     @PostMapping("/findAPByAID")
     public RspObject<Map<String,Object>> findAPByAID(Integer appealID){
         return teacherService.findAPByAID(appealID);
+    }
+
+    @AuthAccess
+    @PostMapping("/deleteAPByAID")
+    public RspObject<Boolean> deleteAPByAID(Integer appealID){
+        return teacherService.deleteAPByAID(appealID);
     }
 
 }

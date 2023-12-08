@@ -33,17 +33,14 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<User> login(String id, String password) {
-//        System.out.println(id + " " + password);
+
         Student student = studentDao.findByNum(id);
-//        System.out.println(student);
+
         if (student == null) {
             return RspObject.fail("该学生不存在!");
         } else if (!student.getPassword().equals(password)) {
-            System.out.println(student.getPassword());
-            System.out.println(password);
             return RspObject.fail("密码错误!");
         } else {
-            System.out.println(student.getPassword());
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
@@ -59,11 +56,6 @@ public class StudentServiceImpl implements StudentService  {
             return RspObject.success("插入成功",Boolean.TRUE);
         }
     }
-
-//    @Override
-//    public RspObject<List<Student>> searchAll() {
-//        return RspObject.success("查询成功！",studentDao.findAll());
-//    }
 
     @Override
     public RspObject<Boolean> deleteOne(String id) {

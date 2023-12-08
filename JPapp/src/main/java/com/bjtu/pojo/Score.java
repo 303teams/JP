@@ -14,7 +14,7 @@ public class Score {
 
     private String sno;
     private Integer contentID;
-    private Double score;
+    private Integer score;
 
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

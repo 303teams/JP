@@ -19,7 +19,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public RspObject<User> login(String id, String password) {
-        System.out.println(id + " " + password);
         Admin admin = adminDao.findByNum(id);
 //        System.out.println(student);
         if (admin == null) {

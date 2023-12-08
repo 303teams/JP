@@ -23,7 +23,7 @@
     </select>
 
     <select id="findHWbyCno" resultType="com.bjtu.pojo.Homework">
-        SELECT DISTINCT homework.homeworkID, homework.name,homework.submitDdl,homework.scoreDdl,
+        SELECT DISTINCT homework.homeworkID, homework.name,homework.submitDdl,homework.scoreDdl,homework.info,
                         teacher.name as teacherName,
                         course.cname as courseName ,
                         content.contentID as contentID,
@@ -55,8 +55,8 @@
     </select>
 
     <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
-        insert into homework(homeworkID,cno,name,content,tno,fileName,submitDdl,scoreDdl)
-        values (#{homeworkID}, #{cno},#{name},#{content},#{tno},#{fileName},#{submitDdl},#{scoreDdl})
+        insert into homework(homeworkID,cno,name,content,tno,fileName,submitDdl,scoreDdl,info)
+        values (#{homeworkID}, #{cno},#{name},#{content},#{tno},#{fileName},#{submitDdl},#{scoreDdl},#{info})
     </insert>
 
 

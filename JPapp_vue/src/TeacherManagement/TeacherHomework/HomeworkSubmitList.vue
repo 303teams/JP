@@ -43,7 +43,7 @@
           </template>
         </el-table-column>
         <el-table-column label="作业成绩" width="120px" align="center" sortable prop="score" />
-        <el-table-column label="操作" align="center" width="130px">
+        <el-table-column label="操作" align="center" width="140px">
           <template v-slot="scope">
           <el-button size="large" v-if="scope.row.contentID !== null" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
           <span v-else>未提交</span>
