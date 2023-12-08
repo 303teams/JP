@@ -115,9 +115,11 @@ const sendVerificationCode = () => {
     'username': UserEmailVerifyForm.value.username,
     'email': UserEmailVerifyForm.value.email
   };
+
   //发送验证码
   http.sendCode(data).then(res => {
     if (res.data.code === 200) {
+      ElMessage.success("验证码已发送")
       CountDown();
     } else {
       ElMessage.warning("验证码发送失败:" + res.data.msg)
