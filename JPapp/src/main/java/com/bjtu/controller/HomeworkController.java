@@ -83,7 +83,7 @@ public class HomeworkController {
     @PostMapping("/setAnswer")
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
-//        System.out.println("name"+name);
+        System.out.println("name"+name);
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
     }
 

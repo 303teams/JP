@@ -59,7 +59,7 @@
               :http-request="(params) => uploadAnswer(params, scope.row)"
               :before-upload="beforeUpload"
               :on-success="successHandle"
-              show-file-list="false"
+              :show-file-list="false"
               limit="1"
           >
             <el-button type="primary">上传答案</el-button>
@@ -390,21 +390,35 @@ const uploadAnswer = (params,row) =>{
 
   form.set('file', params.file);
   form.set('homeworkID', row.homeworkID)
-  return axios({
-    url: 'http://localhost:8081/homework/setAnswer',
-    method: 'post',
-    data: form,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      'token': token,
-    }
-  })
+  console.log(row.homeworkID)
+  // 返回一个 Promise 对象，用于处理上传成功或失败的情况
+  return new Promise((resolve, reject) => {
+    // 发送文件上传请求
+    axios({
+      url: 'http://localhost:8081/homework/setAnswer',
+      method: 'post',
+      data: form,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'token': token,
+      }
+    })
+        .then(res => {
+          // 处理上传成功的逻辑
+          console.log('上传成功', res);
+          resolve(res);  // 将成功的响应传递给 Promise
+        })
+        .catch(error => {
+          // 处理上传失败的逻辑
+          console.error('上传失败', error);
+          reject(error);  // 将错误信息传递给 Promise
+        });
+  });
 };
 
 const successHandle = () => {
   ElMessage.success('上传成功');
   fetchData();
-  console.log(form.homeworkID)
 };
 
 const resetFormData = () => {
@@ -505,7 +519,7 @@ const Back = () => {
 }
 
 .HomeworkList{
-  width: 100vh;
+  width: 100%;
 }
 
 </style>
