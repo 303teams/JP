@@ -92,7 +92,6 @@ public class TeacherController {
         appeal = teacherService.findAPByID(appealID);
 
         if(appeal.getStatus()==0){
-//            System.out.println("contentID: "+contentID);
             return teacherService.setAP(appealID,1);
         }
         else return RspObject.success("已处理！");
