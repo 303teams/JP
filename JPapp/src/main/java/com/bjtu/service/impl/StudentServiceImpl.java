@@ -223,41 +223,44 @@ public class StudentServiceImpl implements StudentService  {
 //        获取该作业的评分情况
         List<Score> scores = scoreDao.findSCByCID(contentID);
         MathUtils scoresfilter = new MathUtils(scores);
-        while(scoresfilter.getStd() >= STD) {
-            flag = Boolean.TRUE;
-            if (scoresfilter.getSize() >= MIN) {
-//            删除一个异常值   
-                scoresfilter.cutScore();
-            } else {
+        try{
+            while(scoresfilter.getStd() >= STD) {
+                flag = Boolean.TRUE;
+                if (scoresfilter.getSize() >= MIN) {
+//            删除一个异常值
+                    scoresfilter.cutScore();
+                } else {
 //                将申诉交给老师处理
-                User user = TokenUtils.getCurrentUser();
-                Appeal appeal = new Appeal();
-                appeal.setSno(user.getId());
-                appeal.setContentID(contentID);
-                appeal.setAppealContent(appealContent);
-                appeal.setStatus(0);
-                long currentTimeMillis = System.currentTimeMillis();
-                Timestamp currentTime = new Timestamp(currentTimeMillis);
-                appeal.setTime(currentTime);
+                    User user = TokenUtils.getCurrentUser();
+                    Appeal appeal = new Appeal();
+                    appeal.setSno(user.getId());
+                    appeal.setContentID(contentID);
+                    appeal.setAppealContent(appealContent);
+                    appeal.setStatus(0);
+                    long currentTimeMillis = System.currentTimeMillis();
+                    Timestamp currentTime = new Timestamp(currentTimeMillis);
+                    appeal.setTime(currentTime);
 
-                appealDao.insertAppeal(appeal);
-                return RspObject.success("你的申诉符合条件，已发送至任课教师，请耐心等待。",Boolean.TRUE);
+                    appealDao.insertAppeal(appeal);
+                    return RspObject.success("你的申诉符合条件，已发送至任课教师，请耐心等待。",Boolean.TRUE);
+                }
             }
-        }
 
-        if(flag){
+            if(flag){
 //            执行将待置0的评分置0操作
-            List<Integer> cutList = scoresfilter.getCutIndex();
-            for(Integer i : cutList){
-                scoreDao.setInvalid(i);
-            }
+                List<Integer> cutList = scoresfilter.getCutIndex();
+                for(Integer i : cutList){
+                    scoreDao.setInvalid(i);
+                }
 //            执行重新统计某项作业成绩的动作
-            contentDao.updateScore(contentID);
-            return RspObject.success("你的申诉已由机器自动处理",Boolean.TRUE);
-        }else{
-            return RspObject.success("不符合申诉条件，拒绝处理！",Boolean.TRUE);
+                contentDao.updateScore(contentID);
+                return RspObject.success("你的申诉已由机器自动处理",Boolean.TRUE);
+            }else{
+                return RspObject.success("不符合申诉条件，拒绝处理！",Boolean.TRUE);
+            }
+        }catch (Exception e) {
+            throw new ServiceException(500, e.getMessage());
         }
-
     }
 
     @Override
