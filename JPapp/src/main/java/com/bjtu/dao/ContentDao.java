@@ -25,4 +25,12 @@ public interface ContentDao {
     public Content findCTSByCID(Integer contentID);
 
     public Map<String,Object> getScoreDistribution(Integer home);
+
+    public void deliverTask(Integer homeworkID);
+
+    public void calculateAllScore(Integer homeworkID);
+
+    public Integer findHIDByCID(Integer contentID);
+
+    public void updateScore(Integer contentID);
 }

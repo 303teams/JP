@@ -1,22 +1,15 @@
 package com.bjtu.controller;
 
-import cn.hutool.core.io.FileUtil;
 import com.bjtu.config.AuthAccess;
-import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.ContentService;
 import com.bjtu.service.HomeworkService;
-import com.bjtu.service.StudentService;
 import com.bjtu.service.TeacherService;
-import com.bjtu.task.ScheduledTask;
-import com.bjtu.util.FileUtils;
 import com.bjtu.util.TokenUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
 
 import java.util.List;
 import java.util.Map;
@@ -64,13 +57,7 @@ public class TeacherController {
     @AuthAccess
     @PostMapping("/setCTScore")
     public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Integer score){
-        try {
-            ScheduledTask.scoreSet.add(new Timestamp(System.currentTimeMillis() + 5000));
             return teacherService.setCTScore(contentID, score);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServiceException(500,e.getMessage());
-        }
     }
 
     //教师查看学生申诉信息

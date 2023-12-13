@@ -7,6 +7,7 @@ import com.bjtu.pojo.Homework;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.service.HomeworkService;
 import com.bjtu.service.StudentService;
+import com.bjtu.task.ScheduledTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Autowired
     HomeworkDao homeworkDao;
+    @Autowired
+    ScheduledTask scheduledTask;
+
     @Override
     public RspObject<List<Homework>> findAll(){
         return RspObject.success("查询成功！",homeworkDao.findAll());

@@ -71,6 +71,10 @@
         WHERE contentID = #{contentID}
     </update>
 
+    <update id="updateScore">
+
+    </update>
+
     <select id="getScoreDistribution" resultType="java.util.Map">
         SELECT
             COUNT(CASE WHEN score = 0 THEN 1 END) as score_0,
@@ -80,6 +84,19 @@
             COUNT(CASE WHEN score = 10 THEN 1 END) as score_10
         FROM content
         WHERE homeworkID = #{homeworkID};
+    </select>
+
+    <select id="deliverTask" parameterType="integer">
+        CALL assign_homework(#{homeworkID})
+    </select>
+
+    <select id="calculateAllScore" parameterType="integer">
+
+    </select>
+    <select id="findHIDByCID" resultType="java.lang.Integer">
+        SELECT homeworkID
+        FROM content
+        WHERE contentID = #{contentID}
     </select>
 
 </mapper>

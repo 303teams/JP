@@ -39,4 +39,9 @@ class HomeworkDaoTest {
     void findHWbyCno() {
         System.out.println(homeworkDao.findHWbyCno("21301001","1001"));
     }
+
+    @Test
+    void findSimpleAll() {
+        System.out.println(homeworkDao.findSimpleAll());
+    }
 }

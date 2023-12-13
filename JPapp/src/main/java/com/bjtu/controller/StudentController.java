@@ -55,37 +55,13 @@ public class StudentController {
     //学生打分
     @PostMapping("score")
     public RspObject<Boolean> score(Integer contentID,Integer score,String content) {
-        User user = TokenUtils.getCurrentUser();
-        Score s= new Score();
-        s.setSno(user.getId());
-        s.setContentID(contentID);
-        s.setScore(score);
-        s.setContent(content);
-
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
-
-        s.setTime(currentTime);
-        return studentService.insertScore(s);
+        return studentService.score(contentID,score,content);
     }
 
     //发送申诉请求
     @PostMapping("sendAppeal")
     public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
-//        System.out.println("in2");
-//        System.out.println(contentID+" "+appealContent);
-        User user = TokenUtils.getCurrentUser();
-        Appeal appeal = new Appeal();
-        appeal.setSno(user.getId());
-        appeal.setContentID(contentID);
-        appeal.setAppealContent(appealContent);
-        appeal.setStatus(0);
-
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
-
-        appeal.setTime(currentTime);
-        return studentService.insertAppeal(appeal);
+        return studentService.handleAppeal(contentID, appealContent);
     }
 
     @PostMapping("findSCByCID")

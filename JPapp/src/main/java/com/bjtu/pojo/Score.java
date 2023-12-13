@@ -12,6 +12,7 @@ import java.util.Date;
 
 public class Score {
 
+    private Integer scoreID;
     private String sno;
     private Integer contentID;
     private Integer score;
@@ -21,4 +22,7 @@ public class Score {
     private Timestamp time;
 
     private String content;
+
+    private Integer homeworkID;
+    private Integer valid;
 }

@@ -53,11 +53,21 @@
             H.homeworkID, H.content, H.cno;
 
     </select>
+    <select id="findSimpleAll" resultType="com.bjtu.pojo.Homework">
+        select homeworkID,submitDdl,scoreDdl
+        from homework
+    </select>
+    <select id="findSimpleHWById" resultType="com.bjtu.pojo.Homework">
+        SELECT homeworkID,submitDdl,scoreDdl
+        FROM homework
+        WHERE homework.homeworkID = #{id}
+    </select>
 
     <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
-        insert into homework(homeworkID,cno,name,content,tno,fileName,submitDdl,scoreDdl,info)
-        values (#{homeworkID}, #{cno},#{name},#{content},#{tno},#{fileName},#{submitDdl},#{scoreDdl},#{info})
+        insert into homework(cno,name,content,tno,fileName,submitDdl,scoreDdl,info)
+        values ( #{cno},#{name},#{content},#{tno},#{fileName},#{submitDdl},#{scoreDdl},#{info})
     </insert>
+
 
 
 </mapper>
