@@ -36,7 +36,6 @@ public class HomeworkController {
     HomeworkService homeworkService;
 
 //    学生/老师 下载 作业
-    @AuthAccess
     @PostMapping("/downloadHW")
     public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
 
@@ -57,7 +56,6 @@ public class HomeworkController {
 
 
 //    老师上传作业
-    @AuthAccess
     @PostMapping("/uploadHW")
     public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName,String info) throws IOException, ParseException {
         Homework homework = new Homework();
@@ -79,14 +77,12 @@ public class HomeworkController {
     }
 
     //    教师上传正确答案
-    @AuthAccess
     @PostMapping("/setAnswer")
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
     }
 
-    @AuthAccess
     @PostMapping("/downloadAns")
     public ResponseEntity<byte[]> downloadAns(@RequestParam Integer homeworkID) throws UnsupportedEncodingException {
         Homework homework = homeworkService.findHWById(homeworkID);

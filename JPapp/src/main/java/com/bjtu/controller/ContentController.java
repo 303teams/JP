@@ -35,7 +35,6 @@ public class ContentController {
     ContentService contentService;
 
 //    学生上传作业
-    @AuthAccess
     @PostMapping("/uploadCT")
     public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,
                                       @RequestParam String cno,
@@ -63,7 +62,6 @@ public class ContentController {
     }
 
 //    学生/老师 下载 学生的作业
-    @AuthAccess
     @PostMapping("/downloadCT")
     public ResponseEntity<byte[]> downloadCT(Integer contentID) throws UnsupportedEncodingException {
         Content content1 = contentService.findById(contentID);
