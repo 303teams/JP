@@ -40,7 +40,7 @@
     </select>
 
     <select id="findSCByCID" resultType="com.bjtu.pojo.Score">
-        SELECT contentID,score,time,content,scoreID
+        SELECT contentID,score,time,content,scoreID,valid
         FROM score
         WHERE contentID = #{contentID}
     </select>
