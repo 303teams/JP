@@ -158,7 +158,6 @@ const goRead = (item) => {
 }
 
 .item-dot {
-  position: absolute;
   width: 7px;
   height: 7px;
   background-color: red;

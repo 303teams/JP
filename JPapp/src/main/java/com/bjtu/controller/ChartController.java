@@ -1,9 +1,7 @@
 package com.bjtu.controller;
 
-import com.bjtu.dao.HomeworkDao;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.service.ChartService;
-import com.bjtu.service.HomeworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

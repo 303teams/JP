@@ -51,4 +51,8 @@ class ContentDaoTest {
         System.out.println(contentDao.getScoreDistribution(21));
     }
 
+    @Test
+    void deliverTask() {
+        contentDao.deliverTask(1);
+    }
 }

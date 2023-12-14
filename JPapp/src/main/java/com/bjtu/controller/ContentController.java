@@ -66,10 +66,7 @@ public class ContentController {
     @AuthAccess
     @PostMapping("/downloadCT")
     public ResponseEntity<byte[]> downloadCT(Integer contentID) throws UnsupportedEncodingException {
-        System.out.println("contentID"+ contentID);
         Content content1 = contentService.findById(contentID);
-
-//        System.out.println("hh"+ contentID);
 
         byte[] content = content1.getContent();
         String fileName = content1.getFileName();

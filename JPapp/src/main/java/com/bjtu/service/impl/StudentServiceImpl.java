@@ -4,17 +4,22 @@ import com.bjtu.dao.*;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.StudentService;
+import com.bjtu.util.MathUtils;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
+
+    private double STD = 1.414;
+    private int MIN = 3;
 
     @Autowired
     StudentDao studentDao;
@@ -33,17 +38,14 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<User> login(String id, String password) {
-//        System.out.println(id + " " + password);
+
         Student student = studentDao.findByNum(id);
-//        System.out.println(student);
+
         if (student == null) {
             return RspObject.fail("该学生不存在!");
         } else if (!student.getPassword().equals(password)) {
-            System.out.println(student.getPassword());
-            System.out.println(password);
             return RspObject.fail("密码错误!");
         } else {
-            System.out.println(student.getPassword());
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
@@ -59,11 +61,6 @@ public class StudentServiceImpl implements StudentService  {
             return RspObject.success("插入成功",Boolean.TRUE);
         }
     }
-
-//    @Override
-//    public RspObject<List<Student>> searchAll() {
-//        return RspObject.success("查询成功！",studentDao.findAll());
-//    }
 
     @Override
     public RspObject<Boolean> deleteOne(String id) {
@@ -182,33 +179,87 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+
+//    @Override
+//    public RspObject<Boolean> setScore(Integer contentID, Integer score, String sno) {
+//        try {
+//            scoreDao.setCTScore(contentID,score,sno);
+//            return RspObject.success("修改成功！",Boolean.TRUE);
+//        }catch (Exception e){
+//            throw new ServiceException(500,e.getMessage());
+//        }
+//    }
+
+//    学生提交评分结果
     @Override
-    public RspObject<Boolean> setScore(Integer contentID, Integer score, String sno) {
+    public RspObject<Boolean> score(Integer contentID,Integer score,String content) {
+
+        User user = TokenUtils.getCurrentUser();
+        Score s= new Score();
+        s.setSno(user.getId());
+        s.setContentID(contentID);
+        s.setScore(score);
+        s.setContent(content);
+        s.setHomeworkID(contentDao.findHIDByCID(contentID));
+
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp currentTime = new Timestamp(currentTimeMillis);
+
+        s.setTime(currentTime);
+
         try {
-            scoreDao.setCTScore(contentID,score,sno);
-            return RspObject.success("修改成功！",Boolean.TRUE);
+            scoreDao.insertScore(s);
+            return RspObject.success("评分成功！",Boolean.TRUE);
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
         }
+
     }
 
     @Override
-    public RspObject<Boolean> insertScore(Score score) {
-        try {
-            scoreDao.insertScore(score);
-            return RspObject.success("插入成功！",Boolean.TRUE);
-        }catch (Exception e){
-            throw new ServiceException(500,e.getMessage());
-        }
-    }
+    public RspObject<Boolean> handleAppeal(Integer contentID, String appealContent) {
 
-    @Override
-    public RspObject<Boolean> insertAppeal(Appeal appeal) {
-        try {
-            appealDao.insertAppeal(appeal);
-            return RspObject.success("插入成功！",Boolean.TRUE);
-        }catch (Exception e){
-            throw new ServiceException(500,e.getMessage());
+        Boolean flag = Boolean.FALSE;
+//        获取该作业的评分情况
+        List<Score> scores = scoreDao.findSCByCID(contentID);
+        MathUtils scoresfilter = new MathUtils(scores);
+        try{
+            while(scoresfilter.getStd() >= STD) {
+                flag = Boolean.TRUE;
+                if (scoresfilter.getSize() >= MIN) {
+//            删除一个异常值
+                    scoresfilter.cutScore();
+                } else {
+//                将申诉交给老师处理
+                    User user = TokenUtils.getCurrentUser();
+                    Appeal appeal = new Appeal();
+                    appeal.setSno(user.getId());
+                    appeal.setContentID(contentID);
+                    appeal.setAppealContent(appealContent);
+                    appeal.setStatus(0);
+                    long currentTimeMillis = System.currentTimeMillis();
+                    Timestamp currentTime = new Timestamp(currentTimeMillis);
+                    appeal.setTime(currentTime);
+
+                    appealDao.insertAppeal(appeal);
+                    return RspObject.success("你的申诉符合条件，已发送至任课教师，请耐心等待。",Boolean.TRUE);
+                }
+            }
+
+            if(flag){
+//            执行将待置0的评分置0操作
+                List<Integer> cutList = scoresfilter.getCutIndex();
+                for(Integer i : cutList){
+                    scoreDao.setInvalid(i);
+                }
+//            执行重新统计某项作业成绩的动作
+                contentDao.updateScore(contentID);
+                return RspObject.success("你的申诉已由机器自动处理",Boolean.TRUE);
+            }else{
+                return RspObject.success("不符合申诉条件，拒绝处理！",Boolean.TRUE);
+            }
+        }catch (Exception e) {
+            throw new ServiceException(500, e.getMessage());
         }
     }
 

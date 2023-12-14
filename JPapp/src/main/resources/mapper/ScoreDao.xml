@@ -7,18 +7,22 @@
 
     <!--    插入作业号为contentID，对应的评分人为sno的score-->
     <insert id="insertScore" parameterType="Score" useGeneratedKeys="true" keyProperty="id">
-        insert into score(contentID,sno,score,time,content)
-        values (#{contentID}, #{sno},#{score},#{time},#{content})
+        insert into score(contentID,sno,score,time,content,homeworkID)
+        values (#{contentID}, #{sno},#{score},#{time},#{content},#{homeworkID})
     </insert>
 
+<!--    <update id="setCTScore"  parameterType="integer">-->
+<!--        update score-->
+<!--        SET score = #{score}-->
+<!--        WHERE contentID = #{contentID}-->
+<!--        AND sno = #{sno}-->
+<!--    </update>-->
 
-    <update id="setCTScore"  parameterType="integer">
-        update score
-        SET score = #{score}
-        WHERE contentID = #{contentID}
-        AND sno = #{sno}
+    <update id="setInvalid">
+        UPDATE score
+        SET valid = 0
+        WHERE scoreID = #{scoreID}
     </update>
-
 
     <!--    作业号为contentID，对应的评分人为sno的打分信息-->
     <select id="findxCTById" resultType="com.bjtu.pojo.Content">
@@ -36,7 +40,7 @@
     </select>
 
     <select id="findSCByCID" resultType="com.bjtu.pojo.Score">
-        SELECT contentID,score,time,content
+        SELECT contentID,score,time,content,scoreID
         FROM score
         WHERE contentID = #{contentID}
     </select>

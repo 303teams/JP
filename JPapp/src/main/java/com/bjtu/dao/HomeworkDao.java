@@ -11,7 +11,11 @@ import java.util.Map;
 public interface HomeworkDao {
     public List<Homework> findAll();
 
+    public List<Homework> findSimpleAll();
+
     public Homework findHWById(Integer id);
+
+    public Homework findSimpleHWById(Integer id);
 
     void insert(Homework homework);
 
@@ -22,4 +26,5 @@ public interface HomeworkDao {
     public List<Homework> findHWsbyCno(String cno);
 
     public void setAnswer (Integer homeworkID,byte[] answer,String Afilename);
+    
 }

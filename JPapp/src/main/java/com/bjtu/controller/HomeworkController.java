@@ -39,7 +39,6 @@ public class HomeworkController {
     @AuthAccess
     @PostMapping("/downloadHW")
     public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
-        System.out.println("hh"+homeworkId);
 
         Homework homework = homeworkService.findHWById(homeworkId);
 
@@ -60,7 +59,7 @@ public class HomeworkController {
 //    老师上传作业
     @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName) throws IOException, ParseException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName,String info) throws IOException, ParseException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
 
@@ -73,7 +72,8 @@ public class HomeworkController {
                 .setCno(cno)
                 .setSubmitDdl(new Timestamp(dateFormat.parse(submitDdl).getTime()))
                 .setScoreDdl(new Timestamp(dateFormat.parse(scoreDdl).getTime()))
-                .setName(HWName);
+                .setName(HWName)
+                .setInfo(info);
         homeworkService.addHomework(homework);
         return RspObject.success("上传成功，当前thId：" , homework);
     }
@@ -83,7 +83,6 @@ public class HomeworkController {
     @PostMapping("/setAnswer")
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
-        System.out.println("name"+name);
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
     }
 

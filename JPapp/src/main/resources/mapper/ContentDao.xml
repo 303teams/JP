@@ -18,13 +18,23 @@
     </select>
 
     <select id="findCTByHId" resultType="com.bjtu.pojo.Content">
-        SELECT DISTINCT c.contentID as contentID, s.id as sno, s.name as sname, c.submitTime as submitTime, c.score as score,
-                        c.filename as fileName
-        FROM student s
-                 JOIN sc ON s.id = sc.sno
-                 LEFT JOIN content c ON s.id = c.sno AND c.homeworkID = #{homeworkID}
-        WHERE sc.cno IN (SELECT homework.cno FROM homework WHERE homework.homeworkID = #{homeworkID})
-           OR c.homeworkID IS NULL;
+        SELECT
+            sc.sno AS sno,
+            student.name AS sname,
+            content.contentID AS contentID,
+            content.submitTime AS submitTime,
+            content.score AS score
+        FROM
+            sc
+                JOIN
+            student ON sc.sno = student.id
+                JOIN
+            homework ON sc.cno = homework.cno
+                LEFT JOIN
+            content ON homework.homeworkID = content.homeworkID AND sc.sno = content.sno
+        WHERE
+            homework.homeworkID = #{homeworkID};
+
     </select>
 
 <!--    查询作业号为contentID，对应的评分人为sno的打分信息-->
@@ -61,6 +71,10 @@
         WHERE contentID = #{contentID}
     </update>
 
+    <update id="updateScore">
+        CALL score_content(#{contentID})
+    </update>
+
     <select id="getScoreDistribution" resultType="java.util.Map">
         SELECT
             COUNT(CASE WHEN score = 0 THEN 1 END) as score_0,
@@ -70,6 +84,20 @@
             COUNT(CASE WHEN score = 10 THEN 1 END) as score_10
         FROM content
         WHERE homeworkID = #{homeworkID};
+    </select>
+
+    <select id="deliverTask" parameterType="integer">
+        CALL assign_homework(#{homeworkID})
+    </select>
+
+    <select id="calculateAllScore" parameterType="integer">
+        CALL score_homework(#{homeworkID})
+    </select>
+
+    <select id="findHIDByCID" resultType="java.lang.Integer">
+        SELECT homeworkID
+        FROM content
+        WHERE contentID = #{contentID}
     </select>
 
 </mapper>

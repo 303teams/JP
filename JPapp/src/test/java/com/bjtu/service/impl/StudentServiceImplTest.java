@@ -55,4 +55,9 @@ class StudentServiceImplTest {
     void findCTsByCID() {
         System.out.println(studentService.findCTsByCID(1));
     }
+
+    @Test
+    void handleAppeal() {
+        System.out.println(studentService.handleAppeal(2,"我不满意"));
+    }
 }
