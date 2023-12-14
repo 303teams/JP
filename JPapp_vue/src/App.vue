@@ -6,13 +6,13 @@
 </template>
 
 <script>
-import DevicePixelRatio from './utils/devicePixelRatio';
+//import DevicePixelRatio from './utils/devicePixelRatio';
 
 export default {
   name: 'App',
   components: {},
   created() {
-    new DevicePixelRatio().init();
+    //new DevicePixelRatio().init();
   },
 
   methods: {

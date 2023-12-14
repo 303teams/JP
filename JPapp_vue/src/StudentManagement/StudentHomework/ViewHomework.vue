@@ -29,6 +29,11 @@
         </div>
 
         <el-divider style="margin-top: 5px"/>
+
+        <div class="custom-text-with-checkbox">
+          <p class="custom-text">已完成互评</p>
+          <input type="checkbox" id="checkbox1" name="checkbox1" v-model="ifSubmit" disabled>
+        </div>
       </div>
 
       <div :class="{ 'active-box': currentStage === 'resultPublish' }" class="progress-box">
@@ -43,6 +48,7 @@
 
     <homework-submit :homeworkID="props.homeworkID" :cno="props.cno" v-if="currentStage === 'submission'"/>
     <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" v-if="currentStage === 'peerReview'"/>
+    <grade-detail v-if = "currentStage === 'resultPublish'"></grade-detail>
   </div>
 
 </template>
@@ -53,6 +59,7 @@ import {computed, defineProps, onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import homeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
 import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
+import GradeDetail from "@/StudentManagement/StudentHomework/GradeDetail.vue";
 
 const router = useRouter();
 const submitDdl = history.state.submitDdl;
@@ -140,8 +147,9 @@ onMounted(() => {
 
 <style scoped>
 .icon{
-  top: 10px;
-  left: -30px;
+  position: absolute;
+  top: 100px;
+  left: 278px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;

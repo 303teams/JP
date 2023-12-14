@@ -1,6 +1,5 @@
 <template>
   <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
-    <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="Score">
       <span>我的分数：{{score}}</span>
       <div style="width: 500px;margin-top: 30px" label="内容" prop="info">
@@ -54,23 +53,23 @@ const initEcharts = (chart, data) => {
         data: [
           {
             value: data.score_0,
-            name: "0",
+            name: "0分",
           },
           {
             value: data.score_1_3,
-            name: "1-3",
+            name: "1-3分",
           },
           {
             value: data.score_4_6,
-            name: "4-6",
+            name: "4-6分",
           },
           {
             value: data.score_7_9,
-            name: "7-9",
+            name: "7-9分",
           },
           {
             value: data.score_10,
-            name: "10",
+            name: "10分",
           },
         ],
       },
@@ -146,9 +145,6 @@ const fetchData = () => {
       });
 };
 
-const Back = () => {
-  router.back();
-};
 
 onMounted(() => {
   fetchData();
@@ -156,15 +152,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.icon {
-  position: absolute;
-  top: 0px;
-  left: 20px;
-  font-size: 30px;
-  color: #3796ec;
-  cursor: pointer;
-}
-
 .Score{
   margin-top: 80px;
   margin-left: 100px;

@@ -100,7 +100,8 @@ const handleCheck = (cno,row) => {
       name:row.name,
       submitDdl:row.submitDdl,
       scoreDdl:row.scoreDdl,
-      contentID:row.contentID
+      contentID:row.contentID,
+      info:row.info
     }
   });
 };

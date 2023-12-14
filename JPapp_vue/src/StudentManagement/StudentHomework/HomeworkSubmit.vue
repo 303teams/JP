@@ -7,8 +7,10 @@
 
     <div class="content-container">
       <span style="font-size: 20px;font-weight: bold">作业内容:</span>
+      <br/><br/>
+      <span style="font-size: 13px">{{HomeworkInfo}}</span>
       <br/>
-      <a style="font-size: 15px; margin-top: 50px; display: inline-block;" :href="blobUrl" :download="fileName">{{fileName}}</a>
+      <a style="font-size: 15px; margin-top: 60px; display: inline-block;" :href="blobUrl" :download="fileName">{{fileName}}</a>
     </div>
 
     <el-divider></el-divider>
@@ -36,7 +38,7 @@
         </el-form-item>
         <el-form-item style="margin-top: 100px">
           <div style="width: 1100px" label="内容" prop="info">
-            <el-input type="textarea" resize="none" :rows="10" v-model="submitHomeworkForm.info" placeholder="请输入作业内容"/>
+            <el-input type="textarea" resize="none" :rows="10" v-model="submitHomeworkForm.ContentInfo" placeholder="请输入作业内容"/>
           </div>
         </el-form-item>
       </el-form>
@@ -65,9 +67,10 @@ const blobUrl = ref();
 const fileName = ref();
 const name = history.state.name;
 const submitDdl = history.state.submitDdl;
+const HomeworkInfo = history.state.info;
 const submitHomeworkForm = reactive({
   files: null,
-  info: null,
+  ContentInfo: null,
 });
 
 const rules = {

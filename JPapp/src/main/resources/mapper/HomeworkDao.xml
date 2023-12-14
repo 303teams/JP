@@ -23,7 +23,7 @@
     </select>
 
     <select id="findHWbyCno" resultType="com.bjtu.pojo.Homework">
-        SELECT DISTINCT homework.homeworkID, homework.name,homework.submitDdl,homework.scoreDdl,
+        SELECT DISTINCT homework.homeworkID, homework.name,homework.submitDdl,homework.scoreDdl,homework.info,
                         teacher.name as teacherName,
                         course.cname as courseName ,
                         content.contentID as contentID,
