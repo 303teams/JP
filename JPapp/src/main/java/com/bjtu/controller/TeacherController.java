@@ -101,4 +101,10 @@ public class TeacherController {
         return teacherService.deleteAPByAID(appealID);
     }
 
+    @AuthAccess
+    @PostMapping("/deleteHWByHId")
+    public RspObject<Boolean> deleteHWByHId(Integer homeworkID){
+        return homeworkService.deleteByHId(homeworkID);
+    }
+
 }

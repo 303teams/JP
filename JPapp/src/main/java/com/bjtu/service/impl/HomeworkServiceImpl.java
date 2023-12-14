@@ -27,14 +27,25 @@ public class HomeworkServiceImpl implements HomeworkService {
         return RspObject.success("查询成功！",homeworkDao.findAll());
     }
 
-
     public Homework findHWById(Integer id) {
         return homeworkDao.findHWById(id);
     }
 
     @Override
     public void addHomework(Homework homework) {
+//        新添作业，并将该作业添加到扫描线程内
         homeworkDao.insert(homework);
+        scheduledTask.addHomework(homework.getHomeworkID());
+    }
+
+    @Override
+    public RspObject<Boolean> deleteByHId(Integer homeworkID) {
+        try{
+            homeworkDao.deleteByHId(homeworkID);
+            return RspObject.success("删除成功",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
     }
 
     @Override

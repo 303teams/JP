@@ -12,6 +12,11 @@
         Where homeworkID = #{homeworkID}
     </update>
 
+    <delete id="deleteByHId">
+        delete from homework
+        where homeworkID = #{homeworkID}
+    </delete>
+
     <select id="findAll" resultType="Homework">
         select * from homework
     </select>
@@ -64,10 +69,9 @@
     </select>
 
     <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
-        insert into homework(cno,name,content,tno,fileName,submitDdl,scoreDdl,info)
-        values ( #{cno},#{name},#{content},#{tno},#{fileName},#{submitDdl},#{scoreDdl},#{info})
+        insert into homework(cno, name, content, tno, fileName, submitDdl, scoreDdl, info)
+        values (#{cno}, #{name}, #{content}, #{tno}, #{fileName}, #{submitDdl}, #{scoreDdl}, #{info})
     </insert>
-
 
 
 </mapper>

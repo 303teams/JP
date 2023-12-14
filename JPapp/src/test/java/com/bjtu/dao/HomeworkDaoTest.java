@@ -17,16 +17,9 @@ class HomeworkDaoTest {
 
     @Test
     void insert() {
-
         Homework homework = new Homework();
-
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
-
-
-        homework.setSubmitDdl(currentTime);
         homeworkDao.insert(homework);
-//        System.out.println(homework);
+        System.out.println(homework.getHomeworkID());
     }
 
 

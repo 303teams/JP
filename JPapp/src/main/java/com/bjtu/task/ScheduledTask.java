@@ -99,14 +99,14 @@ public class ScheduledTask {
         addSubmitSet(homeworkID);
     }
 
-    public void addSubmitSet(Integer homeworkID){
+    private void addSubmitSet(Integer homeworkID){
         submitLock.lock();
         Homework homework = homeworkDao.findSimpleHWById(homeworkID);
         submitSet.add(homework);
         submitLock.unlock();
     }
 
-    public void addScoreSet(Integer homeworkID){
+    private void addScoreSet(Integer homeworkID){
         scoreLock.lock();
         Homework homework = homeworkDao.findSimpleHWById(homeworkID);
         scoreSet.add(homework);
