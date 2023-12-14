@@ -22,4 +22,8 @@ public interface HomeworkService {
 
     RspObject<Boolean> setAnswer(Integer homeworkID,byte[] answer,String Afilename);
 
+    public RspObject<Boolean> alterScoreDdlByHID(Integer homeworkID, String scoreDdl);
+
+    public RspObject<Boolean> alterSubmitDdlByHID(Integer homeworkID, String submitDdl);
+
 }

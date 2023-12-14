@@ -28,5 +28,8 @@ public interface HomeworkDao {
     public List<Homework> findHWsbyCno(String cno);
 
     public void setAnswer (Integer homeworkID,byte[] answer,String Afilename);
-    
+
+    public void updateScoreDdl(Integer homeworkID,String scoreDdl);
+
+    public void updateSubmitDdl(Integer homeworkID,String submitDdl);
 }

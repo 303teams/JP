@@ -12,6 +12,18 @@
         Where homeworkID = #{homeworkID}
     </update>
 
+    <update id="updateScoreDdl">
+        Update homework
+        Set scoreDdl = #{scoreDdl}
+        Where homeworkID = #{homeworkID}
+    </update>
+
+    <update id="updateSubmitDdl">
+        Update homework
+        Set submitDdl = #{submitDdl}
+        Where homeworkID = #{homeworkID}
+    </update>
+
     <delete id="deleteByHId">
         delete from homework
         where homeworkID = #{homeworkID}

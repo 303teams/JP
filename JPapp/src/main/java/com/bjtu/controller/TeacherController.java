@@ -107,4 +107,16 @@ public class TeacherController {
         return homeworkService.deleteByHId(homeworkID);
     }
 
+    @AuthAccess
+    @PostMapping("/alterSubmitDdlByHID")
+    public RspObject<Boolean> alterSubmitDdlByHID(Integer homeworkID,String submitDdl){
+        return homeworkService.alterSubmitDdlByHID(homeworkID,submitDdl);
+    }
+
+    @AuthAccess
+    @PostMapping("/alterScoreDdlByHID")
+    public RspObject<Boolean> alterScoreDdlByHID(Integer homeworkID,String scoreDdl){
+        return homeworkService.alterScoreDdlByHID(homeworkID,scoreDdl);
+    }
+
 }
