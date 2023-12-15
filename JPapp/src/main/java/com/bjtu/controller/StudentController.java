@@ -69,6 +69,4 @@ public class StudentController {
         return studentService.findSCByCID(contentID);
     }
 
-
-
 }
