@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://8.141.4.25:3306/jp
+    username: root
+    password: Lizhichao12
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'null'
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.bjtu.pojo
+
+
+server:
+  port: 8081

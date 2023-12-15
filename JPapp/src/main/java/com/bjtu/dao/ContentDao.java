@@ -1,0 +1,36 @@
+package com.bjtu.dao;
+import com.bjtu.pojo.Content;
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+import java.util.Map;
+
+@Mapper
+public interface ContentDao {
+
+
+    public Content findCTById(int id);
+
+    void insert(Content content);
+
+    public List<Content> findCTByHId(Integer homeworkID);
+
+    public void setCTScore(Integer contentID,Integer score);
+
+    public Content findxCTById(Integer contentID,String sno);
+
+    public String findSnoByCID(Integer contentID);
+
+    public Content findCTSByCID(Integer contentID);
+
+    public Map<String,Object> getScoreDistribution(Integer home);
+
+    public void deliverTask(Integer homeworkID);
+
+    public void calculateAllScore(Integer homeworkID);
+
+    public Integer findHIDByCID(Integer contentID);
+
+    public void updateScore(Integer contentID);
+}

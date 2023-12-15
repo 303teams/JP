@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.bjtu.dao.HomeworkDao">
+
+    <update id="setAnswer">
+        Update homework
+        Set answer = #{answer},Afilename = #{Afilename}
+        Where homeworkID = #{homeworkID}
+    </update>
+
+    <update id="updateScoreDdl">
+        Update homework
+        Set scoreDdl = #{scoreDdl}
+        Where homeworkID = #{homeworkID}
+    </update>
+
+    <update id="updateSubmitDdl">
+        Update homework
+        Set submitDdl = #{submitDdl}
+        Where homeworkID = #{homeworkID}
+    </update>
+
+    <delete id="deleteByHId">
+        delete from homework
+        where homeworkID = #{homeworkID}
+    </delete>
+
+    <select id="findAll" resultType="Homework">
+        select * from homework
+    </select>
+
+    <select id="findHWById" resultType="Homework">
+        SELECT *
+        FROM homework
+        WHERE homework.homeworkID = #{id}
+    </select>
+
+    <select id="findHWbyCno" resultType="com.bjtu.pojo.Homework">
+        SELECT DISTINCT homework.homeworkID, homework.name,homework.submitDdl,homework.scoreDdl,homework.info,
+                        teacher.name as teacherName,
+                        course.cname as courseName ,
+                        content.contentID as contentID,
+                        content.score as score
+        FROM student
+                 JOIN sc ON student.id = sc.sno
+                 JOIN homework ON sc.cno = homework.cno
+                 JOIN teacher ON homework.tno = teacher.id
+                 JOIN course ON homework.cno = course.cno
+                 LEFT JOIN content ON homework.homeworkID = content.homeworkID
+            AND content.cno = course.cno
+            AND content.sno = student.id
+        WHERE student.id = #{id} and course.cno = #{cno}
+    </select>
+    <select id="findHWsbyCno" resultType="com.bjtu.pojo.Homework">
+        SELECT
+            H.homeworkID,H.name,H.submitDdl,H.scoreDdl,H.fileName,H.Afilename,
+            COUNT(DISTINCT sc.sno) AS totalAmount,
+            COUNT(DISTINCT C.sno) AS submitAmount
+        FROM
+            homework H
+                JOIN sc ON H.cno = sc.cno
+                LEFT JOIN content C ON H.homeworkID = C.homeworkID AND sc.sno = C.sno
+        WHERE
+            H.cno = #{cno}
+        GROUP BY
+            H.homeworkID, H.content, H.cno;
+
+    </select>
+    <select id="findSimpleAll" resultType="com.bjtu.pojo.Homework">
+        select homeworkID,submitDdl,scoreDdl
+        from homework
+    </select>
+    <select id="findSimpleHWById" resultType="com.bjtu.pojo.Homework">
+        SELECT homeworkID,submitDdl,scoreDdl
+        FROM homework
+        WHERE homework.homeworkID = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">
+        insert into homework(cno, name, content, tno, fileName, submitDdl, scoreDdl, info)
+        values (#{cno}, #{name}, #{content}, #{tno}, #{fileName}, #{submitDdl}, #{scoreDdl}, #{info})
+    </insert>
+
+
+</mapper>

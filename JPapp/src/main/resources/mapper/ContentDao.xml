@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjtu.dao.ContentDao">
+
+
+    <insert id="insert" parameterType="Content" useGeneratedKeys="true" keyProperty="contentID">
+        insert into content(contentID,cno,sno,homeworkID,content,fileName,submitTime)
+        values (#{contentID}, #{cno},#{sno},#{homeworkID},#{content},#{fileName},#{submitTime})
+    </insert>
+
+    <select id="findCTById" resultType="com.bjtu.pojo.Content">
+        SELECT *
+        FROM content
+        WHERE content.contentID = #{id}
+    </select>
+
+    <select id="findCTByHId" resultType="com.bjtu.pojo.Content">
+        SELECT
+            sc.sno AS sno,
+            student.name AS sname,
+            content.contentID AS contentID,
+            content.submitTime AS submitTime,
+            content.score AS score
+        FROM
+            sc
+                JOIN
+            student ON sc.sno = student.id
+                JOIN
+            homework ON sc.cno = homework.cno
+                LEFT JOIN
+            content ON homework.homeworkID = content.homeworkID AND sc.sno = content.sno
+        WHERE
+            homework.homeworkID = #{homeworkID};
+
+    </select>
+
+<!--    查询作业号为contentID，对应的评分人为sno的打分信息-->
+    <select id="findxCTById" resultType="com.bjtu.pojo.Content">
+        SELECT
+            c.contentID,
+            c.fileName as fileName,
+            COALESCE(score.score, null) as score,
+            COALESCE(score.content, 'No comment') as comment
+        FROM
+            content c
+                LEFT JOIN score ON c.contentID = score.contentID AND score.sno = #{sno}
+        WHERE
+            c.contentID = #{contentID};
+
+    </select>
+
+
+    <select id="findSnoByCID" resultType="java.lang.String">
+        Select sno
+        FROM content WHERE
+        contentID = #{contentID}
+    </select>
+
+    <select id="findCTSByCID" resultType="com.bjtu.pojo.Content">
+        SELECT contentID1,contentID2,contentID3,contentID4,contentID5,contentID6
+        FROM content
+        WHERE content.contentID = #{id}
+    </select>
+
+    <update id="setCTScore"  parameterType="integer">
+        update content
+        SET score = #{score}
+        WHERE contentID = #{contentID}
+    </update>
+
+    <update id="updateScore">
+        CALL score_content(#{contentID})
+    </update>
+
+    <select id="getScoreDistribution" resultType="java.util.Map">
+        SELECT
+            COUNT(CASE WHEN score = 0 THEN 1 END) as score_0,
+            COUNT(CASE WHEN score BETWEEN 1 AND 3 THEN 1 END) as score_1_3,
+            COUNT(CASE WHEN score BETWEEN 4 AND 6 THEN 1 END) as score_4_6,
+            COUNT(CASE WHEN score BETWEEN 7 AND 9 THEN 1 END) as score_7_9,
+            COUNT(CASE WHEN score = 10 THEN 1 END) as score_10
+        FROM content
+        WHERE homeworkID = #{homeworkID};
+    </select>
+
+    <select id="deliverTask" parameterType="integer">
+        CALL assign_homework(#{homeworkID})
+    </select>
+
+    <select id="calculateAllScore" parameterType="integer">
+        CALL score_homework(#{homeworkID})
+    </select>
+
+    <select id="findHIDByCID" resultType="java.lang.Integer">
+        SELECT homeworkID
+        FROM content
+        WHERE contentID = #{contentID}
+    </select>
+
+</mapper>
