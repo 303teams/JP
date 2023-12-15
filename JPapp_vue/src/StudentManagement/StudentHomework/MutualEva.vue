@@ -21,13 +21,10 @@
         </div>
       </div>
 
-      <div style="width: 1100px;margin-top: 30px" label="内容" prop="info">
+      <div class="comment" label="内容" prop="info">
         <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语"/>
+        <el-button type="primary" @click="submitScore">提交</el-button>
       </div>
-    </div>
-
-    <div class="button_class">
-      <el-button type="primary" @click="submitScore">提交</el-button>
     </div>
 
 
@@ -187,10 +184,17 @@ onMounted(() => {
   color: #ff9800; /* 或者你选择的其他颜色 */
 }
 
-.button_class{
+.comment{
   display: flex;
   justify-content: center;
-  margin-top: 80px;
+  flex-direction: column;
+  width: 500px;
+  margin-top: 30px
+}
+
+.comment .el-button{
+  margin-top: 30px;
+  width:50px
 }
 
 </style>
