@@ -52,8 +52,8 @@ public class Homework implements Serializable {
 
     private String Afilename;
     private byte[] answer;
-
     private String info;
+
 
     public Homework() {
     }

@@ -155,6 +155,44 @@ const http = {
         return request(config)
     },
 
+    //学生提交申诉
+    submitAppeal(data){
+        const config = {
+            url:'/student/sendAppeal',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //获取成绩分布信息
+    getScoreInfo(data){
+        const config = {
+            url:'/chart/getScoreDistribution',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //学生提交互评分数
+    submitScore(data){
+        const config = {
+            url:'/student/score',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
 
     //下载学生作业
     downloadCT(data){
@@ -163,6 +201,33 @@ const http = {
             method:'post',
             data:data,
             responseType: 'blob',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //学生下载答案
+    downloadAnswer(data){
+        const config = {
+            url:'/homework/downloadAns',
+            method:'post',
+            data:data,
+            responseType: 'blob',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //学生查看互评评分列表
+    getScoreList(data){
+        const config = {
+            url:'/student/findSCByCID',
+            method:'post',
+            data:data,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
