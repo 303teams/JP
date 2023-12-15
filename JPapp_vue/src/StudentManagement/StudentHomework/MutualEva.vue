@@ -37,11 +37,10 @@
 <script setup>
 import { ref, onMounted,defineProps, } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import {ElMessage} from "element-plus";
+import http from "@/api/http";
 
 const router = useRouter();
-const token = localStorage.getItem('token');
 const props = defineProps(['homeworkID', 'contentID']);
 const ContentBlobUrl = ref();
 const AnswerBlobUrl = ref();
@@ -51,37 +50,19 @@ const selectedScore = ref();
 const info = ref();
 
 const fetchData = () => {
-  // 创建两个 axios 实例
-  const axiosInstance1 = axios.create({
-    baseURL: 'http://localhost:8081',
-    headers: {
-      'Content-Type': 'application/json',
-      'token': token,
-    },
-    responseType: 'blob',
-  });
+  const data1 = {
+    contentID: props.contentID,
+  };
 
-  const axiosInstance2 = axios.create({
-    baseURL: 'http://localhost:8081',
-    headers: {
-      'Content-Type': 'application/json',
-      'token': token,
-    },
-    responseType: 'blob',
-  });
+  const data2 = {
+    homeworkID: props.homeworkID,
+  };
+
 
   // 同时发起两个请求
   Promise.all([
-    axiosInstance1.post('/content/downloadCT', null, {
-      params: {
-        contentID: props.contentID,
-      },
-    }),
-    axiosInstance2.post('homework/downloadAns', null, {
-      params: {
-        homeworkID: props.homeworkID,
-      },
-    }),
+      http.downloadCT(data1),
+      http.downloadAnswer(data2),
   ])
       .then(([res1, res2]) => {
         // 处理第一个请求的响应
@@ -120,21 +101,13 @@ const submitScore = () => {
     ElMessage.warning("请选择分数");
     return;
   }
-  axios
-      .post(
-          'http://localhost:8081/student/score',
-          {
-            contentID: props.contentID,
-            score: selectedScore.value,
-            content: info.value,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
+
+  const data = {
+    contentID: props.contentID,
+    score: selectedScore.value,
+    content: info.value,
+  }
+  http.submitScore(data)
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res);
@@ -167,18 +140,20 @@ onMounted(() => {
   justify-content: start;
   flex-direction: column;
   text-align: left;
+  padding-left: 50px;
 }
 
 .icon{
-  top: 0px;
-  left: 0px;
+  position: absolute;
+  top: 100px;
+  left: 278px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
 }
 
 .main{
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .content-container {

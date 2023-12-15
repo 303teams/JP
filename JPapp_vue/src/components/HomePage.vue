@@ -32,14 +32,14 @@ body {
 }
 
 .layout-container-demo .el-header {
-  height: 10vh;
+  height: 8vh;
   padding: 0;
   border-bottom: 1px solid #e5e7eb;
 }
 
 .layout-container-demo .el-main {
-  padding: 0 0 30px 30px;
-  height: 90vh;
+  padding: 0 0 80px 30px;
+  height: 92vh;
   width: 85vw;
   overflow: auto;
 }
