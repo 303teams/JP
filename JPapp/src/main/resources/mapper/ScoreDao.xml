@@ -6,7 +6,7 @@
 <mapper namespace="com.bjtu.dao.ScoreDao">
 
     <!--    插入作业号为contentID，对应的评分人为sno的score-->
-    <insert id="insertScore" parameterType="Score" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertScore" parameterType="Score" useGeneratedKeys="true" keyProperty="scoreID">
         insert into score(contentID,sno,score,time,content,homeworkID)
         values (#{contentID}, #{sno},#{score},#{time},#{content},#{homeworkID})
     </insert>
