@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -99,26 +101,26 @@ public class ScheduledTask {
         addSubmitSet(homeworkID);
     }
 
-    public void addSubmitSet(Integer homeworkID){
+    private void addSubmitSet(Integer homeworkID){
         submitLock.lock();
         Homework homework = homeworkDao.findSimpleHWById(homeworkID);
         submitSet.add(homework);
         submitLock.unlock();
     }
 
-    public void addScoreSet(Integer homeworkID){
+    private void addScoreSet(Integer homeworkID){
         scoreLock.lock();
         Homework homework = homeworkDao.findSimpleHWById(homeworkID);
         scoreSet.add(homework);
         scoreLock.unlock();
     }
 
-    public void alterSubmitDdl(Integer homeworkID,Timestamp submitDdl){
+    public void alterSubmitDdl(Integer homeworkID,String submitDdl) throws ParseException {
         submitLock.lock();
         int i = 0;
         for(; i<submitSet.size(); i++){
             if(submitSet.get(i).getHomeworkID() == homeworkID){
-                submitSet.get(i).setSubmitDdl(submitDdl);
+                submitSet.get(i).setSubmitDdl(transfer(submitDdl));
                 break;
             }
         }
@@ -126,18 +128,18 @@ public class ScheduledTask {
         if(i == submitSet.size()){
             Homework homework = new Homework()
                     .setHomeworkID(homeworkID)
-                    .setSubmitDdl(submitDdl);
+                    .setSubmitDdl(transfer(submitDdl));
             submitSet.add(homework);
         }
         submitLock.unlock();
     }
 
-    public void alterScoreDdl(Integer homeworkID,Timestamp scoreDdl){
+    public void alterScoreDdl(Integer homeworkID,String scoreDdl) throws ParseException {
         scoreLock.lock();
         int i = 0;
         for(; i<scoreSet.size(); i++){
             if(scoreSet.get(i).getHomeworkID() == homeworkID){
-                scoreSet.get(i).setScoreDdl(scoreDdl);
+                scoreSet.get(i).setScoreDdl(transfer(scoreDdl));
                 break;
             }
         }
@@ -145,10 +147,15 @@ public class ScheduledTask {
         if(i == scoreSet.size()){
             Homework homework = new Homework()
                     .setHomeworkID(homeworkID)
-                    .setScoreDdl(scoreDdl);
+                    .setScoreDdl(transfer(scoreDdl));
             scoreSet.add(homework);
         }
         scoreLock.unlock();
+    }
+
+    private Timestamp transfer(String time) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return new Timestamp(dateFormat.parse(time).getTime());
     }
 
 

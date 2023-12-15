@@ -19,6 +19,8 @@ public interface HomeworkDao {
 
     void insert(Homework homework);
 
+    void deleteByHId(Integer homeworkID);
+
     //    学生查看某项课程的作业列表
     public List<Homework> findHWbyCno(String id,String cno);
 
@@ -26,5 +28,8 @@ public interface HomeworkDao {
     public List<Homework> findHWsbyCno(String cno);
 
     public void setAnswer (Integer homeworkID,byte[] answer,String Afilename);
-    
+
+    public void updateScoreDdl(Integer homeworkID,String scoreDdl);
+
+    public void updateSubmitDdl(Integer homeworkID,String submitDdl);
 }
