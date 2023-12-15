@@ -47,24 +47,24 @@ public class StudentController {
     }
 
     //    返回互评作业列表
-    @PostMapping("findCTsByCID")
+    @PostMapping("/findCTsByCID")
     public RspObject<List<Content>> findCTsByCID(Integer contentID) {
         return studentService.findCTsByCID(contentID);
     }
 
     //学生打分
-    @PostMapping("score")
+    @PostMapping("/score")
     public RspObject<Boolean> score(Integer contentID,Integer score,String content) {
         return studentService.score(contentID,score,content);
     }
 
     //发送申诉请求
-    @PostMapping("sendAppeal")
+    @PostMapping("/sendAppeal")
     public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
         return studentService.handleAppeal(contentID, appealContent);
     }
 
-    @PostMapping("findSCByCID")
+    @PostMapping("/findSCByCID")
     public RspObject<List<Score>> findSCByCID(Integer contentID){
         return studentService.findSCByCID(contentID);
     }

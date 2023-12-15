@@ -100,4 +100,8 @@
         WHERE contentID = #{contentID}
     </select>
 
+    <select id="getRankingByCT" resultType="java.util.Map">
+
+    </select>
+
 </mapper>

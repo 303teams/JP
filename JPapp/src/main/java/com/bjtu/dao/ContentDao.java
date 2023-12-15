@@ -33,4 +33,8 @@ public interface ContentDao {
     public Integer findHIDByCID(Integer contentID);
 
     public void updateScore(Integer contentID);
+
+    @MapKey("courseID")
+    public Map<String,Map<String,Object>> getRankingByCT(Integer contentID,String sno);
+
 }
