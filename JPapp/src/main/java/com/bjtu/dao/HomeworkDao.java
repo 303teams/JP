@@ -1,9 +1,11 @@
 package com.bjtu.dao;
 
 import com.bjtu.pojo.Homework;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface HomeworkDao {
@@ -23,7 +25,8 @@ public interface HomeworkDao {
     public List<Homework> findHWbyCno(String id,String cno);
 
     //    根据某项课程的序号返回所有作业的序号
-    public List<Integer> findHWIDsByCno(String cno);
+    @MapKey("homeworkID")
+    public List<Homework> findHWInfoByCno(String cno);
 
     //    老师查看某一课程的学生作业提交列表
     public List<Homework> findHWsbyCno(String cno);

@@ -80,10 +80,11 @@
         WHERE homework.homeworkID = #{id}
     </select>
 
-    <select id="findHWIDsByCno" resultType="java.lang.Integer">
-        SELECT homeworkID
+    <select id="findHWInfoByCno" resultType="com.bjtu.pojo.Homework">
+        SELECT homeworkID,scoreDdl
         FROM homework
         WHERE cno = #{cno}
+        ORDER BY homeworkID ASC
     </select>
 
     <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">

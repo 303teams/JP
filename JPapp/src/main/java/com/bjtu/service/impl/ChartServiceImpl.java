@@ -4,11 +4,13 @@ import com.bjtu.dao.ContentDao;
 import com.bjtu.dao.HomeworkDao;
 import com.bjtu.dao.ScDao;
 import com.bjtu.exception.ServiceException;
+import com.bjtu.pojo.Homework;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service("ChartService")
@@ -40,20 +42,23 @@ public class ChartServiceImpl implements ChartService {
     @Override
     public RspObject<List<Map<String, Object>>> getAllRanking(String id) {
         List data = new ArrayList<Map<String,Object>>();
-        List<Integer> homeworkList;
+        List<Homework> homeworkList;
         List<Map<String,Object>> scores;
         try{
 //            获取学生课程列表（返回信息包括每项课程的课程序号，课程名，课程成绩）
             List<Map<String,Object>> courseList = scDao.findCourseInfoBySno(id);
             for(Map course:courseList){
 //                根据课程序号获得某课程的作业ID列表
-                homeworkList = homeworkDao.findHWIDsByCno(course.get("cno").toString());
+                homeworkList = homeworkDao.findHWInfoByCno(course.get("cno").toString());
                 List<Integer> ranks = new ArrayList<>();
-                for(Integer homeworkID:homeworkList){
-//                    根据作业ID获得某项作业全班的得分情况
-                    scores = contentDao.findCTscoreByHId(homeworkID);
+                for(Homework homework:homeworkList){
+//                    筛选已经过了截至时间的的作业
+                    if(homework.getScoreDdl().getTime() < new Timestamp(System.currentTimeMillis()).getTime()){
+                        //根据作业ID获得某项作业全班的得分情况
+                        scores = contentDao.findCTscoreByHId(homework.getHomeworkID());
 //                    获得本学生排名数据
-                    ranks.add(getRank(scores,id));
+                        ranks.add(getRank(scores,id));
+                    }
                 }
 //                将该排名数据加入至course中
                 course.put("ranks",ranks);
