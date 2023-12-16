@@ -9,9 +9,8 @@ import java.util.Map;
 @Mapper
 public interface ScDao {
 
-    List<Integer> findCoursesBySno(String sno);
+    @MapKey("")
+    List<Map<String,Object>> findCourseInfoBySno(String sno);
 
-    @MapKey("cno")
-    Map<String,Map<String,Object>> getFinalScoresBySno(String sno);
 
 }

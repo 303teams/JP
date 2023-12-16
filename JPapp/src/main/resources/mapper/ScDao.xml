@@ -6,15 +6,11 @@
 <mapper namespace="com.bjtu.dao.ScDao">
 
 
-    <select id="findCoursesBySno" resultType="java.lang.Integer">
-        SELECT cno
+    <select id="findCourseInfoBySno" resultType="java.util.Map">
+        SELECT sc.cno,cname,score
         FROM sc
+        JOIN course ON sc.cno = course.cno
         WHERE sno = #{sno}
     </select>
 
-    <select id="getFinalScoresBySno" resultType="java.util.Map">
-        SELECT cno,score
-        FROM sc
-        WHERE sno = #{sno}
-    </select>
 </mapper>

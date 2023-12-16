@@ -28,9 +28,8 @@ class ContentDaoTest {
 
     @Test
     void findCTByHId() {
-        System.out.println(contentDao.findCTByHId(1));
+        System.out.println(contentDao.findCTByHId(602));
     }
-
 
     @Test
     void setCTScore() {
@@ -54,5 +53,10 @@ class ContentDaoTest {
     @Test
     void deliverTask() {
         contentDao.deliverTask(1);
+    }
+
+    @Test
+    void findCTscoreByHId() {
+        System.out.println(contentDao.findCTscoreByHId(602));
     }
 }

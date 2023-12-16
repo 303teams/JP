@@ -22,6 +22,9 @@ public interface HomeworkDao {
     //    学生查看某项课程的作业列表
     public List<Homework> findHWbyCno(String id,String cno);
 
+    //    根据某项课程的序号返回所有作业的序号
+    public List<Integer> findHWIDsByCno(String cno);
+
     //    老师查看某一课程的学生作业提交列表
     public List<Homework> findHWsbyCno(String cno);
 

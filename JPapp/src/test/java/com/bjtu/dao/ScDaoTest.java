@@ -16,12 +16,7 @@ class ScDaoTest {
     ScDao scDao;
 
     @Test
-    void findCoursesBySno() {
-    }
-
-    @Test
-    void getFinalScoresBySno() {
-        Map<String,Map<String,Object>> datas = scDao.getFinalScoresBySno("21301006");
-        System.out.println(datas.get("1001").get("score"));
+    void findCourseInfoBySno() {
+        System.out.println(scDao.findCourseInfoBySno("21301006"));
     }
 }
