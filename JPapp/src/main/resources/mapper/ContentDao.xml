@@ -107,12 +107,9 @@
     <select id="findCTscoreByHId" resultType="java.util.Map">
         SELECT
             sc.sno AS sno,
-            content.contentID AS contentID,
             COALESCE(content.score, 0) AS score
         FROM
             sc
-                JOIN
-            student ON sc.sno = student.id
                 JOIN
             homework ON sc.cno = homework.cno
                 LEFT JOIN

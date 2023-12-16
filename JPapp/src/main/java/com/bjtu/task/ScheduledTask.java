@@ -38,7 +38,7 @@ public class ScheduledTask {
     @Autowired
     HomeworkDao homeworkDao;
 
-    @PostConstruct
+//    @PostConstruct
     public void setUserService() {
         submitLock = new ReentrantLock();
         scoreLock = new ReentrantLock();

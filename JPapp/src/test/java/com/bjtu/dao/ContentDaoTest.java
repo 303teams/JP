@@ -57,6 +57,6 @@ class ContentDaoTest {
 
     @Test
     void findCTscoreByHId() {
-        System.out.println(contentDao.findCTscoreByHId(602));
+        System.out.println(contentDao.findCTscoreByHId(603));
     }
 }

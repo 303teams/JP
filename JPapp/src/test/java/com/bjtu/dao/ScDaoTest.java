@@ -17,6 +17,6 @@ class ScDaoTest {
 
     @Test
     void findCourseInfoBySno() {
-        System.out.println(scDao.findCourseInfoBySno("21301006"));
+        System.out.println(scDao.findCourseInfoBySno("21301005"));
     }
 }

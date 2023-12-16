@@ -16,10 +16,8 @@ public class ChartServiceImpl implements ChartService {
 
     @Autowired
     ContentDao contentDao;
-
     @Autowired
     HomeworkDao homeworkDao;
-
     @Autowired
     ScDao scDao;
 
@@ -69,7 +67,7 @@ public class ChartServiceImpl implements ChartService {
     }
 
     // 返回一个学生每项课程的的每项作业的成绩排名百分比数据
-    private int getRank(List<Map<String, Object>> scores, String sno) {
+    private static int getRank(List<Map<String, Object>> scores, String sno) {
         // 排序成绩表（降序）
         Collections.sort(scores, (s1, s2) -> Double.compare((Double) s2.get("score"), (Double) s1.get("score")));
 
@@ -85,6 +83,16 @@ public class ChartServiceImpl implements ChartService {
     }
 
     public static void main(String[] args) {
+        List<Map<String, Object>> scores = Arrays.asList(
+                new HashMap<String, Object>() {{ put("score", 80.0); put("sno", "21301001"); }},
+                new HashMap<String, Object>() {{ put("score", 90.0); put("sno", "21301002"); }},
+                new HashMap<String, Object>() {{ put("score", 75.0); put("sno", "21301003"); }}
+                // 添加更多成绩数据
+        );
 
+        String snoToFind = "21301001";
+        int rank = getRank(scores, snoToFind);
+        System.out.println("学号为 " + snoToFind + " 的学生排名为：" + rank);
     }
+
 }
