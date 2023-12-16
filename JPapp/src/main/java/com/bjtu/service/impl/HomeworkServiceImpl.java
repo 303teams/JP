@@ -59,21 +59,12 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public RspObject<Boolean> alterScoreDdlByHID(Integer homeworkID, String scoreDdl) {
+    public RspObject<Boolean> alterDdlByHID(Integer homeworkID, String submitDdl,String scoreDdl) {
         try{
             homeworkDao.updateScoreDdl(homeworkID,scoreDdl);
-            scheduledTask.alterScoreDdl(homeworkID,scoreDdl);
-            return RspObject.success("修改成功",Boolean.TRUE);
-        }catch (Exception e){
-            throw new ServiceException(500,e.getMessage());
-        }
-    }
-
-    @Override
-    public RspObject<Boolean> alterSubmitDdlByHID(Integer homeworkID, String submitDdl) {
-        try{
             homeworkDao.updateSubmitDdl(homeworkID,submitDdl);
-            scheduledTask.alterSubmitDdl(homeworkID,submitDdl);
+            scheduledTask.alterScoreDdl(homeworkID,scoreDdl);
+            homeworkDao.updateSubmitDdl(homeworkID,submitDdl);
             return RspObject.success("修改成功",Boolean.TRUE);
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
