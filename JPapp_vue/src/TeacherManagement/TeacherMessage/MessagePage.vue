@@ -62,7 +62,6 @@
 
 <script setup>
 import {computed, onMounted, ref} from 'vue';
-import axios from "axios";
 import http from "@/api/http";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {useRouter} from "vue-router";
@@ -70,7 +69,6 @@ import {useRouter} from "vue-router";
 
 const pageSize = 10;
 const currentPage = ref(1);
-const token = localStorage.getItem('token');
 const tableData = ref([]);  //储存后端传来的数据
 const router = useRouter();
 const isHovered = ref(false);

@@ -54,12 +54,10 @@
 <script setup>
 
 import {defineProps, onMounted, reactive, ref} from "vue";
-import axios from "axios";
 import http from "@/api/http";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 
-const token = localStorage.getItem('token');
 const props = defineProps(['homeworkID','cno']);
 const router = useRouter();
 const SubmitHomeworkRef = ref();
