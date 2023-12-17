@@ -62,6 +62,7 @@ public class ScheduledTask {
     @Scheduled(cron = "*/1 * * * * ?")
     public void submitScan() throws InterruptedException {
         if (submitflag) {
+
             submitLock.lock();
             for (int i = 0; i < submitSet.size(); i++) {
                 if (submitSet.get(i).getSubmitDdl().getTime() < new Timestamp(System.currentTimeMillis()).getTime()) {

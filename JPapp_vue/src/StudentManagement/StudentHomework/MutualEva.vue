@@ -22,7 +22,7 @@
       </div>
 
       <div class="comment" label="内容" prop="info">
-        <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语"/>
+        <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语" :maxlength="20"/>
         <el-button type="primary" @click="submitScore">提交</el-button>
       </div>
     </div>

@@ -28,7 +28,17 @@
                 </div>
               </div>
             </div>
-            <div style="margin-top: 40px">{{ item.time }}</div>
+            <div style="margin-top: 40px;margin-right: 100px">{{ item.time }}</div>
+            <div class="delete-button" @click.stop="deleteMessage(item)">
+              <el-icon
+                  size="40px"
+                  @mouseenter="isHovered = true"
+                  @mouseleave="isHovered = false"
+              >
+                <Delete v-if="!isHovered" />
+                <DeleteFilled v-else />
+              </el-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -54,7 +64,7 @@
 import {computed, onMounted, ref} from 'vue';
 import axios from "axios";
 import http from "@/api/http";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {useRouter} from "vue-router";
 
 
@@ -63,7 +73,35 @@ const currentPage = ref(1);
 const token = localStorage.getItem('token');
 const tableData = ref([]);  //储存后端传来的数据
 const router = useRouter();
+const isHovered = ref(false);
 
+const deleteMessage = (item) => {
+  // 在这里可以调用 ElMessageBox 弹出确认框
+  ElMessageBox.confirm('确定要删除这条申诉吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    // 用户点击了确定后的逻辑
+    const data = {
+      appealID: item.appealID,
+    }
+    http.deleteAppeal(data).then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success("删除成功");
+        fetchData();
+        console.log(res)
+      } else {
+        ElMessage.error("获取信息失败:" + res.data.msg);
+      }
+    })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }).catch(() => {
+  });
+};
 
 const visibleMessages = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
@@ -191,6 +229,7 @@ const goRead = (item) => {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  position: relative;
 }
 
 
@@ -206,8 +245,19 @@ const goRead = (item) => {
   justify-content: center;
 }
 
-.full-row {
-  width: 100%;
+
+.delete-button {
+  cursor: pointer;
+  color: rgba(28, 28, 17, 0.24);
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: none;
+}
+
+.item-content:hover .delete-button {
+  display: inline-block;
 }
 </style>
 

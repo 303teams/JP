@@ -1,15 +1,13 @@
 <template>
   <div class="homeListMain">
     <div class = "score">
-      <div v-for="(item, index) in scoreList" :key="index" class="score-list">
-        <span>分数{{index+1}}：{{ item.score }}</span>
-        <div label="内容" prop="info" style="white-space: pre-wrap">
-          <p v-if="expandComments[index]">{{ item.content.split('\n').slice(0, 2).join('\n') }}</p>
-          <p v-else>{{ item.content }}</p>
-          <p class="toggle" v-show="expandComments[index]" @click="toggleExpand(index)">展开</p>
-          <p class="toggle" v-show="!expandComments[index]" @click="toggleExpand(index)">收起</p>
-        </div>
-      </div>
+      <el-table
+          :data="scoreList"
+          style="width: 100%"
+      >
+        <el-table-column prop="score" label="学生评分" width="180" />
+        <el-table-column prop="content" label="评语" width="500"/>
+      </el-table>
       <span>我的分数：{{score}}</span>
       <div class="appeal">
         <div style="width: 500px;margin-top: 30px" label="内容" prop="info">
@@ -36,7 +34,7 @@ const props = defineProps(["homeworkID"]);
 const score= history.state.score;
 const contentID = history.state.contentID;
 const info = ref();
-const expandComments = reactive({});
+// const expandComments = reactive({});
 
 const myChart = ref({});
 const myChartStyle = ref({ margin: "50px 20px 50px auto", width: "50%", height: "400px" }); // Adjusted margin
@@ -141,10 +139,10 @@ const fetchData = () => {
           console.log(res2)
           Object.assign(scoreList, res2.data.data);
 
-          // 初始化 expandComments
-          scoreList.forEach((item, index) => {
-            expandComments[index] = item.content.split('\n').length > 2;
-          });
+          //  初始化 expandComments
+          // scoreList.forEach((item, index) => {
+          //   expandComments[index] = item.content.split('\n').length > 2;
+          // });
         }else{
           window.alert("获取信息失败:" + res2.data.msg);
         }
@@ -155,9 +153,9 @@ const fetchData = () => {
   });
 };
 
-const toggleExpand = (index) => {
-  expandComments[index] = !expandComments[index];
-};
+// const toggleExpand = (index) => {
+//   expandComments[index] = !expandComments[index];
+// };
 
 
 onMounted(() => {
@@ -186,14 +184,8 @@ onMounted(() => {
   text-align: left;
 }
 
-.score-list{
-  margin-top: 80px;
-  font-size: 15px;
-  display: flex;
-  justify-content: start;
-  text-align: left;
-  flex-direction: column;
-  width: 500px;
+.score .el-table{
+  margin-top: 50px;
 }
 
 .toggle{
