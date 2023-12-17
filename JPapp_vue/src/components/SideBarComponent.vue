@@ -14,21 +14,16 @@
         </el-menu-item>
         <el-menu-item index="/viewCourse" :route="{ name: 'ViewCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>课程
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/course.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;课程
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/ShowGrade" :route="{ name: 'ShowGrade' }">
           <template #title>
-            <div>
-              <span>分数</span>
-            </div>
-          </template>
-        </el-menu-item>
-        <el-menu-item>
-          <template #title>
-            <div>
-              <span>其他</span>
-            </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/grade.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;成绩分析
           </template>
         </el-menu-item>
       </el-menu>
@@ -50,7 +45,9 @@
         </el-menu-item>
         <el-menu-item index="/ViewMyCourse" :route="{ name: 'ViewMyCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>已授课程
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/course.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;已授课程
           </template>
         </el-menu-item>
         <el-menu-item  index="/MessagePage" :route="{ name: 'MessagePage' }">

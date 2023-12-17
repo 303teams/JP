@@ -45,7 +45,7 @@ public class ChartServiceImpl implements ChartService {
         List<Homework> homeworkList;
         List<Map<String,Object>> scores;
         try{
-//            获取学生课程列表（返回信息包括每项课程的课程序号，课程名，课程成绩）
+//           获取学生课程列表（返回信息包括每项课程的课程序号，课程名，课程成绩）
             List<Map<String,Object>> courseList = scDao.findCourseInfoBySno(id);
             for(Map course:courseList){
 //                根据课程序号获得某课程的作业ID列表
@@ -56,6 +56,7 @@ public class ChartServiceImpl implements ChartService {
                     if(homework.getScoreDdl().getTime() < new Timestamp(System.currentTimeMillis()).getTime()){
                         //根据作业ID获得某项作业全班的得分情况
                         scores = contentDao.findCTscoreByHId(homework.getHomeworkID());
+                        System.out.println(scores);
 //                    获得本学生排名数据
                         ranks.add(getRank(scores,id));
                     }
@@ -65,6 +66,7 @@ public class ChartServiceImpl implements ChartService {
 //                将一个课程的数据加入之返回体中
                 data.add(course);
             }
+            System.out.println(data);
             return RspObject.success("学生成绩查询成功！",data);
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());

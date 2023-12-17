@@ -54,12 +54,10 @@
 <script setup>
 
 import {defineProps, onMounted, reactive, ref} from "vue";
-import axios from "axios";
 import http from "@/api/http";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 
-const token = localStorage.getItem('token');
 const props = defineProps(['homeworkID','cno']);
 const router = useRouter();
 const SubmitHomeworkRef = ref();
@@ -115,17 +113,7 @@ const submitHomework = () => {
       }
       formData.set('cno', props.cno)
       formData.set('homeworkID', props.homeworkID)
-      axios
-          .post(
-              'http://localhost:8081/content/uploadCT',
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  'token': token,
-                },
-              }
-          )
+      http.submitHomework(formData)
           .then((res) => {
             if (res.data.code === 200) {
               console.log(res)
