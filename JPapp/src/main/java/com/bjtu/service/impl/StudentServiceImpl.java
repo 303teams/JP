@@ -36,6 +36,9 @@ public class StudentServiceImpl implements StudentService  {
     @Autowired
     ContentDao contentDao;
 
+    @Autowired
+    ScDao scDao;
+
     @Override
     public RspObject<User> login(String id, String password) {
 
@@ -271,4 +274,5 @@ public class StudentServiceImpl implements StudentService  {
             throw new ServiceException(500,e.getMessage());
         }
     }
+
 }

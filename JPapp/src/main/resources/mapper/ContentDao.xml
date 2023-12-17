@@ -100,4 +100,22 @@
         WHERE contentID = #{contentID}
     </select>
 
+    <select id="getRankingByCT" resultType="java.util.Map">
+
+    </select>
+
+    <select id="findCTscoreByHId" resultType="java.util.Map">
+        SELECT
+            sc.sno AS sno,
+            COALESCE(content.score, 0) AS score
+        FROM
+            sc
+                JOIN
+            homework ON sc.cno = homework.cno
+                LEFT JOIN
+            content ON homework.homeworkID = content.homeworkID AND sc.sno = content.sno
+        WHERE
+            homework.homeworkID = #{homeworkID};
+    </select>
+
 </mapper>

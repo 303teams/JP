@@ -51,10 +51,11 @@
                  JOIN teacher ON homework.tno = teacher.id
                  JOIN course ON homework.cno = course.cno
                  LEFT JOIN content ON homework.homeworkID = content.homeworkID
-            AND content.cno = course.cno
-            AND content.sno = student.id
-        WHERE student.id = #{id} and course.cno = #{cno}
+--             AND content.cno = course.cno
+--             AND content.sno = student.id
+        WHERE student.id = #{id} and sc.cno = #{cno}
     </select>
+
     <select id="findHWsbyCno" resultType="com.bjtu.pojo.Homework">
         SELECT
             H.homeworkID,H.name,H.submitDdl,H.scoreDdl,H.fileName,H.Afilename,
@@ -78,6 +79,13 @@
         SELECT homeworkID,submitDdl,scoreDdl
         FROM homework
         WHERE homework.homeworkID = #{id}
+    </select>
+
+    <select id="findHWInfoByCno" resultType="com.bjtu.pojo.Homework">
+        SELECT homeworkID,scoreDdl
+        FROM homework
+        WHERE cno = #{cno}
+        ORDER BY homeworkID ASC
     </select>
 
     <insert id="insert" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkID">

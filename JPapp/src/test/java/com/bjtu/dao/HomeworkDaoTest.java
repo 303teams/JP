@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class HomeworkDaoTest {
@@ -36,5 +38,10 @@ class HomeworkDaoTest {
     @Test
     void findSimpleAll() {
         System.out.println(homeworkDao.findSimpleAll());
+    }
+
+    @Test
+    void findHWInfoByCno() {
+        System.out.println(homeworkDao.findHWInfoByCno("1001"));
     }
 }
