@@ -1,7 +1,9 @@
 package com.bjtu.controller;
 
 import com.bjtu.pojo.RspObject;
+import com.bjtu.pojo.User;
 import com.bjtu.service.ChartService;
+import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +26,9 @@ public class ChartController {
     }
 
     @PostMapping("/getAllRanking")
-    public RspObject<List<Map<String, Object>>> getAllRanking(String id){
-        return chartService.getAllRanking(id);
+    public RspObject<List<Map<String, Object>>> getAllRanking(){
+        User user = TokenUtils.getCurrentUser();
+        return chartService.getAllRanking(user.getId());
     }
 
 

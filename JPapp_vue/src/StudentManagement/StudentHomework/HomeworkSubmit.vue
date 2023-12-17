@@ -115,17 +115,7 @@ const submitHomework = () => {
       }
       formData.set('cno', props.cno)
       formData.set('homeworkID', props.homeworkID)
-      axios
-          .post(
-              'http://localhost:8081/content/uploadCT',
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  'token': token,
-                },
-              }
-          )
+      http.submitHomework(formData)
           .then((res) => {
             if (res.data.code === 200) {
               console.log(res)

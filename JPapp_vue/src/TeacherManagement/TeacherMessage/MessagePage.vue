@@ -114,17 +114,7 @@ const handleCurrentChange = (newPage) => {
 };
 
 const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/findAppeal',
-          null,
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      ).then((res) => {
+  http.getAppealList().then((res) => {
     if (res.data.code === 200) {
       tableData.value = res.data.data;
       console.log(res)

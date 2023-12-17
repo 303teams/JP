@@ -27,12 +27,11 @@
 
 <script setup>
 import { ref, onMounted,defineProps } from 'vue';
-import axios from 'axios';
- import {useRouter} from "vue-router";
+import {useRouter} from "vue-router";
+import http from "@/api/http";
 
 
 const tableData = ref( []);  //储存后端传来的数据
-const token = localStorage.getItem('token');
 const props = defineProps(['homeworkID', 'contentID']);
 const router = useRouter();
 
@@ -42,20 +41,10 @@ const MutualEvaluate = (homeworkID,row) =>{
 
 const fetchData = () => {
   if(props.contentID !== null){
-    axios
-        .post(
-            'http://localhost:8081/student/findCTsByCID',
-            {
-              contentID: props.contentID,
-            },
-
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token,
-              },
-            }
-        )
+    const data = {
+      contentID: props.contentID,
+    };
+    http.getMutualHomeworkList(data)
         .then(res => {
           if (res.data.code === 200) {
             if (res.data.data !== null) {
