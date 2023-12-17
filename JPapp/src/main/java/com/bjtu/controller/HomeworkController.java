@@ -36,16 +36,13 @@ public class HomeworkController {
     HomeworkService homeworkService;
 
 //    学生/老师 下载 作业
-    @AuthAccess
     @PostMapping("/downloadHW")
     public ResponseEntity<byte[]> downloadHW(Integer homeworkId) throws UnsupportedEncodingException {
-        System.out.println("hh"+homeworkId);
 
         Homework homework = homeworkService.findHWById(homeworkId);
 
         byte[] content = homework.getContent();
         String fileName = homework.getFileName();
-        System.out.println(fileName);
         String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
         HttpHeaders headers = new HttpHeaders();
@@ -59,9 +56,8 @@ public class HomeworkController {
 
 
 //    老师上传作业
-    @AuthAccess
     @PostMapping("/uploadHW")
-    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName) throws IOException, ParseException {
+    public RspObject<Object> uploadHW(@RequestParam("file") MultipartFile file, @RequestParam String cno,String scoreDdl,String submitDdl,String HWName,String info) throws IOException, ParseException {
         Homework homework = new Homework();
         String name = file.getOriginalFilename();
 
@@ -74,21 +70,19 @@ public class HomeworkController {
                 .setCno(cno)
                 .setSubmitDdl(new Timestamp(dateFormat.parse(submitDdl).getTime()))
                 .setScoreDdl(new Timestamp(dateFormat.parse(scoreDdl).getTime()))
-                .setName(HWName);
+                .setName(HWName)
+                .setInfo(info);
         homeworkService.addHomework(homework);
         return RspObject.success("上传成功，当前thId：" , homework);
     }
 
     //    教师上传正确答案
-    @AuthAccess
     @PostMapping("/setAnswer")
     public RspObject<Boolean> setAnswer(@RequestParam("file") MultipartFile file,Integer homeworkID) throws IOException {
         String name = file.getOriginalFilename();
-//        System.out.println("name"+name);
         return homeworkService.setAnswer(homeworkID,file.getBytes(),name);
     }
 
-    @AuthAccess
     @PostMapping("/downloadAns")
     public ResponseEntity<byte[]> downloadAns(@RequestParam Integer homeworkID) throws UnsupportedEncodingException {
         Homework homework = homeworkService.findHWById(homeworkID);

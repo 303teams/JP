@@ -2,11 +2,10 @@
   <div class="homeListMain">
     <div class="base_title">
       <p class="title">互评任务</p>
-      <p>为保证成绩公平、公正，在提交作业后请至少为6份 作业进行评分；不评或者少评都会直接影响作业成绩。<br>
-        为确保大家的作业都能够被评到，互评列表采取依次解锁的形式；在评完第一份后下一份作业自动解锁。</p>
+      <p>为保证成绩公平、公正，在提交作业后请为6份 作业进行评分；不评或者少评都会直接影响作业成绩。</p>
     </div>
     <div class="main">
-      <el-table :data="tableData" border stripe style="width: 500px">
+      <el-table v-if="props.contentID" :data="tableData" border stripe style="width: 500px">
         <el-table-column prop="date" label="作业列表" width="300px">
           <template v-slot="scope">
           <span>student{{ scope.$index+1 }}</span>
@@ -14,11 +13,13 @@
         </el-table-column>
         <el-table-column label="你的评分" width="200px">
           <template v-slot="scope">
-          <span v-if="scope.row.score === null">{{ scope.row.score }}</span>
+          <span v-if="scope.row.score !== null">{{ scope.row.score }}</span>
           <el-button v-else type="text" style="color: #3796EC;" @click="MutualEvaluate(props.homeworkID,scope.row)">前往互评</el-button>
           </template>
         </el-table-column>
       </el-table>
+
+      <span style="font-size: 25px" v-else>您未提交作业，无法参与互评!!!</span>
     </div>
 
   </div>
@@ -40,35 +41,37 @@ const MutualEvaluate = (homeworkID,row) =>{
 }
 
 const fetchData = () => {
-  console.log(props.contentID);
-  axios
-      .post(
-          'http://localhost:8081/student/findCTsByCID',
-          {
-            contentID: props.contentID,
-          },
-
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
+  if(props.contentID !== null){
+    axios
+        .post(
+            'http://localhost:8081/student/findCTsByCID',
+            {
+              contentID: props.contentID,
             },
+
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'token': token,
+              },
+            }
+        )
+        .then(res => {
+          if (res.data.code === 200) {
+            if (res.data.data !== null) {
+              tableData.value = res.data.data;
+              console.log(res);
+            }
+          }else {
+            console.log(res)
           }
-      )
-      .then(res => {
-        if (res.data.code === 200) {
-          if (res.data.data !== null) {
-            tableData.value = res.data.data;
-            console.log(res);
-          }
-        }else {
-          console.log(res)
-        }
-      })
-    .catch((err) => {
-        console.error("发生未知错误！");
-        console.log(err);
-      });
+        })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }
+
 };
 
 

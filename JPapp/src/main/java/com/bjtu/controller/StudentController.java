@@ -7,6 +7,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.scanner.ScannerImpl;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -46,44 +47,26 @@ public class StudentController {
     }
 
     //    返回互评作业列表
-    @PostMapping("findCTsByCID")
+    @PostMapping("/findCTsByCID")
     public RspObject<List<Content>> findCTsByCID(Integer contentID) {
-//        System.out.println("in1"+contentID);
-
         return studentService.findCTsByCID(contentID);
     }
 
     //学生打分
-    @PostMapping("score")
-    public RspObject<Boolean> score(Integer contentID,Double score,String content) {
-        User user = TokenUtils.getCurrentUser();
-        Score s= new Score();
-        s.setSno(user.getId());
-        s.setContentID(contentID);
-        s.setScore(score);
-        s.setContent(content);
-
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
-
-        s.setTime(currentTime);
-        return studentService.insertScore(s);
+    @PostMapping("/score")
+    public RspObject<Boolean> score(Integer contentID,Integer score,String content) {
+        return studentService.score(contentID,score,content);
     }
 
     //发送申诉请求
-    @PostMapping("sendAppeal")
+    @PostMapping("/sendAppeal")
     public RspObject<Boolean> sendAppeal(Integer contentID, String appealContent) {
-//        System.out.println("in2");
-//        System.out.println(contentID+" "+appealContent);
-        Appeal appeal = new Appeal();
-        appeal.setContentID(contentID);
-        appeal.setAppealContent(appealContent);
-        appeal.setStatus(0);
-
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
-
-        appeal.setTime(currentTime);
-        return studentService.insertAppeal(appeal);
+        return studentService.handleAppeal(contentID, appealContent);
     }
+
+    @PostMapping("/findSCByCID")
+    public RspObject<List<Score>> findSCByCID(Integer contentID){
+        return studentService.findSCByCID(contentID);
+    }
+
 }

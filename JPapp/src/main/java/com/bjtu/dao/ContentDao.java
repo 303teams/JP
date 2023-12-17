@@ -14,7 +14,12 @@ public interface ContentDao {
 
     void insert(Content content);
 
+//    根据作业ID返回所有提交的作业（教师端）
     public List<Content> findCTByHId(Integer homeworkID);
+
+//    根据作业ID返回所有提交的作业的成绩（未提交按照0分处理）（学生端）
+    @MapKey("sno")
+    public List<Map<String,Object>> findCTscoreByHId(Integer homeworkID);
 
     public void setCTScore(Integer contentID,Integer score);
 
@@ -25,4 +30,16 @@ public interface ContentDao {
     public Content findCTSByCID(Integer contentID);
 
     public Map<String,Object> getScoreDistribution(Integer home);
+
+    public void deliverTask(Integer homeworkID);
+
+    public void calculateAllScore(Integer homeworkID);
+
+    public Integer findHIDByCID(Integer contentID);
+
+    public void updateScore(Integer contentID);
+
+    @MapKey("courseID")
+    public Map<String,Map<String,Object>> getRankingByCT(Integer contentID,String sno);
+
 }

@@ -30,9 +30,12 @@ public interface StudentService {
 
     RspObject<List<Content>> findCTsByCID(Integer contentID);
 
-    RspObject<Boolean> setScore(Integer contentID, Integer score, String sno);
-    public RspObject<Boolean> insertScore(Score score);
+//    RspObject<Boolean> setScore(Integer contentID, Integer score, String sno);
 
-    public RspObject<Boolean> insertAppeal(Appeal appeal);
+    public RspObject<Boolean> score(Integer contentID,Integer score,String content);
+
+    public RspObject<Boolean> handleAppeal(Integer contentID, String appealContent);
+
+    public RspObject<List<Score>> findSCByCID(Integer contentID);
 
 }

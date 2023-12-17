@@ -41,7 +41,7 @@
         <el-table-column label="作业成绩" width="120px" align="center">
           <template v-slot="scope">
           <el-tooltip v-if="scope.row.score !== null" class="item" effect="dark" content="查看详情" placement="top">
-          <span @click="ClickGrade(scope.row)" style="cursor: pointer; color:dodgerblue">
+          <span @click="handleCheck(cno,scope.row)" style="cursor: pointer; color:dodgerblue">
             {{ scope.row.score }}
             <el-icon><Search /></el-icon>
           </span>
@@ -100,21 +100,14 @@ const handleCheck = (cno,row) => {
       name:row.name,
       submitDdl:row.submitDdl,
       scoreDdl:row.scoreDdl,
-      contentID:row.contentID
+      contentID:row.contentID,
+      info:row.info,
+      score:row.score
     }
   });
 };
 
 
-const ClickGrade = (row) => {
-  router.push({
-    path:`/studentHome/GradeDetail/${row.homeworkID}`,
-    state:{
-      contentID:row.contentID,
-      score:row.score
-    }
-  })
-};
 
 const fetchData = () => {
   const data = {
@@ -179,7 +172,7 @@ onMounted(() => {
 .base_title {
   position: absolute;
   top: 0px;
-  left: 120px;
+  left: 80px;
 }
 
 .title {

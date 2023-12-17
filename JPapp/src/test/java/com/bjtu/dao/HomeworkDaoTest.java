@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class HomeworkDaoTest {
@@ -17,16 +19,9 @@ class HomeworkDaoTest {
 
     @Test
     void insert() {
-
         Homework homework = new Homework();
-
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
-
-
-        homework.setSubmitDdl(currentTime);
         homeworkDao.insert(homework);
-//        System.out.println(homework);
+        System.out.println(homework.getHomeworkID());
     }
 
 
@@ -38,5 +33,15 @@ class HomeworkDaoTest {
     @Test
     void findHWbyCno() {
         System.out.println(homeworkDao.findHWbyCno("21301001","1001"));
+    }
+
+    @Test
+    void findSimpleAll() {
+        System.out.println(homeworkDao.findSimpleAll());
+    }
+
+    @Test
+    void findHWInfoByCno() {
+        System.out.println(homeworkDao.findHWInfoByCno("1001"));
     }
 }

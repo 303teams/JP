@@ -1,6 +1,7 @@
 package com.bjtu.dao;
 
 import com.bjtu.pojo.*;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,11 +14,11 @@ public interface AppealDao {
 
     public List<Map<String, Object>> findAppeal(String id);
 
-    public List<Map<String, Object>> findAppealByCno(String cno);
+    Appeal findAPByID(Integer contentID);
 
+    public void setAP(Integer appealID, Integer num);
 
-    Appeal findAPByID(int contentID);
+    public Map<String,Object> findAPByAID(Integer appealID);
 
-
-    public void setAP(@Param("contentID") int contentID, @Param("num") int num);
+    public void deleteAPByAID(Integer appealID);
 }

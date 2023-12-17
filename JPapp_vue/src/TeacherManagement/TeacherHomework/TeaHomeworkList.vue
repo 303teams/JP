@@ -55,11 +55,11 @@
           <el-upload
               v-if="scope.row.afilename === null"
               class="upload-demo"
-              action="http://localhost:8081/homework/setAnswer"
+              action="/homework/setAnswer"
               :http-request="(params) => uploadAnswer(params, scope.row)"
               :before-upload="beforeUpload"
               :on-success="successHandle"
-              show-file-list="false"
+              :show-file-list="false"
               limit="1"
           >
             <el-button type="primary">上传答案</el-button>
@@ -70,6 +70,20 @@
             </template>
           </el-upload>
           <span v-else>已上传</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="right">
+          <template #default="scope">
+          <el-icon
+              size="40px"
+              @mouseenter="isHovered = true"
+              @mouseleave="isHovered = false"
+              @click="handleDelete(scope.$index, scope.row)"
+              style="cursor: pointer;color: rgba(87,86,86,0.55)"
+          >
+            <Delete v-if="!isHovered" />
+            <DeleteFilled v-else />
+          </el-icon>
           </template>
         </el-table-column>
       </el-table>
@@ -156,10 +170,10 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import axios from 'axios';
-import {ElConfigProvider, ElMessage} from 'element-plus';
+import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRoute, useRouter} from "vue-router";
+import http from "@/api/http";
 
 const loading = ref(true);
 const currentPage = ref(1); // 从第一页开始
@@ -168,11 +182,11 @@ const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
 const dialogTableVisible = ref(false);
-const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const HomeworkFormRef =ref();
 const router = useRouter();
 const route =useRoute();
+const isHovered = ref(false);
 const courseName = ref('');
 const homeworkData = reactive({
   name: '',
@@ -220,26 +234,16 @@ const disabledScoreDate = (time) => {
   }else{
     return time.getTime() < new Date(homeworkData.submitDdl).getTime();
   }
-
 };
 
 
 
 const fetchData = () => {
   return new Promise((resolve, reject) => {
-    axios
-        .post(
-            'http://localhost:8081/teacher/findHWbyCno',
-            {
-              cno: props.cno,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token,
-              },
-            }
-        )
+    const data1={
+      cno: props.cno,
+    }
+    http.getHomeworkList(data1)
         .then(res1 => {
           if (res1.data.code === 200) {
             // courseName.value = res1.data.data[0].courseName;
@@ -250,20 +254,11 @@ const fetchData = () => {
 
               // 使用promise实现多个接口的调用
               const promises = tableData.data.map(item => {
-                return axios.post(
-                    'http://localhost:8081/homework/downloadHW',
-                    null,
-                    {
-                      params: {
-                        homeworkId: item.homeworkID,
-                      },
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'token': token,
-                      },
-                      responseType: 'blob',
-                    }
-                ).then(res2 => {
+                const data2={
+                  homeworkId: item.homeworkID,
+                }
+                return http.downloadHomework(data2)
+                    .then(res2 => {
                   console.log(res2)
                   const blob = new Blob([res2.data], {type: 'application/octet-stream'});
                   const blobUrl = URL.createObjectURL(blob);
@@ -303,7 +298,13 @@ const updateFilteredData = () => {
 };
 
 const handleClick = (row) => {
-  router.push(`/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.homeworkID}`);
+  router.push({
+    path: `/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.homeworkID}`,
+    state: {
+      submitDdl:row.submitDdl,
+      scoreDdl:row.scoreDdl,
+    }
+  });
 };
 
 const uploadHomework = () => {
@@ -350,20 +351,11 @@ const assignHomework = () => {
     formData.set('submitDdl', homeworkData.submitDdl);
       if (valid) {
         console.log(formData.get('scoreDdl'))
-        axios
-            .post(
-                'http://localhost:8081/homework/uploadHW',
-                formData,
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'token': token,
-                  },
-                }
-            )
+        http.assignHomework(formData)
             .then((res) => {
               if (res.data.code === 200) {
                 console.log(res)
+                ElMessage.success("作业发布成功");
                 resetFormData();
                 fetchData();
               } else {
@@ -390,21 +382,56 @@ const uploadAnswer = (params,row) =>{
 
   form.set('file', params.file);
   form.set('homeworkID', row.homeworkID)
-  return axios({
-    url: 'http://localhost:8081/homework/setAnswer',
-    method: 'post',
-    data: form,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      'token': token,
+  console.log(row.homeworkID)
+  // 返回一个 Promise 对象，用于处理上传成功或失败的情况
+  return new Promise((resolve, reject) => {
+    // 发送文件上传请求
+    http.uploadAnswer(form)
+        .then(res => {
+          // 处理上传成功的逻辑
+          console.log('上传成功', res);
+          resolve(res);  // 将成功的响应传递给 Promise
+        })
+        .catch(error => {
+          // 处理上传失败的逻辑
+          console.error('上传失败', error);
+          reject(error);  // 将错误信息传递给 Promise
+        });
+  });
+};
+
+const handleDelete = (index, row) => {
+  // 在这里可以调用 ElMessageBox 弹出确认框
+  ElMessageBox.confirm('确定要删除这项作业吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    const data = {
+      homeworkID: row.homeworkID,
     }
-  })
+    http.deleteHomework(data)
+        .then((res) => {
+          if (res.data.code === 200) {
+            console.log(res)
+            tableData.data.splice(index, 1);
+            updateFilteredData();
+            ElMessage.success('删除成功');
+          } else {
+            window.alert("删除失败:" + res.data.msg);
+          }
+        })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }).catch(() => {
+  });
 };
 
 const successHandle = () => {
   ElMessage.success('上传成功');
   fetchData();
-  console.log(form.homeworkID)
 };
 
 const resetFormData = () => {
@@ -447,8 +474,8 @@ const Back = () => {
 
 .base_title {
   position: absolute;
-  top: -40px;
-  left: 170px;
+  top: -20px;
+  left: 120px;
 }
 
 .title {
@@ -473,7 +500,7 @@ const Back = () => {
 .search-container {
   display: flex;
   width: auto;
-  margin-top: 80px;
+  margin-top: 100px;
   margin-bottom: 10px;
 }
 
@@ -490,8 +517,8 @@ const Back = () => {
 .upload-button {
   position: absolute;
   top: 0;
-  right: 170px;
-  margin-top: 80px;
+  right: 120px;
+  margin-top: 100px;
   margin-bottom: 10px;
 }
 
@@ -505,7 +532,7 @@ const Back = () => {
 }
 
 .HomeworkList{
-  width: 100vh;
+  width: 100%;
 }
 
 </style>

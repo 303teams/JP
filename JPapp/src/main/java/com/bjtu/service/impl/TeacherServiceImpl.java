@@ -4,11 +4,14 @@ import com.bjtu.dao.*;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.TeacherService;
+import com.bjtu.task.ScheduledTask;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +31,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     ContentDao contentDao;
+
+    @Autowired
+    ScoreDao scoreDao;
 
     @Override
     public RspObject<User> login(String id, String password) {
@@ -87,10 +93,6 @@ public class TeacherServiceImpl implements TeacherService {
         }else if(!teacher.getPassword().equals(oldPassword)){
             throw new ServiceException(500,"原密码错误！");
         }else{
-//            teacherDao.updatePassword(teacher.getId(),newPassword);
-//            teacherDao.deleteByNum(teacher.getId());
-//            teacher.setPassword(newPassword);
-//            teacherDao.insert(teacher);
             teacher.setPassword(newPassword);
             teacherDao.updatePassword(teacher);
             return RspObject.success("密码修改成功！");
@@ -201,14 +203,50 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public  Appeal findAPByID(Integer contentID){
+    public  Appeal findAPByID(Integer appealID){
 
-        return appealDao.findAPByID(contentID);
+        return appealDao.findAPByID(appealID);
     }
 
     @Override
-    public RspObject<Boolean> setAP(Integer contentID,int num){
-        appealDao.setAP(contentID,num);
+    public RspObject<Boolean> setAP(Integer appealID,Integer num){
+        appealDao.setAP(appealID,num);
         return RspObject.success("修改成功！",Boolean.TRUE);
     }
+
+    @Override
+    public RspObject<Map<String, Object>> findAPByAID(Integer appealID) {
+        try{
+            return RspObject.success("查询成功！",appealDao.findAPByAID(appealID));
+        }catch (Exception e){
+            throw new ServiceException(500,"查询失败!");
+        }
+    }
+
+    @Override
+    public RspObject<Boolean> deleteAPByAID(Integer appealID) {
+        try{
+            appealDao.deleteAPByAID(appealID);
+            return RspObject.success("删除成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
+    @Override
+    public RspObject<Boolean> setCTWeightedScore(Integer contentId, Integer score) {
+//        学生打分权重40%，老师打分权重60%
+        List<Score> scores = scoreDao.findSCByCID(contentId);
+        Integer sum = 0;
+        for (Score sc : scores) {
+            sum += sc.getScore();
+        }
+        try{
+            contentDao.setCTScore(contentId, (int) (0.6*score+0.4*sum/scores.size()));
+            return RspObject.success("修改成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
 }

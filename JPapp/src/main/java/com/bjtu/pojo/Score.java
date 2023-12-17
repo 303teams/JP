@@ -12,13 +12,17 @@ import java.util.Date;
 
 public class Score {
 
+    private Integer scoreID;
     private String sno;
     private Integer contentID;
-    private Double score;
+    private Integer score;
 
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Timestamp time;
 
     private String content;
+
+    private Integer homeworkID;
+    private Integer valid;
 }

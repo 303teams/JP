@@ -1,24 +1,44 @@
 <template>
   <div class="my-message-content">
-    <div style="width: 1150px" v-if="visibleMessages.length">
-      <div class="message-main" style="width: 1150px">
+    <div style="width: 1150px" v-if="tableData">
+      <div class="message-main">
         <div
             class="message-item"
             v-for="(item) in visibleMessages"
-            :key="item.contentID"
-            :class="{ 'active': item.status === 0 }"
+            :key="item.appealID"
             @click="goRead(item)"
         >
           <div class="item-content">
             <div class="appeal-info">
-              <p class="title">课程：{{ item.cname }}  作业名：{{item.hname}}申诉请求</p>
+              <p class="title" :class="{ 'active': item.status === 0 }">
+                课程：{{ item.cname }}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                作业名：{{item.hname}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                申诉请求
+                <span style="color:#3bb43b" v-if="item.status === 2">(已处理)</span>
+              </p>
               <div class="content">
-                <div class="item-dot" v-if="item.status === 0"/>
-                <p style="margin-left: 12px">{{item.sname}}</p>
-                <p style="margin-left: 20px">{{ item.appealContent }}</p>
+                <div class="item-dot" v-if="item.status === 0"></div>
+                <div class="text-content">
+                  <p class="sname" style="margin-left: 12px; white-space: nowrap; color: #3498db">{{item.sname}}：</p>
+                  <p class="appeal-content" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ item.appealContent }}
+                  </p>
+                </div>
               </div>
             </div>
-            <p style="margin-top: 40px">{{ item.time }}</p>
+            <div style="margin-top: 40px;margin-right: 100px">{{ item.time }}</div>
+            <div class="delete-button" @click.stop="deleteMessage(item)">
+              <el-icon
+                  size="40px"
+                  @mouseenter="isHovered = true"
+                  @mouseleave="isHovered = false"
+              >
+                <Delete v-if="!isHovered" />
+                <DeleteFilled v-else />
+              </el-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -43,13 +63,45 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
 import axios from "axios";
+import http from "@/api/http";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {useRouter} from "vue-router";
 
 
 const pageSize = 10;
 const currentPage = ref(1);
 const token = localStorage.getItem('token');
 const tableData = ref([]);  //储存后端传来的数据
+const router = useRouter();
+const isHovered = ref(false);
 
+const deleteMessage = (item) => {
+  // 在这里可以调用 ElMessageBox 弹出确认框
+  ElMessageBox.confirm('确定要删除这条申诉吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    // 用户点击了确定后的逻辑
+    const data = {
+      appealID: item.appealID,
+    }
+    http.deleteAppeal(data).then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success("删除成功");
+        fetchData();
+        console.log(res)
+      } else {
+        ElMessage.error("获取信息失败:" + res.data.msg);
+      }
+    })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }).catch(() => {
+  });
+};
 
 const visibleMessages = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
@@ -91,8 +143,32 @@ onMounted(() => {
 });
 
 const goRead = (item) => {
-  console.log('Read message:', item);
-  // 在这里处理点击消息后的逻辑，例如跳转到消息详情页面等
+  if(item.status === 0){
+    const data = {
+      appealID: item.appealID,
+    }
+    http.ClickAppeal(data).then((res) => {
+      if (res.data.code === 200) {
+        console.log(res)
+      } else {
+        ElMessage.error("获取信息失败:" + res.data.msg);
+      }
+    })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }
+
+  router.push({
+    path: 'MessageDetail',
+    state: {
+      contentID: item.contentID,
+      appealID: item.appealID,
+      sno: item.sno,
+      sname: item.sname,
+    }
+  })
 };
 </script>
 
@@ -123,22 +199,29 @@ const goRead = (item) => {
   width: 7px;
   height: 7px;
   background-color: red;
-  margin-top: 15px;
-  margin-left: -10px;
+  margin-top: 6px;
   border-radius: 50%;
 }
 
 .title{
-  font-size: 17px;
+  font-size: 19px;
   margin-left: 20px;
+
 }
 
-.content{
-  font-size: 12px;
+.content {
   display: flex;
-  justify-content: left;
+  align-items: start;
+}
+
+.text-content{
+  font-size: 14px;
+  display: flex;
+  justify-content: start;
   margin-top: -13px;
   margin-left: 10px;
+  max-width: 1000px;
+
 }
 
 .item-content {
@@ -146,13 +229,14 @@ const goRead = (item) => {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  position: relative;
 }
 
 
 .appeal-info{
   display: flex;
-  justify-content: start;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .pagination {
@@ -161,8 +245,19 @@ const goRead = (item) => {
   justify-content: center;
 }
 
-.full-row {
-  width: 100%;
+
+.delete-button {
+  cursor: pointer;
+  color: rgba(28, 28, 17, 0.24);
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: none;
+}
+
+.item-content:hover .delete-button {
+  display: inline-block;
 }
 </style>
 

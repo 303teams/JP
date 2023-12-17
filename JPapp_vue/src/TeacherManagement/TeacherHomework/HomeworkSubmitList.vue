@@ -17,8 +17,7 @@
         </el-button>
 
         <div style="margin-left: 130px">
-          <el-button @click="modifyContent" size="large" class="upload-button">修改作业内容</el-button>
-          <el-button @click="modifyDdl" size="large" class="upload-button">修改截止时间</el-button>
+          <el-button @click="modifyDdl" size="large" class="modify-ddl-button">修改截止时间</el-button>
         </div>
       </div>
       <el-table :data="filterTableData"
@@ -26,10 +25,10 @@
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="学生学号" width="120px" sortable prop="sno" />
-        <el-table-column label="学生姓名" width="120px" sortable prop="sname" />
-        <el-table-column label="提交时间" width="200px" sortable prop="submitTime" />
-        <el-table-column label="作业提交内容" width="150px">
+        <el-table-column label="学生学号" width="120px" align="center" sortable prop="sno" />
+        <el-table-column label="学生姓名" width="120px" align="center" sortable prop="sname" />
+        <el-table-column label="提交时间" width="200px" align="center" sortable prop="submitTime" />
+        <el-table-column label="作业提交内容" align="center" width="150px">
           <template v-slot="scope">
           <el-link
               v-if="scope.row.contentID !== null"
@@ -42,11 +41,10 @@
           <span v-else>未提交</span>
           </template>
         </el-table-column>
-        <el-table-column label="作业成绩" width="120px" sortable prop="score" />
-        <el-table-column label="操作" width="130px">
+        <el-table-column label="作业成绩" width="120px" align="center" sortable prop="score" />
+        <el-table-column label="操作" align="center" width="140px">
           <template v-slot="scope">
-          <el-button size="large" v-if="scope.row.contentID !== null" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
-          <span v-else>未提交</span>
+          <el-button size="large" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,30 +77,80 @@
         </span>
       </template>
     </el-dialog>
+
+    <el-dialog title="修改截止时间" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyDdlDia" width="30%">
+      <div class="modify-ddl">
+        <p>当前提交截止时间：{{submitDdl}}</p>
+        <el-date-picker
+            v-model="newSubmitDdl"
+            type="datetime"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            format="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="disabledSubmitDate"
+            placeholder="选择日期和时间"/>
+
+        <p>当前互评截止时间：{{scoreDdl }}</p>
+        <el-date-picker
+            v-model="newScoreDdl"
+            type="datetime"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            format="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="disabledScoreDate"
+            placeholder="选择日期和时间"/>
+      </div>
+
+      <template #footer>
+        <span>
+          <el-button @click="modifyDdlDia = false">取 消</el-button>
+          <el-button type="primary" @click="modiDdlSubmit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import axios from 'axios';
-import { ElConfigProvider } from 'element-plus';
+import {ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
  import {useRouter} from "vue-router";
+import http from "@/api/http";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
 const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
-const token = localStorage.getItem('token');
 const props = defineProps(['cno','homeworkID']);
 const router = useRouter();
 const modifyScoreDia = ref(false);
+const modifyDdlDia = ref(false);
 const currentContentID = ref(0);    // 当前作业ID
 const currentScore = ref(0);       // 当前分数
 const newScore = ref(0);           // 新的分数
+let submitDdl = history.state.submitDdl;
+let scoreDdl = history.state.scoreDdl;
+const newSubmitDdl = ref('');
+const newScoreDdl = ref('');
 
+
+// 禁用日期
+const disabledSubmitDate = (time) => {
+  if(newScoreDdl.value === '') {
+    return time.getTime() < new Date() - 8.64e7 || time.getTime() > new Date(scoreDdl).getTime();
+  }else{
+    return time.getTime() > new Date(newScoreDdl.value).getTime() || time.getTime() < new Date() - 8.64e7;
+  }
+};
+
+const disabledScoreDate = (time) => {
+  if(newSubmitDdl.value === ''){
+    return time.getTime() < new Date() - 8.64e7
+  }else{
+    return time.getTime() < new Date(newSubmitDdl.value).getTime();
+  }
+};
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -114,23 +162,13 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
-
   return new Promise((resolve, reject) => {
-    axios
-        .post(
-            'http://localhost:8081/teacher/findCTByHId',
-            {
-              homeworkID: props.homeworkID,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token,
-              },
-            }
-        )
+    const data1={
+      homeworkID: props.homeworkID,
+    }
+    http.getStudentHomeworkList(data1)
         .then(res1 => {
-
+          console.log(res1);
           if (res1.data.code === 200) {
             console.log(props.cno);
             tableData.data = res1.data.data;
@@ -138,29 +176,20 @@ const fetchData = () => {
 
             // 使用promise实现多个接口的调用
             const promises = tableData.data.map(item => {
-              return axios.post(
-                  'http://localhost:8081/content/downloadCT',
-                  null,
-                  {
-                    params: {
-                      contentID: item.contentID,
-                    },
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'token': token,
-                    },
-                    responseType: 'blob',
-                  }
-              ).then(res2 => {
-                console.log(res2)
-                const blob = new Blob([res2.data], {type: 'application/octet-stream'});
-                const blobUrl = URL.createObjectURL(blob);
+              const data2={
+                contentID: item.contentID,
+              }
+              return http.downloadCT(data2)
+                  .then(res2 => {
+                    console.log(res2)
+                    const blob = new Blob([res2.data], {type: 'application/octet-stream'});
+                    const blobUrl = URL.createObjectURL(blob);
 
-                // 给每项作业分配url用来下载
-                item.blobUrl = blobUrl;
-                updateFilteredData(); // 更新过滤后的数据
+                    // 给每项作业分配url用来下载
+                    item.blobUrl = blobUrl;
+                    updateFilteredData(); // 更新过滤后的数据
+                  });
               });
-            });
 
             console.log(tableData.data)
             // 使用Promise.all来执行promises数组里的所有promise
@@ -199,25 +228,17 @@ const modifyScore = (contentId,score) => {
 };
 
 const modiScoreSubmit = () => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/setCTScore',
-          {
-            contentID: currentContentID.value,
-            score: newScore.value,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
+  const data = {
+    contentID: currentContentID.value,
+    score: newScore.value,
+  }
+  http.changeScore(data)
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res)
           modifyScoreDia.value = false;
           fetchData();
+          ElMessage.success("修改成功");
         } else {
           window.alert("修改失败:" + res.data.msg);
         }
@@ -228,6 +249,34 @@ const modiScoreSubmit = () => {
       });
 };
 
+const modifyDdl = () => {
+  modifyDdlDia.value = true;
+};
+
+const modiDdlSubmit = () =>{
+  const data = {
+    homeworkID: props.homeworkID,
+    submitDdl: newSubmitDdl.value,
+    scoreDdl: newScoreDdl.value,
+  }
+  http.changeDeadline(data)
+      .then((res) => {
+        if (res.data.code === 200) {
+          console.log(res)
+          modifyDdlDia.value = false;
+          submitDdl = newSubmitDdl.value;
+          scoreDdl = newScoreDdl.value;
+          fetchData();
+          ElMessage.success("修改成功");
+        } else {
+          window.alert("修改失败:" + res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+}
 
 const clickSearch = () => {
   updateFilteredData();
@@ -239,6 +288,8 @@ const Back = () => {
 
 onMounted(() => {
   fetchData();
+  newSubmitDdl.value = submitDdl;
+  newScoreDdl.value = scoreDdl;
 });
 
 
@@ -261,7 +312,7 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: -40px;
+  top: 0px;
   left: 170px;
 }
 
@@ -281,6 +332,10 @@ onMounted(() => {
   left: 0;
   top: 50%;
   margin-top: -10px;
+}
+
+.main{
+  margin-top: 40px;
 }
 
 .search-container {
@@ -308,14 +363,17 @@ onMounted(() => {
   right: 170px;
 }
 
-.main_page{
-  margin-top: 80px;
+.modify-ddl {
+  text-align: left;
+  margin: 0 50px;
+}
+
+.modify-ddl-button{
+  margin-left: 160px;
 }
 
 .HomeworkList{
   width: 100%;
 }
-
-
 
 </style>

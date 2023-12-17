@@ -40,46 +40,57 @@ public class Utils {
         return String.valueOf(code);
     }
 
-//    验证邮箱是否与账户名匹配
-    public static boolean isMatchEmail(String id,String email){
+    //    验证邮箱是否与账户名匹配
+    public static boolean isMatchEmail(String id, String email) {
         Student student = staticStudentDao.findByNum(id);
         Teacher teacher = staticTeachertDao.findByNum(id);
         Admin admin = staticAdminDao.findByNum(id);
-        if(student != null){
+        if (student != null) {
             return student.getEmail().equals(email);
-        }else if(teacher != null){
+        } else if (teacher != null) {
             return teacher.getEmail().equals(email);
-        }else if(admin != null){
+        } else if (admin != null) {
             return admin.getEmail().equals(email);
-        }else{
-            throw new ServiceException(500,"该用户不存在!");
+        } else {
+            throw new ServiceException(500, "该用户不存在!");
         }
     }
 
-    public static String getUserType(String id){
+    /**
+     *
+     * @param id
+     * @return id对应的用户类型
+     */
+    public static String getUserType(String id) {
         Student student = staticStudentDao.findByNum(id);
         Teacher teacher = staticTeachertDao.findByNum(id);
         Admin admin = staticAdminDao.findByNum(id);
-        if(student != null){
+        if (student != null) {
             return "student";
-        }else if(teacher != null){
+        } else if (teacher != null) {
             return "teacher";
-        }else if(admin != null){
+        } else if (admin != null) {
             return "admin";
-        }else{
-            throw new ServiceException(500,"该用户不存在!");
+        } else {
+            throw new ServiceException(500, "该用户不存在!");
         }
     }
 
-    public static boolean userIsExist(String id){
-        if(staticStudentDao.findByNum(id) != null){
+    /**
+     *
+     * @param id
+     * @return id对应的用户是否存在
+     */
+    public static boolean userIsExist(String id) {
+        if (staticStudentDao.findByNum(id) != null) {
             return true;
-        }else if(staticTeachertDao.findByNum(id) != null){
+        } else if (staticTeachertDao.findByNum(id) != null) {
             return true;
-        }else if(staticAdminDao.findByNum(id) != null){
+        } else if (staticAdminDao.findByNum(id) != null) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
 }

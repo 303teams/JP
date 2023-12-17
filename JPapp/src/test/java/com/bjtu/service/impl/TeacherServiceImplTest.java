@@ -38,4 +38,5 @@ class TeacherServiceImplTest {
     void findCTByHId() {
         System.out.println(teacherService.findCTByHId(1));
     }
+
 }

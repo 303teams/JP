@@ -36,7 +36,13 @@ public interface TeacherService {
     
     Content findCTByID(Integer contentID);
 
-    Appeal findAPByID(Integer contentID);
+    Appeal findAPByID(Integer appealID);
 
-    RspObject<Boolean> setAP(Integer contentID,int num);
+    RspObject<Boolean> setAP(Integer appealID,Integer num);
+
+    RspObject<Map<String,Object>> findAPByAID(Integer appealID);
+
+    RspObject<Boolean> deleteAPByAID(Integer appealID);
+
+    RspObject<Boolean> setCTWeightedScore(Integer contentId,Integer score);
 }

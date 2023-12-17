@@ -32,25 +32,14 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import axios from 'axios';
 import {useRouter} from "vue-router";
+import http from "@/api/http";
 
 const items = ref([]);
-const token = localStorage.getItem('token');
 const router = useRouter();
 
 const fetchData = async () => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/findCourse',
-          null,
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
+  http.getCourseList()
       .then((res) => {
         if (res.data.code === 200) {
           items.value = res.data.data;
