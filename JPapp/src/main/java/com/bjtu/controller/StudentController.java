@@ -41,9 +41,9 @@ public class StudentController {
     //    学生查看自己某课程的作业列表
     @PostMapping("/findCTByCno")
     public RspObject<List<Homework>> findCTByCno(String cno) {
-//        System.out.println(cno);
         User user = TokenUtils.getCurrentUser();
         return studentService.findHWbyCno(user.getId(), cno);
+//        return studentService.findHWbyCno("21301001", cno);
     }
 
     //    返回互评作业列表

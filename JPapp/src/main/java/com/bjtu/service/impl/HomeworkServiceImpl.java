@@ -42,6 +42,8 @@ public class HomeworkServiceImpl implements HomeworkService {
     public RspObject<Boolean> deleteByHId(Integer homeworkID) {
         try{
             homeworkDao.deleteByHId(homeworkID);
+//            更新定时任务
+            scheduledTask.deleteHW(homeworkID);
             return RspObject.success("删除成功",Boolean.TRUE);
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
@@ -62,9 +64,9 @@ public class HomeworkServiceImpl implements HomeworkService {
     public RspObject<Boolean> alterDdlByHID(Integer homeworkID, String submitDdl,String scoreDdl) {
         try{
             homeworkDao.updateScoreDdl(homeworkID,scoreDdl);
-            homeworkDao.updateSubmitDdl(homeworkID,submitDdl);
             scheduledTask.alterScoreDdl(homeworkID,scoreDdl);
             homeworkDao.updateSubmitDdl(homeworkID,submitDdl);
+            scheduledTask.alterSubmitDdl(homeworkID,submitDdl);
             return RspObject.success("修改成功",Boolean.TRUE);
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
