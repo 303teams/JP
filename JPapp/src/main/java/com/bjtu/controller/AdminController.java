@@ -1,6 +1,5 @@
 package com.bjtu.controller;
 
-import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.Course;
 import com.bjtu.pojo.RspObject;
 import com.bjtu.pojo.Student;
