@@ -143,30 +143,30 @@ const newScoreDdl = ref('');
 
 // 禁用日期
 const disabledSubmitDate = (time) => {
-  if(homeworkData.scoreDdl === '') {
-    return time.getTime() <= new Date() - 8.64e7;
+  if(newScoreDdl.value === '') {
+    return time.getTime() < new Date() - 8.64e7 || time.getTime() > new Date(scoreDdl).getTime();
   }else{
-    return time.getTime() >= new Date(homeworkData.scoreDdl).getTime() || time.getTime() < new Date() - 8.64e7;
+    return time.getTime() > new Date(newScoreDdl.value).getTime() || time.getTime() < new Date() - 8.64e7;
   }
 };
 
 const disabledSubmitHours = () => {
-  if(homeworkData.submitDdl !=='') {
-    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+  if(newSubmitDdl.value !=='') {
+    const selectedDate = new Date(newSubmitDdl.value).getTime();
     const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
     const currentDay = dayjs().format('YYYY-MM-DD');
     const currentHour = new Date().getHours();
 
 
-    if(homeworkData.scoreDdl === ''){
+    if(newScoreDdl.value === ''){
       if(selectedDay === currentDay) {
         return Array.from({length: currentHour}, (_, index) => index);
       }else{
         return [];
       }
     }else{
-      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
-      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      const scoreDay = dayjs(new Date(newScoreDdl.value).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(newScoreDdl.value).getHours();
       console.log("scoreDay:"+scoreDay)
       console.log("selectedDay:"+selectedDay)
       if(scoreDay === selectedDay) {
@@ -185,23 +185,23 @@ const disabledSubmitHours = () => {
 };
 
 const disabledSubmitMinutes = (selectedHour) => {
-  if(homeworkData.submitDdl !=='') {
-    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+  if(newSubmitDdl.value !=='') {
+    const selectedDate = new Date(newSubmitDdl.value).getTime();
     const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
     const currentDay = dayjs().format('YYYY-MM-DD');
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
 
-    if(homeworkData.scoreDdl === ''){
+    if(newScoreDdl.value === ''){
       if(selectedDay === currentDay && selectedHour === currentHour) {
         return Array.from({length: currentMinutes}, (_, index) => index);
       }else{
         return [];
       }
     }else{
-      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
-      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
-      const scoreDdlMinutes = new Date(homeworkData.scoreDdl).getMinutes();
+      const scoreDay = dayjs(new Date(newScoreDdl.value).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(newScoreDdl.value).getHours();
+      const scoreDdlMinutes = new Date(newScoreDdl.value).getMinutes();
       if(scoreDay === selectedDay && selectedHour === scoreDdlHours) {
         if(selectedDay === currentDay && selectedHour === currentHour) {
           return Array.from({length: 60}, (_, index) => index < currentMinutes || index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
@@ -219,25 +219,25 @@ const disabledSubmitMinutes = (selectedHour) => {
 };
 
 const disabledSubmitSeconds = (selectedHour,selectedMinute) => {
-  if(homeworkData.submitDdl !=='') {
-    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+  if(newSubmitDdl.value !=='') {
+    const selectedDate = new Date(newSubmitDdl.value).getTime();
     const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
     const currentDay = dayjs().format('YYYY-MM-DD');
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
     const currentSeconds = new Date().getSeconds();
 
-    if(homeworkData.scoreDdl === ''){
+    if(newScoreDdl.value === ''){
       if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
         return Array.from({length: currentSeconds}, (_, index) => index);
       }else{
         return [];
       }
     }else{
-      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
-      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
-      const scoreDdlMinutes = new Date(homeworkData.scoreDdl).getMinutes();
-      const scoreDdlSeconds = new Date(homeworkData.scoreDdl).getSeconds();
+      const scoreDay = dayjs(new Date(newScoreDdl.value).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(newScoreDdl.value).getHours();
+      const scoreDdlMinutes = new Date(newScoreDdl.value).getMinutes();
+      const scoreDdlSeconds = new Date(newScoreDdl.value).getSeconds();
       if(scoreDay === selectedDay && selectedHour === scoreDdlHours && selectedMinute === scoreDdlMinutes) {
         if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
           return Array.from({length: 60}, (_, index) => index < currentSeconds || index > scoreDdlSeconds ? index : null).filter(second => second !== null);
@@ -253,32 +253,30 @@ const disabledSubmitSeconds = (selectedHour,selectedMinute) => {
   }
 };
 
-
 const disabledScoreDate = (time) => {
-  if(homeworkData.submitDdl === ''){
-    return time.getTime() <= new Date() - 8.64e7;
+  if(newSubmitDdl.value === ''){
+    return time.getTime() < new Date() - 8.64e7
   }else{
-    const submitDdlDate = new Date(homeworkData.submitDdl).setHours(0, 0, 0, 0);
-    return time.getTime() < submitDdlDate;
+    return time.getTime() < new Date(newSubmitDdl.value).getTime();
   }
 };
 
 const disabledScoreHours = () => {
-  if(homeworkData.scoreDdl !== ''){
-    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+  if(newScoreDdl.value !== ''){
+    const selectedDate = new Date(newScoreDdl.value).getTime();
     const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
     const currentDay = dayjs().format('YYYY-MM-DD');
     const currentHour = new Date().getHours();
 
-    if(homeworkData.submitDdl === ''){
+    if(newSubmitDdl.value === ''){
       if(selectedDay === currentDay) {
         return Array.from({length: currentHour}, (_, index) => index);
       }else{
         return [];
       }
     }else{
-      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
-      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      const submitDdlDay = dayjs(new Date(newSubmitDdl.value).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(newSubmitDdl.value).getHours();
       if(submitDdlDay === selectedDay) {
         if(selectedDay === currentDay){
           return Array.from({length: 24}, (_, index) => index < submitDdlHours || index < currentHour ? index : null).filter(hour => hour !== null);
@@ -293,23 +291,23 @@ const disabledScoreHours = () => {
 };
 
 const disabledScoreMinutes = (selectedHour) => {
-  if(homeworkData.scoreDdl !== ''){
-    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+  if(newScoreDdl.value !== ''){
+    const selectedDate = new Date(newScoreDdl.value).getTime();
     const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
     const currentDay = dayjs().format('YYYY-MM-DD');
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
 
-    if(homeworkData.submitDdl === ''){
+    if(newSubmitDdl.value === ''){
       if(selectedDay === currentDay && selectedHour === currentHour) {
         return Array.from({length: currentMinutes}, (_, index) => index);
       }else{
         return [];
       }
     }else{
-      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
-      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
-      const submitDdlMinutes = new Date(homeworkData.submitDdl).getMinutes();
+      const submitDdlDay = dayjs(new Date(newSubmitDdl.value).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(newSubmitDdl.value).getHours();
+      const submitDdlMinutes = new Date(newSubmitDdl.value).getMinutes();
       if(submitDdlDay === selectedDay && selectedHour === submitDdlHours) {
         if(selectedDay === currentDay && selectedHour === currentHour) {
           return Array.from({length: 60}, (_, index) => index < submitDdlMinutes || index < currentMinutes ? index : null).filter(minute => minute !== null);
@@ -323,25 +321,25 @@ const disabledScoreMinutes = (selectedHour) => {
   }
 };
 const disabledScoreSeconds = (selectedHour,selectedMinute) => {
-  if(homeworkData.scoreDdl !== ''){
-    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+  if(newScoreDdl.value !== ''){
+    const selectedDate = new Date(newScoreDdl.value).getTime();
     const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
     const currentDay = dayjs().format('YYYY-MM-DD');
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
     const currentSeconds = new Date().getSeconds();
 
-    if(homeworkData.submitDdl === ''){
+    if(newSubmitDdl.value === ''){
       if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
         return Array.from({length: currentSeconds}, (_, index) => index);
       }else{
         return [];
       }
     }else{
-      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
-      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
-      const submitDdlMinutes = new Date(homeworkData.submitDdl).getMinutes();
-      const submitDdlSeconds = new Date(homeworkData.submitDdl).getSeconds();
+      const submitDdlDay = dayjs(new Date(newSubmitDdl.value).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(newSubmitDdl.value).getHours();
+      const submitDdlMinutes = new Date(newSubmitDdl.value).getMinutes();
+      const submitDdlSeconds = new Date(newSubmitDdl.value).getSeconds();
       if(submitDdlDay === selectedDay && selectedHour === submitDdlHours && selectedMinute === submitDdlMinutes) {
         if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
           return Array.from({length: 60}, (_, index) => index < submitDdlSeconds || index < currentSeconds ? index : null).filter(second => second !== null);
@@ -366,35 +364,34 @@ const filterTableData = computed(() =>
 
 const fetchData = () => {
   return new Promise((resolve, reject) => {
-    const data1={
+    const data1 = {
       homeworkID: props.homeworkID,
-    }
+    };
+
     http.getStudentHomeworkList(data1)
         .then(res1 => {
           console.log(res1);
           if (res1.data.code === 200) {
             console.log(props.cno);
             tableData.data = res1.data.data;
-            console.log(res1);
 
             // 使用promise实现多个接口的调用
             const promises = tableData.data.map(item => {
-              const data2={
+              const data2 = {
                 contentID: item.contentID,
-              }
+              };
               return http.downloadCT(data2)
                   .then(res2 => {
-                    console.log(res2)
-                    const blob = new Blob([res2.data], {type: 'application/octet-stream'});
+                    console.log(res2);
+                    const blob = new Blob([res2.data], { type: 'application/octet-stream' });
                     const blobUrl = URL.createObjectURL(blob);
 
                     // 给每项作业分配url用来下载
                     item.blobUrl = blobUrl;
-                    updateFilteredData(); // 更新过滤后的数据
                   });
-              });
+            });
 
-            console.log(tableData.data)
+            console.log(tableData.data);
             // 使用Promise.all来执行promises数组里的所有promise
             return Promise.all(promises);
           } else {
@@ -403,7 +400,19 @@ const fetchData = () => {
           }
         })
         .then(() => {
-          resolve({success: true, message: 'Data fetched successfully'});
+          // 将已提交作业的学生放在列表前面排序
+          tableData.data.sort((a, b) => {
+            if (a.contentID !== null && b.contentID === null) {
+              return -1;
+            } else if (a.contentID === null && b.contentID !== null) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          updateFilteredData(); // 更新过滤后的数据
+          resolve({ success: true, message: 'Data fetched successfully' });
         })
         .catch(error => {
           console.error("发生未知错误！");

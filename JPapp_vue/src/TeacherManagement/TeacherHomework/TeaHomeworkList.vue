@@ -438,6 +438,20 @@ const disabledScoreSeconds = (selectedHour,selectedMinute) => {
     }
   }
 };
+
+const submitDdlDefaultTime = () => {
+  if(homeworkData.submitDdl === '') {
+    return dayjs().add(10, 'minute')
+  }else{
+    const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+    if(submitDdlDay === dayjs().format('YYYY-MM-DD')) {
+      return dayjs().add(10, 'minute')
+    }else{
+      return new Date(2000, 1, 1, 0, 0, 0);
+    }
+  }
+};
+
 const fetchData = () => {
   return new Promise((resolve, reject) => {
     const data1={
@@ -646,7 +660,8 @@ onMounted(() => {
   fetchData();
   loading.value = false;
   courseName.value=route.params.courseName;
-  console.log(route.params.courseName)
+  console.log(route.params.courseName);
+
 });
 
 const Back = () => {

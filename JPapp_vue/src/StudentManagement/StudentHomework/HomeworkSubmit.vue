@@ -44,7 +44,7 @@
       </el-form>
     </div>
     <span class="dialog-footer">
-        <el-button @click="closeDia">取消</el-button>
+        <el-button @click="Back()">返回</el-button>
         <el-button type="primary" @click="submitHomework">确认</el-button>
     </span>
   </div>
@@ -143,9 +143,6 @@ const resetFormData = () => {
   submitHomeworkForm.files = null;
 };
 
-const closeDia= () => {
-  resetFormData();
-};
 
 const Back = () => {
   router.back();
