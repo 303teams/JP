@@ -42,7 +42,7 @@
           <template v-slot="scope">
           <el-tooltip v-if="scope.row.score !== null" class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleCheck(cno,scope.row)" style="cursor: pointer; color:dodgerblue">
-            {{ scope.row.score }}
+            {{ scope.row.submitTime }}
             <el-icon><Search /></el-icon>
           </span>
           </el-tooltip>
