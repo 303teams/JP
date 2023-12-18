@@ -178,7 +178,7 @@ public class StudentServiceImpl implements StudentService  {
             }
             return RspObject.success("查询成功！", contents);
         }catch (Exception e){
-            throw new ServiceException(500,"查询失败！!");
+            throw new ServiceException(500,e.getMessage());
         }
     }
 
@@ -196,25 +196,29 @@ public class StudentServiceImpl implements StudentService  {
 //    学生提交评分结果
     @Override
     public RspObject<Boolean> score(Integer contentID,Integer score,String content) {
-
         User user = TokenUtils.getCurrentUser();
-        Score s= new Score();
-        s.setSno(user.getId());
-        s.setContentID(contentID);
-        s.setScore(score);
-        s.setContent(content);
-        s.setHomeworkID(contentDao.findHIDByCID(contentID));
 
-        long currentTimeMillis = System.currentTimeMillis();
-        Timestamp currentTime = new Timestamp(currentTimeMillis);
+        if(scoreDao.findSCByCIDAndSno(contentID,user.getId()) != null){
+            throw new ServiceException(500,"你已评分！");
+        }else {
+            Score s= new Score();
+            s.setSno(user.getId());
+            s.setContentID(contentID);
+            s.setScore(score);
+            s.setContent(content);
+            s.setHomeworkID(contentDao.findHIDByCID(contentID));
 
-        s.setTime(currentTime);
+            long currentTimeMillis = System.currentTimeMillis();
+            Timestamp currentTime = new Timestamp(currentTimeMillis);
 
-        try {
-            scoreDao.insertScore(s);
-            return RspObject.success("评分成功！",Boolean.TRUE);
-        }catch (Exception e){
-            throw new ServiceException(500,e.getMessage());
+            s.setTime(currentTime);
+
+            try {
+                scoreDao.insertScore(s);
+                return RspObject.success("评分成功！",Boolean.TRUE);
+            }catch (Exception e){
+                throw new ServiceException(500,e.getMessage());
+            }
         }
 
     }
