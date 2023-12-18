@@ -32,7 +32,7 @@
 
         <div class="custom-text-with-checkbox">
           <p class="custom-text">已完成互评</p>
-          <input type="checkbox" id="checkbox1" name="checkbox1" v-model="ifSubmit" disabled>
+          <input type="checkbox" id="checkbox1" name="checkbox1" v-model="isMutual" disabled>
         </div>
       </div>
 
@@ -46,9 +46,9 @@
       </div>
     </div>
 
-    <homework-submit :homeworkID="props.homeworkID" :cno="props.cno" v-if="currentStage === 'submission'"/>
-    <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" v-if="currentStage === 'peerReview'"/>
-    <grade-detail v-if = "currentStage === 'resultPublish'"></grade-detail>
+    <homework-submit :homeworkID="props.homeworkID" :submitTime="submitTime" :cno="props.cno" v-if="currentStage === 'submission'"/>
+    <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" @MutualNum="ifMutual" v-show="currentStage === 'peerReview'"/>
+    <grade-detail :homeworkID="props.homeworkID" v-if = "currentStage === 'resultPublish'"/>
   </div>
 
 </template>
@@ -65,11 +65,13 @@ const router = useRouter();
 const submitDdl = history.state.submitDdl;
 const scoreDdl = history.state.scoreDdl;
 const contentID = history.state.contentID;
+const submitTime = history.state.submitTime;
 const props = defineProps(['homeworkID','cno']);
 const remainDays = ref();
 const currentStage = ref();
 const resultPublishProgress = ref();
 const currentTimestamp = new Date().getTime();
+const isMutual = ref(false);
 
 const calculateRemainingDays = () => {
   const currentDate = new Date(); // 当前日期
@@ -118,6 +120,16 @@ const ifSubmit = computed(() => {
     return true;
   }
 });
+
+//是否互评
+const ifMutual = (value) => {
+  console.log(value);
+  if(value === 6){
+    isMutual.value = true;
+  }else {
+    isMutual.value = false;
+  }
+};
 
 const Back = () => {
   router.back();

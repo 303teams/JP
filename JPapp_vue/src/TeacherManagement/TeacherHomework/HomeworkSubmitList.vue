@@ -475,16 +475,18 @@ const modiDdlSubmit = () =>{
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res)
-          modifyDdlDia.value = false;
           submitDdl = newSubmitDdl.value;
           scoreDdl = newScoreDdl.value;
+          modifyDdlDia.value = false;
           fetchData();
           ElMessage.success("修改成功");
         } else {
           window.alert("修改失败:" + res.data.msg);
+          modifyDdlDia.value = false;
         }
       })
       .catch((err) => {
+        modifyDdlDia.value = false;
         console.error("发生未知错误！");
         console.log(err);
       });

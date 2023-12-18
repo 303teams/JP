@@ -8,8 +8,9 @@
         <el-table-column prop="score" label="学生评分" width="180" />
         <el-table-column prop="content" label="评语" width="500"/>
       </el-table>
-      <span>我的分数：{{score}}</span>
+      <span style="font-size: 20px;margin-top: 50px">最终分数：{{score}}</span>
       <div class="appeal">
+        <p style="color:rgba(227,11,11,0.4)">对分数有疑问？在下面进行申诉！</p>
         <div style="width: 500px;margin-top: 30px" label="内容" prop="info">
           <el-input type="textarea" resize="none" :rows="8" v-model="info" placeholder="请输入申诉内容"/>
         </div>
@@ -118,6 +119,7 @@ const fetchData = () => {
   const data1 = {
     homeworkID: props.homeworkID,
   };
+  console.log("homeworkID:", props.homeworkID)
   const data2 = {
     contentID: contentID,
   }

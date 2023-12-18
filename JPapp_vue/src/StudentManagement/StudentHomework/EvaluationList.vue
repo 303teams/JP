@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted,defineProps } from 'vue';
+import {ref, onMounted, defineProps, defineEmits, computed} from 'vue';
 import {useRouter} from "vue-router";
 import http from "@/api/http";
 
@@ -34,9 +34,11 @@ import http from "@/api/http";
 const tableData = ref( []);  //储存后端传来的数据
 const props = defineProps(['homeworkID', 'contentID']);
 const router = useRouter();
+const emit = defineEmits(['MutualNum']);
 
 const MutualEvaluate = (homeworkID,row) =>{
   router.push(`/studentHome/MutualEva/${homeworkID}/${row.contentID}`);
+  setValue();
 }
 
 const fetchData = () => {
@@ -49,6 +51,8 @@ const fetchData = () => {
           if (res.data.code === 200) {
             if (res.data.data !== null) {
               tableData.value = res.data.data;
+              setValue();
+              console.log("tableData:", tableData.value);
               console.log(res);
             }
           }else {
@@ -63,6 +67,12 @@ const fetchData = () => {
 
 };
 
+const scoredDataCount = computed(() =>
+    tableData.value.filter(item => item.score !== null).length);
+
+const setValue = () => {
+  emit('MutualNum',scoredDataCount.value);
+}
 
 onMounted(() => {
   fetchData();

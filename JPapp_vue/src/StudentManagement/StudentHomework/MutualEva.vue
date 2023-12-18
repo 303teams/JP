@@ -108,7 +108,7 @@ const submitScore = () => {
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res);
-          window.alert("评分成功");
+          ElMessage.success("评分成功");
           Back();
         } else {
           window.alert("评分失败:" + res.data.msg);
