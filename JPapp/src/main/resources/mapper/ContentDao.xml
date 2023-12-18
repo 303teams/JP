@@ -23,7 +23,8 @@
             student.name AS sname,
             content.contentID AS contentID,
             content.submitTime AS submitTime,
-            content.score AS score
+            content.score AS score,
+            content.fileName AS fileName
         FROM
             sc
                 JOIN
@@ -75,6 +76,12 @@
         CALL score_content(#{contentID})
     </update>
 
+    <update id="alterContent">
+        UPDATE content
+        SET content = #{content}, fileName = #{fileName}, submitTime = #{submitTime}
+        WHERE contentID = #{contentID}
+    </update>
+
     <select id="getScoreDistribution" resultType="java.util.Map">
         SELECT
             COUNT(CASE WHEN score = 0 THEN 1 END) as score_0,
@@ -116,6 +123,14 @@
             content ON homework.homeworkID = content.homeworkID AND sc.sno = content.sno
         WHERE
             homework.homeworkID = #{homeworkID};
+    </select>
+    <select id="findCTByHIDSno" resultType="com.bjtu.pojo.Content">
+        SELECT *
+        FROM
+            content
+        WHERE
+            content.homeworkID = #{homeworkID}
+                AND content.sno = #{sno};
     </select>
 
 </mapper>
