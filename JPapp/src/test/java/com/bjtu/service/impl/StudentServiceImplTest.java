@@ -53,7 +53,7 @@ class StudentServiceImplTest {
 
     @Test
     void findCTsByCID() {
-        System.out.println(studentService.findCTsByCID(1));
+        System.out.println(studentService.findCTsByCID(108));
     }
 
     @Test
