@@ -43,7 +43,6 @@ public class StudentController {
     public RspObject<List<Homework>> findCTByCno(String cno) {
         User user = TokenUtils.getCurrentUser();
         return studentService.findHWbyCno(user.getId(), cno);
-//        return studentService.findHWbyCno("21301001", cno);
     }
 
     //    返回互评作业列表

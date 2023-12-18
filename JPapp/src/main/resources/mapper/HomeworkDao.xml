@@ -44,7 +44,8 @@
                         teacher.name as teacherName,
                         course.cname as courseName ,
                         content.contentID as contentID,
-                        content.score as score
+                        content.score as score,
+                        content.submitTime as submitTime
         FROM student
                  JOIN sc ON student.id = sc.sno
                  JOIN homework ON sc.cno = homework.cno
