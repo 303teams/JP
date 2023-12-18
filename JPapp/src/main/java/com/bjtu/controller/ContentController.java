@@ -40,25 +40,35 @@ public class ContentController {
                                       @RequestParam String cno,
                                       @RequestParam Integer homeworkID,
                                       HttpServletResponse response) throws IOException {
-        Content content = new Content();
         User user = TokenUtils.getCurrentUser();
-        String name = file.getOriginalFilename();
+        Content content = contentService.findCTByHIDSno(homeworkID,user.getId());
 
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp currentTime = new Timestamp(currentTimeMillis);
 
-        content.setContent(file.getBytes())
-                .setHomeworkID(homeworkID)
-                .setFileName(name)
-                .setSno(user.getId())
-                .setCno(cno)
-                .setSubmitTime(currentTime);
+        if(content != null){
+            content.setContent(file.getBytes())
+                    .setFileName(file.getOriginalFilename())
+                    .setSubmitTime(currentTime);
+            return contentService.alterContent(content);
+        }else{
+            Content newContent = new Content();
+            String name = file.getOriginalFilename();
 
-        contentService.addContent(content);
-        // 添加对响应头的修改
-        response.setHeader("Content-Disposition", "attachment;filename=" + name);
-        byte[] bytes = file.getBytes();
-        return RspObject.success("上传成功，当前thId：" , bytes);
+            newContent.setContent(file.getBytes())
+                    .setHomeworkID(homeworkID)
+                    .setFileName(name)
+                    .setSno(user.getId())
+                    .setCno(cno)
+                    .setSubmitTime(currentTime);
+
+            contentService.addContent(newContent);
+            // 添加对响应头的修改
+            response.setHeader("Content-Disposition", "attachment;filename=" + name);
+            byte[] bytes = file.getBytes();
+            return RspObject.success("上传成功，当前thId：" , bytes);
+        }
+
     }
 
 //    学生/老师 下载 学生的作业

@@ -42,4 +42,7 @@ public interface ContentDao {
     @MapKey("courseID")
     public Map<String,Map<String,Object>> getRankingByCT(Integer contentID,String sno);
 
+    public Content findCTByHIDSno(Integer homeworkID,String sno);
+
+    public void alterContent(Content content);
 }
