@@ -46,15 +46,15 @@ public class ScheduledTask {
         scoreSet = new ArrayList<>();
 
 //        将未到达截止时间的作业的id导入之submitSet表和scoreSet表;
-        List<Homework> homeworks = homeworkDao.findSimpleAll();
-        for(Homework homework : homeworks){
-            if(homework.getSubmitDdl().getTime() > new Timestamp(System.currentTimeMillis()).getTime()){
-                submitSet.add(homework);
-            }
-            if(homework.getScoreDdl().getTime() > new Timestamp(System.currentTimeMillis()).getTime()){
-                scoreSet.add(homework);
-            }
-        }
+//        List<Homework> homeworks = homeworkDao.findSimpleAll();
+//        for(Homework homework : homeworks){
+//            if(homework.getSubmitDdl().getTime() > new Timestamp(System.currentTimeMillis()).getTime()){
+//                submitSet.add(homework);
+//            }
+//            if(homework.getScoreDdl().getTime() > new Timestamp(System.currentTimeMillis()).getTime()){
+//                scoreSet.add(homework);
+//            }
+//        }
     }
 
 //    扫描submitSet表，执行提交截止时间到达后的动作
