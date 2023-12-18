@@ -87,6 +87,9 @@
             value-format="YYYY-MM-DD HH:mm:ss"
             format="YYYY-MM-DD HH:mm:ss"
             :disabled-date="disabledSubmitDate"
+            :disabled-hours="disabledSubmitHours"
+            :disabled-minutes="disabledSubmitMinutes"
+            :disabled-seconds="disabledSubmitSeconds"
             placeholder="选择日期和时间"/>
 
         <p>当前互评截止时间：{{scoreDdl }}</p>
@@ -96,6 +99,9 @@
             value-format="YYYY-MM-DD HH:mm:ss"
             format="YYYY-MM-DD HH:mm:ss"
             :disabled-date="disabledScoreDate"
+            :disabled-hours="disabledScoreHours"
+            :disabled-minutes="disabledScoreMinutes"
+            :disabled-seconds="disabledScoreSeconds"
             placeholder="选择日期和时间"/>
       </div>
 
@@ -112,7 +118,7 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import {ElConfigProvider, ElMessage} from 'element-plus';
+import {dayjs, ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
  import {useRouter} from "vue-router";
 import http from "@/api/http";
@@ -144,11 +150,206 @@ const disabledSubmitDate = (time) => {
   }
 };
 
+const disabledSubmitHours = () => {
+  if(newSubmitDdl.value !=='') {
+    const selectedDate = new Date(newSubmitDdl.value).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+
+
+    if(newScoreDdl.value === ''){
+      if(selectedDay === currentDay) {
+        return Array.from({length: currentHour}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(newScoreDdl.value).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(newScoreDdl.value).getHours();
+      console.log("scoreDay:"+scoreDay)
+      console.log("selectedDay:"+selectedDay)
+      if(scoreDay === selectedDay) {
+        if(selectedDay === currentDay){
+          return Array.from({length: 24}, (_, index) => index < currentHour || index > scoreDdlHours ? index : null).filter(hour => hour !== null);
+        }else{
+          return Array.from({length: 24}, (_, index) => index > scoreDdlHours ? index : null).filter(hour => hour !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+};
+
+const disabledSubmitMinutes = (selectedHour) => {
+  if(newSubmitDdl.value !=='') {
+    const selectedDate = new Date(newSubmitDdl.value).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if(newScoreDdl.value === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour) {
+        return Array.from({length: currentMinutes}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(newScoreDdl.value).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(newScoreDdl.value).getHours();
+      const scoreDdlMinutes = new Date(newScoreDdl.value).getMinutes();
+      if(scoreDay === selectedDay && selectedHour === scoreDdlHours) {
+        if(selectedDay === currentDay && selectedHour === currentHour) {
+          return Array.from({length: 60}, (_, index) => index < currentMinutes || index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+
+};
+
+const disabledSubmitSeconds = (selectedHour,selectedMinute) => {
+  if(newSubmitDdl.value !=='') {
+    const selectedDate = new Date(newSubmitDdl.value).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const currentSeconds = new Date().getSeconds();
+
+    if(newScoreDdl.value === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+        return Array.from({length: currentSeconds}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(newScoreDdl.value).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(newScoreDdl.value).getHours();
+      const scoreDdlMinutes = new Date(newScoreDdl.value).getMinutes();
+      const scoreDdlSeconds = new Date(newScoreDdl.value).getSeconds();
+      if(scoreDay === selectedDay && selectedHour === scoreDdlHours && selectedMinute === scoreDdlMinutes) {
+        if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+          return Array.from({length: 60}, (_, index) => index < currentSeconds || index > scoreDdlSeconds ? index : null).filter(second => second !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index > scoreDdlSeconds ? index : null).filter(second => second !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+};
+
 const disabledScoreDate = (time) => {
   if(newSubmitDdl.value === ''){
     return time.getTime() < new Date() - 8.64e7
   }else{
     return time.getTime() < new Date(newSubmitDdl.value).getTime();
+  }
+};
+
+const disabledScoreHours = () => {
+  if(newScoreDdl.value !== ''){
+    const selectedDate = new Date(newScoreDdl.value).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+
+    if(newSubmitDdl.value === ''){
+      if(selectedDay === currentDay) {
+        return Array.from({length: currentHour}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(newSubmitDdl.value).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(newSubmitDdl.value).getHours();
+      if(submitDdlDay === selectedDay) {
+        if(selectedDay === currentDay){
+          return Array.from({length: 24}, (_, index) => index < submitDdlHours || index < currentHour ? index : null).filter(hour => hour !== null);
+        }else{
+          return Array.from({length: 24}, (_, index) => index < submitDdlHours ? index : null).filter(hour => hour !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
+
+const disabledScoreMinutes = (selectedHour) => {
+  if(newScoreDdl.value !== ''){
+    const selectedDate = new Date(newScoreDdl.value).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if(newSubmitDdl.value === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour) {
+        return Array.from({length: currentMinutes}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(newSubmitDdl.value).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(newSubmitDdl.value).getHours();
+      const submitDdlMinutes = new Date(newSubmitDdl.value).getMinutes();
+      if(submitDdlDay === selectedDay && selectedHour === submitDdlHours) {
+        if(selectedDay === currentDay && selectedHour === currentHour) {
+          return Array.from({length: 60}, (_, index) => index < submitDdlMinutes || index < currentMinutes ? index : null).filter(minute => minute !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index < submitDdlMinutes ? index : null).filter(minute => minute !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
+const disabledScoreSeconds = (selectedHour,selectedMinute) => {
+  if(newScoreDdl.value !== ''){
+    const selectedDate = new Date(newScoreDdl.value).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const currentSeconds = new Date().getSeconds();
+
+    if(newSubmitDdl.value === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+        return Array.from({length: currentSeconds}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(newSubmitDdl.value).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(newSubmitDdl.value).getHours();
+      const submitDdlMinutes = new Date(newSubmitDdl.value).getMinutes();
+      const submitDdlSeconds = new Date(newSubmitDdl.value).getSeconds();
+      if(submitDdlDay === selectedDay && selectedHour === submitDdlHours && selectedMinute === submitDdlMinutes) {
+        if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+          return Array.from({length: 60}, (_, index) => index < submitDdlSeconds || index < currentSeconds ? index : null).filter(second => second !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index < submitDdlSeconds ? index : null).filter(second => second !== null);
+        }
+      }else{
+        return [];
+      }
+    }
   }
 };
 
@@ -163,35 +364,34 @@ const filterTableData = computed(() =>
 
 const fetchData = () => {
   return new Promise((resolve, reject) => {
-    const data1={
+    const data1 = {
       homeworkID: props.homeworkID,
-    }
+    };
+
     http.getStudentHomeworkList(data1)
         .then(res1 => {
           console.log(res1);
           if (res1.data.code === 200) {
             console.log(props.cno);
             tableData.data = res1.data.data;
-            console.log(res1);
 
             // 使用promise实现多个接口的调用
             const promises = tableData.data.map(item => {
-              const data2={
+              const data2 = {
                 contentID: item.contentID,
-              }
+              };
               return http.downloadCT(data2)
                   .then(res2 => {
-                    console.log(res2)
-                    const blob = new Blob([res2.data], {type: 'application/octet-stream'});
+                    console.log(res2);
+                    const blob = new Blob([res2.data], { type: 'application/octet-stream' });
                     const blobUrl = URL.createObjectURL(blob);
 
                     // 给每项作业分配url用来下载
                     item.blobUrl = blobUrl;
-                    updateFilteredData(); // 更新过滤后的数据
                   });
-              });
+            });
 
-            console.log(tableData.data)
+            console.log(tableData.data);
             // 使用Promise.all来执行promises数组里的所有promise
             return Promise.all(promises);
           } else {
@@ -200,7 +400,19 @@ const fetchData = () => {
           }
         })
         .then(() => {
-          resolve({success: true, message: 'Data fetched successfully'});
+          // 将已提交作业的学生放在列表前面排序
+          tableData.data.sort((a, b) => {
+            if (a.contentID !== null && b.contentID === null) {
+              return -1;
+            } else if (a.contentID === null && b.contentID !== null) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          updateFilteredData(); // 更新过滤后的数据
+          resolve({ success: true, message: 'Data fetched successfully' });
         })
         .catch(error => {
           console.error("发生未知错误！");

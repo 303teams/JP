@@ -37,7 +37,7 @@ const info = ref();
 // const expandComments = reactive({});
 
 const myChart = ref({});
-const myChartStyle = ref({ margin: "50px 20px 50px auto", width: "50%", height: "400px" }); // Adjusted margin
+const myChartStyle = ref({ margin: "50px 20px 50px auto", width: "50%", height: "400px" });
 
 const initEcharts = (chart, data) => {
   const option = {
