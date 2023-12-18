@@ -87,6 +87,9 @@
             value-format="YYYY-MM-DD HH:mm:ss"
             format="YYYY-MM-DD HH:mm:ss"
             :disabled-date="disabledSubmitDate"
+            :disabled-hours="disabledSubmitHours"
+            :disabled-minutes="disabledSubmitMinutes"
+            :disabled-seconds="disabledSubmitSeconds"
             placeholder="选择日期和时间"/>
 
         <p>当前互评截止时间：{{scoreDdl }}</p>
@@ -96,6 +99,9 @@
             value-format="YYYY-MM-DD HH:mm:ss"
             format="YYYY-MM-DD HH:mm:ss"
             :disabled-date="disabledScoreDate"
+            :disabled-hours="disabledScoreHours"
+            :disabled-minutes="disabledScoreMinutes"
+            :disabled-seconds="disabledScoreSeconds"
             placeholder="选择日期和时间"/>
       </div>
 
@@ -112,7 +118,7 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import {ElConfigProvider, ElMessage} from 'element-plus';
+import {dayjs, ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
  import {useRouter} from "vue-router";
 import http from "@/api/http";
@@ -137,18 +143,215 @@ const newScoreDdl = ref('');
 
 // 禁用日期
 const disabledSubmitDate = (time) => {
-  if(newScoreDdl.value === '') {
-    return time.getTime() < new Date() - 8.64e7 || time.getTime() > new Date(scoreDdl).getTime();
+  if(homeworkData.scoreDdl === '') {
+    return time.getTime() <= new Date() - 8.64e7;
   }else{
-    return time.getTime() > new Date(newScoreDdl.value).getTime() || time.getTime() < new Date() - 8.64e7;
+    return time.getTime() >= new Date(homeworkData.scoreDdl).getTime() || time.getTime() < new Date() - 8.64e7;
   }
 };
 
-const disabledScoreDate = (time) => {
-  if(newSubmitDdl.value === ''){
-    return time.getTime() < new Date() - 8.64e7
+const disabledSubmitHours = () => {
+  if(homeworkData.submitDdl !=='') {
+    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+
+
+    if(homeworkData.scoreDdl === ''){
+      if(selectedDay === currentDay) {
+        return Array.from({length: currentHour}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      console.log("scoreDay:"+scoreDay)
+      console.log("selectedDay:"+selectedDay)
+      if(scoreDay === selectedDay) {
+        if(selectedDay === currentDay){
+          return Array.from({length: 24}, (_, index) => index < currentHour || index > scoreDdlHours ? index : null).filter(hour => hour !== null);
+        }else{
+          return Array.from({length: 24}, (_, index) => index > scoreDdlHours ? index : null).filter(hour => hour !== null);
+        }
+      }else{
+        return [];
+      }
+    }
   }else{
-    return time.getTime() < new Date(newSubmitDdl.value).getTime();
+    return [];
+  }
+};
+
+const disabledSubmitMinutes = (selectedHour) => {
+  if(homeworkData.submitDdl !=='') {
+    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if(homeworkData.scoreDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour) {
+        return Array.from({length: currentMinutes}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      const scoreDdlMinutes = new Date(homeworkData.scoreDdl).getMinutes();
+      if(scoreDay === selectedDay && selectedHour === scoreDdlHours) {
+        if(selectedDay === currentDay && selectedHour === currentHour) {
+          return Array.from({length: 60}, (_, index) => index < currentMinutes || index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+
+};
+
+const disabledSubmitSeconds = (selectedHour,selectedMinute) => {
+  if(homeworkData.submitDdl !=='') {
+    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const currentSeconds = new Date().getSeconds();
+
+    if(homeworkData.scoreDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+        return Array.from({length: currentSeconds}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      const scoreDdlMinutes = new Date(homeworkData.scoreDdl).getMinutes();
+      const scoreDdlSeconds = new Date(homeworkData.scoreDdl).getSeconds();
+      if(scoreDay === selectedDay && selectedHour === scoreDdlHours && selectedMinute === scoreDdlMinutes) {
+        if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+          return Array.from({length: 60}, (_, index) => index < currentSeconds || index > scoreDdlSeconds ? index : null).filter(second => second !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index > scoreDdlSeconds ? index : null).filter(second => second !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+};
+
+
+const disabledScoreDate = (time) => {
+  if(homeworkData.submitDdl === ''){
+    return time.getTime() <= new Date() - 8.64e7;
+  }else{
+    const submitDdlDate = new Date(homeworkData.submitDdl).setHours(0, 0, 0, 0);
+    return time.getTime() < submitDdlDate;
+  }
+};
+
+const disabledScoreHours = () => {
+  if(homeworkData.scoreDdl !== ''){
+    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+
+    if(homeworkData.submitDdl === ''){
+      if(selectedDay === currentDay) {
+        return Array.from({length: currentHour}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      if(submitDdlDay === selectedDay) {
+        if(selectedDay === currentDay){
+          return Array.from({length: 24}, (_, index) => index < submitDdlHours || index < currentHour ? index : null).filter(hour => hour !== null);
+        }else{
+          return Array.from({length: 24}, (_, index) => index < submitDdlHours ? index : null).filter(hour => hour !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
+
+const disabledScoreMinutes = (selectedHour) => {
+  if(homeworkData.scoreDdl !== ''){
+    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if(homeworkData.submitDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour) {
+        return Array.from({length: currentMinutes}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      const submitDdlMinutes = new Date(homeworkData.submitDdl).getMinutes();
+      if(submitDdlDay === selectedDay && selectedHour === submitDdlHours) {
+        if(selectedDay === currentDay && selectedHour === currentHour) {
+          return Array.from({length: 60}, (_, index) => index < submitDdlMinutes || index < currentMinutes ? index : null).filter(minute => minute !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index < submitDdlMinutes ? index : null).filter(minute => minute !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
+const disabledScoreSeconds = (selectedHour,selectedMinute) => {
+  if(homeworkData.scoreDdl !== ''){
+    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const currentSeconds = new Date().getSeconds();
+
+    if(homeworkData.submitDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+        return Array.from({length: currentSeconds}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      const submitDdlMinutes = new Date(homeworkData.submitDdl).getMinutes();
+      const submitDdlSeconds = new Date(homeworkData.submitDdl).getSeconds();
+      if(submitDdlDay === selectedDay && selectedHour === submitDdlHours && selectedMinute === submitDdlMinutes) {
+        if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+          return Array.from({length: 60}, (_, index) => index < submitDdlSeconds || index < currentSeconds ? index : null).filter(second => second !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index < submitDdlSeconds ? index : null).filter(second => second !== null);
+        }
+      }else{
+        return [];
+      }
+    }
   }
 };
 

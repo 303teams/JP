@@ -2,7 +2,7 @@
   <div class="demo-collapse">
     <el-collapse v-model="activeNames" @change="handleChange" v-if="tableData.length > 0">
       <el-collapse-item v-for="item in tableData" :key="item.cno" :title="item.cname" :name="item.cno">
-        <canvas id="`lineChart-${item.cno}`"></canvas>
+        <div :id="`lineChart-${item.cno}`" :style="{width: '600px', height: '400px'}"></div>
       </el-collapse-item>
     </el-collapse>
     <el-empty v-else />
@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, reactive, ref} from 'vue';
+import { onMounted, reactive, ref} from 'vue';
 import http from "@/api/http";
 import { ElMessage } from "element-plus";
 import * as echarts from "echarts";
@@ -22,27 +22,40 @@ const handleChange = () => {
   console.log();
 };
 
-const fetchData = () => {
+const fetchData = async () => {
   http.getTotalScore().then((res) => {
     if (res.data.code === 200) {
       Object.assign(tableData, res.data.data);
-      initialEcharts(charts, tableData);
+      tableData[0].ranks=[1,2,3,4,5,6,7,8,9,10];
+      setTimeout(() => {
+        initialEcharts(charts, tableData);
+      }, 1)
+      console.log(res)
     } else {
       ElMessage.error("获取信息失败:" + res.data.msg);
     }
-  }).catch((err) => {
-    console.error("发生未知错误！");
-    console.log(err);
-  });
+  })
+      .catch((err) => {
+        console.error("发生未知错误！");
+        console.log(err);
+      })
+
+  // tableData.push({
+  //   cno: '1',
+  //   cname: '数据结构',
+  //   score: '10',
+  //   ranks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  // });
+  //
+  // setTimeout(() => {
+  //   initialEcharts(charts, tableData);
+  // }, 1)
+
 };
 
-onBeforeUnmount(() => {
-  for (const chart of Object.values(charts.value)) {
-    chart.dispose();
-  }
-});
-const initialEcharts = (charts, data) => {
+const initialEcharts = (chartsObject, data) => {
   data.forEach(item => {
+    console.log("item in initialEcharts:", item); // 检查数据
     const option = {
       xAxis: {
         type: 'category',
@@ -60,16 +73,20 @@ const initialEcharts = (charts, data) => {
       }]
     };
 
+
     const currentChart = echarts.init(document.getElementById(`lineChart-${item.cno}`));
     currentChart.setOption(option);
 
-    // Save the chart instance
-    charts[item.cno] = currentChart;
+    chartsObject[item.cno] = currentChart;
+
+    window.addEventListener("resize", () => {
+      currentChart.resize(); // 使用当前图表实例的 resize 方法
+    });
   });
 };
-
 
 onMounted(() => {
   fetchData();
 });
+
 </script>
