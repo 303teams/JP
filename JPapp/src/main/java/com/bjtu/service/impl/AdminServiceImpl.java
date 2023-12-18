@@ -50,6 +50,7 @@ public class AdminServiceImpl implements AdminService {
         return RspObject.success("成功删除学生！");
     }
     @Override
+
     public RspObject<String> deleteTeacher(String id) {
         adminDao.deleteTeacherByID(id);
         return RspObject.success("成功删除老师！");
