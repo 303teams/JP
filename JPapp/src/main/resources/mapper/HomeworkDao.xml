@@ -53,7 +53,7 @@
                  JOIN course ON homework.cno = course.cno
                  LEFT JOIN content ON homework.homeworkID = content.homeworkID
 --             AND content.cno = course.cno
---             AND content.sno = student.id
+            AND content.sno = student.id
         WHERE student.id = #{id} and sc.cno = #{cno}
     </select>
 
