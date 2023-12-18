@@ -30,14 +30,7 @@
         <el-table-column label="提交时间" width="200px" align="center" sortable prop="submitTime" />
         <el-table-column label="作业提交内容" align="center" width="150px">
           <template v-slot="scope">
-          <el-link
-              v-if="scope.row.contentID !== null"
-              :href="scope.row.blobUrl"
-              :download="scope.row.fileName"
-              style="color: dodgerblue; text-decoration: underline"
-          >
-            下载作业
-          </el-link>
+          <el-button type="text" v-if="scope.row.contentID !== null" @click="DownloadCT(scope.row)">查看作业</el-button>
           <span v-else>未提交</span>
           </template>
         </el-table-column>
@@ -363,65 +356,63 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
-  return new Promise((resolve, reject) => {
-    const data1 = {
-      homeworkID: props.homeworkID,
-    };
+  const data1 = {
+    homeworkID: props.homeworkID,
+  };
 
-    http.getStudentHomeworkList(data1)
-        .then(res1 => {
-          console.log(res1);
-          if (res1.data.code === 200) {
-            console.log(props.cno);
-            tableData.data = res1.data.data;
-
-            // 使用promise实现多个接口的调用
-            const promises = tableData.data.map(item => {
-              const data2 = {
-                contentID: item.contentID,
-              };
-              return http.downloadCT(data2)
-                  .then(res2 => {
-                    console.log(res2);
-                    const blob = new Blob([res2.data], { type: 'application/octet-stream' });
-                    const blobUrl = URL.createObjectURL(blob);
-
-                    // 给每项作业分配url用来下载
-                    item.blobUrl = blobUrl;
-                  });
-            });
-
-            console.log(tableData.data);
-            // 使用Promise.all来执行promises数组里的所有promise
-            return Promise.all(promises);
-          } else {
+  http.getStudentHomeworkList(data1)
+      .then(res1 => {
+        console.log(res1);
+        if (res1.data.code === 200) {
+          console.log(props.cno);
+          tableData.data = res1.data.data;
+        }else {
             window.alert("获取信息失败:" + res1.data.msg);
-            reject("获取信息失败:" + res1.data.msg);
           }
-        })
-        .then(() => {
-          // 将已提交作业的学生放在列表前面排序
-          tableData.data.sort((a, b) => {
-            if (a.contentID !== null && b.contentID === null) {
-              return -1;
-            } else if (a.contentID === null && b.contentID !== null) {
-              return 1;
-            } else {
-              return 0;
-            }
-          });
-
-          updateFilteredData(); // 更新过滤后的数据
-          resolve({ success: true, message: 'Data fetched successfully' });
-        })
-        .catch(error => {
-          console.error("发生未知错误！");
-          console.log(error);
-
-          reject("发生未知错误！");
+      }).then(() => {
+        // 将已提交作业的学生放在列表前面排序
+        tableData.data.sort((a, b) => {
+          if (a.contentID !== null && b.contentID === null) {
+            return -1;
+          } else if (a.contentID === null && b.contentID !== null) {
+            return 1;
+          } else {
+            return 0;
+          }
         });
-  });
+
+        updateFilteredData(); // 更新过滤后的数据
+      }).catch(error => {
+        console.error("发生未知错误！");
+        console.log(error);
+      });
 };
+
+const DownloadCT = (row) =>{
+  const data = {
+    contentID: row.contentID,
+  };
+  http.downloadCT(data)
+      .then(res => {
+        console.log(res);
+        const blob = new Blob([res.data], { type: 'application/octet-stream' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = row.fileName;
+
+        // 模拟点击下载
+        link.click();
+
+        // 释放 URL 对象
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch(err => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+}
 
 const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(

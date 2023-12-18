@@ -63,24 +63,24 @@ const initEcharts = (chart, data) => {
         radius: "30%",
         data: [
           {
-            value: data.score_0,
-            name: "0分",
+            value: data.score_0_2,
+            name: "0-2分",
           },
           {
-            value: data.score_1_3,
-            name: "1-3分",
+            value: data.score_2_4,
+            name: "2-4分",
           },
           {
             value: data.score_4_6,
             name: "4-6分",
           },
           {
-            value: data.score_7_9,
-            name: "7-9分",
+            value: data.score_6_8,
+            name: "6-8分",
           },
           {
-            value: data.score_10,
-            name: "10分",
+            value: data.score_8_10,
+            name: "8-10分",
           },
         ],
       },

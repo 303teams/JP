@@ -16,6 +16,8 @@ import ViewHomework from "@/StudentManagement/StudentHomework/ViewHomework.vue";
 import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
 import MessageDetail from "@/TeacherManagement/TeacherMessage/MessageDetail.vue";
 import ShowGrade from "@/StudentManagement/StudentGrade/ShowGrade.vue";
+import AdminInfoPage from "@/AdminManagement/AdminHome/AdminInfoPage.vue";
+
 
 const routerHistory = createWebHistory();
 
@@ -149,19 +151,21 @@ const router = createRouter({
             ]
         },
 
+        {
+            path: '/AdminHome',
+            name: 'AdminHome',
+            component: HomePage,
+            children: [
+                {
+                    path: '',
+                    name:'AdminInfoPage',
+                    component: AdminInfoPage
+                },
+            ]
+        }
 
-        // {
-        //     path: '/adminHome',
-        //     name: 'adminHome',
-        //     component: AdminPage,
-        //     // children: [
-        //     //     {
-        //     //         path: 'info',
-        //     //         name:'AdminInfoPage',
-        //     //         component: InfoPage
-        //     //     },
-        //     // ]
-        // }
+
+
 
     ],
     // mode: history
