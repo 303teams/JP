@@ -143,7 +143,8 @@ const handleEdit = (e) => {
   value = value.replace(/^0+(\d)/, '$1') // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
   value = value.replace(/(\d{15})\d*/, '$1') // 最多保留15位整数
   value = value.replace(/(\.\d{2})\d*/, '$1')// 最多保留2位小数
-  newScore.value = value
+
+  newScore.value = value;
 }
 
 // 禁用日期
@@ -443,6 +444,15 @@ const modifyScore = (contentId,score) => {
 };
 
 const modiScoreSubmit = () => {
+  if(newScore.value === ''){
+    ElMessage.error("分数不能为空");
+    return;
+  }
+
+  if(newScore.value > 10){
+    ElMessage.error("分数必须在0-10之间");
+    return;
+  }
   const data = {
     contentID: currentContentID.value,
     score: newScore.value,

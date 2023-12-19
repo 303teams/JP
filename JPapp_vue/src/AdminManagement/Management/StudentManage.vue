@@ -22,9 +22,13 @@
       </div>
     </div>
     <div>
-      <el-table :data="filterTableData" style="width: 100%">
-        <el-table-column label="Date" prop="date" />
-        <el-table-column label="Name" prop="name" />
+      <el-table :data="filterTableData" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
+        <el-table-column label="学号" prop="date" />
+        <el-table-column label="姓名" prop="name" />
+        <el-table-column label="性别" prop="address" />
+        <el-table-column label="年龄" prop="address" />
+        <el-table-column label="邮箱" prop="address" />
         <el-table-column align="right">
           <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
@@ -51,8 +55,11 @@ import {Delete} from "@element-plus/icons-vue";
 // import http from "@/api/http";
 
 const tableData = reactive([]);
+const filteredData = ref([]);
+const multipleSelection = ref([]);
 
 const search = ref('')
+
 const filterTableData = computed(() =>
     tableData.filter(
         (data) =>
@@ -60,6 +67,18 @@ const filterTableData = computed(() =>
             data.name.toLowerCase().includes(search.value.toLowerCase())
     )
 )
+
+const clickSearch = () => {
+  filteredData.value = tableData.data.filter(
+      (data) =>
+          !search.value ||
+          data.name.toLowerCase().includes(search.value.toLowerCase())
+  );
+};
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val;
+};
 
 const fetchData = () => {
   // http.getAllStudent()
