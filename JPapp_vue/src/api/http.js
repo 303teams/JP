@@ -168,6 +168,19 @@ const http = {
         return request(config)
     },
 
+    //学生提交作业
+    submitHomework(data){
+        const config = {
+            url:'/content/uploadCT',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
     //获取成绩分布信息
     getScoreInfo(data){
         const config = {
@@ -222,6 +235,19 @@ const http = {
         return request(config)
     },
 
+    //学生查看互评作业列表
+    getMutualHomeworkList(data){
+        const config = {
+            url:'/student/findCTsByCID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //学生查看互评评分列表
     getScoreList(data){
         const config = {
@@ -231,6 +257,15 @@ const http = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
+        }
+        return request(config)
+    },
+
+    //学生获取总成绩
+    getTotalScore(){
+        const config = {
+            url:'/chart/getAllRanking',
+            method:'post',
         }
         return request(config)
     },
@@ -322,6 +357,16 @@ const http = {
         return request(config)
     },
 
+    //老师查看申诉列表
+    getAppealList(){
+        const config = {
+            url:'/teacher/findAppeal',
+            method:'post',
+        }
+        console.log("findAppeal")
+        return request(config)
+    },
+
     //教师点击作业申诉
     ClickAppeal(data){
         const config = {
@@ -389,13 +434,13 @@ const http = {
         return request(config)
     },
 
-    //管理员获取所有学生信息
-    getAllStudent(){
-        const config = {
-            url:'/admin/getAllStudent',
-            method:'post',
-        }
-        return request(config)
-    },
+    // //管理员获取所有学生信息
+    // getAllStudent(){
+    //     const config = {
+    //         url:'/admin/getAllStudent',
+    //         method:'post',
+    //     }
+    //     return request(config)
+    // },
 }
 export default http

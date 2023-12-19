@@ -23,7 +23,8 @@
             student.name AS sname,
             content.contentID AS contentID,
             content.submitTime AS submitTime,
-            content.score AS score
+            content.score AS score,
+            content.fileName AS fileName
         FROM
             sc
                 JOIN
@@ -46,9 +47,9 @@
             COALESCE(score.content, 'No comment') as comment
         FROM
             content c
-                LEFT JOIN score ON c.contentID = score.contentID AND score.sno = #{sno}
+                LEFT JOIN score ON c.contentID = score.contentID
         WHERE
-            c.contentID = #{contentID};
+            c.contentID = #{contentID} AND score.sno = #{sno}
 
     </select>
 
@@ -75,13 +76,19 @@
         CALL score_content(#{contentID})
     </update>
 
+    <update id="alterContent">
+        UPDATE content
+        SET content = #{content}, fileName = #{fileName}, submitTime = #{submitTime}
+        WHERE contentID = #{contentID}
+    </update>
+
     <select id="getScoreDistribution" resultType="java.util.Map">
         SELECT
-            COUNT(CASE WHEN score = 0 THEN 1 END) as score_0,
-            COUNT(CASE WHEN score BETWEEN 1 AND 3 THEN 1 END) as score_1_3,
-            COUNT(CASE WHEN score BETWEEN 4 AND 6 THEN 1 END) as score_4_6,
-            COUNT(CASE WHEN score BETWEEN 7 AND 9 THEN 1 END) as score_7_9,
-            COUNT(CASE WHEN score = 10 THEN 1 END) as score_10
+            COUNT(CASE WHEN score >= 0 AND 2 > score THEN 1 END) as score_0_2,
+            COUNT(CASE WHEN score >= 2 AND 4 > score  THEN 1 END) as score_2_4,
+            COUNT(CASE WHEN score >= 4 AND 6 > score THEN 1 END) as score_4_6,
+            COUNT(CASE WHEN score >= 6 AND 8 > score THEN 1 END) as score_6_8,
+            COUNT(CASE WHEN score >= 8 AND 10 >= score THEN 1 END) as score_8_10
         FROM content
         WHERE homeworkID = #{homeworkID};
     </select>
@@ -116,6 +123,14 @@
             content ON homework.homeworkID = content.homeworkID AND sc.sno = content.sno
         WHERE
             homework.homeworkID = #{homeworkID};
+    </select>
+    <select id="findCTByHIDSno" resultType="com.bjtu.pojo.Content">
+        SELECT *
+        FROM
+            content
+        WHERE
+            content.homeworkID = #{homeworkID}
+                AND content.sno = #{sno};
     </select>
 
 </mapper>

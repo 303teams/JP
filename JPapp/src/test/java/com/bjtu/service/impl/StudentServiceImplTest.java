@@ -53,11 +53,16 @@ class StudentServiceImplTest {
 
     @Test
     void findCTsByCID() {
-        System.out.println(studentService.findCTsByCID(1));
+        System.out.println(studentService.findCTsByCID(108));
     }
 
     @Test
     void handleAppeal() {
         System.out.println(studentService.handleAppeal(2,"我不满意"));
+    }
+
+    @Test
+    void findHWbyCno() {
+        System.out.println(studentService.findHWbyCno("21301001","1001"));
     }
 }

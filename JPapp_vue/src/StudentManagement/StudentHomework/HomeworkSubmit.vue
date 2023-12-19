@@ -44,8 +44,8 @@
       </el-form>
     </div>
     <span class="dialog-footer">
-        <el-button @click="closeDia">取消</el-button>
-        <el-button type="primary" @click="submitHomework">确认</el-button>
+        <el-button @click="Back()">返回</el-button>
+        <el-button type="primary" @click="submitHomework">{{ submitTime ? '重新提交' : '确认提交' }}</el-button>
     </span>
   </div>
 
@@ -54,19 +54,18 @@
 <script setup>
 
 import {defineProps, onMounted, reactive, ref} from "vue";
-import axios from "axios";
 import http from "@/api/http";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 
-const token = localStorage.getItem('token');
-const props = defineProps(['homeworkID','cno']);
+const props = defineProps(['homeworkID','cno',]);
 const router = useRouter();
 const SubmitHomeworkRef = ref();
 const blobUrl = ref();
 const fileName = ref();
 const name = history.state.name;
 const submitDdl = history.state.submitDdl;
+const submitTime = history.state.submitTime;
 const HomeworkInfo = history.state.info;
 const submitHomeworkForm = reactive({
   files: null,
@@ -115,17 +114,7 @@ const submitHomework = () => {
       }
       formData.set('cno', props.cno)
       formData.set('homeworkID', props.homeworkID)
-      axios
-          .post(
-              'http://localhost:8081/content/uploadCT',
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  'token': token,
-                },
-              }
-          )
+      http.submitHomework(formData)
           .then((res) => {
             if (res.data.code === 200) {
               console.log(res)
@@ -155,9 +144,6 @@ const resetFormData = () => {
   submitHomeworkForm.files = null;
 };
 
-const closeDia= () => {
-  resetFormData();
-};
 
 const Back = () => {
   router.back();

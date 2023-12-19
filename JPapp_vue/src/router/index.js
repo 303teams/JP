@@ -15,6 +15,10 @@ import GradeDetail from "@/StudentManagement/StudentHomework/GradeDetail.vue";
 import ViewHomework from "@/StudentManagement/StudentHomework/ViewHomework.vue";
 import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
 import MessageDetail from "@/TeacherManagement/TeacherMessage/MessageDetail.vue";
+import ShowGrade from "@/StudentManagement/StudentGrade/ShowGrade.vue";
+import AdminInfoPage from "@/AdminManagement/AdminHome/AdminInfoPage.vue";
+import StudentManage from "@/AdminManagement/Management/StudentManage.vue";
+
 const routerHistory = createWebHistory();
 
 
@@ -89,6 +93,13 @@ const router = createRouter({
                     name:'GradeDetail',
                     component: GradeDetail,
                     props: true,
+                },
+
+                {
+                    path: 'ShowGrade',
+                    name:'ShowGrade',
+                    component: ShowGrade,
+                    props: true,
                 }
             ]
         },
@@ -140,19 +151,28 @@ const router = createRouter({
             ]
         },
 
+        {
+            path: '/AdminHome',
+            name: 'AdminHome',
+            component: HomePage,
+            children: [
+                {
+                    path: '',
+                    name:'AdminInfoPage',
+                    component: AdminInfoPage
+                },
+                {
+                    path: 'StudentManage',
+                    name:'StudentManage',
+                    component: StudentManage,
+                    props: true,
+                },
 
-        // {
-        //     path: '/adminHome',
-        //     name: 'adminHome',
-        //     component: AdminPage,
-        //     // children: [
-        //     //     {
-        //     //         path: 'info',
-        //     //         name:'AdminInfoPage',
-        //     //         component: InfoPage
-        //     //     },
-        //     // ]
-        // }
+            ]
+        }
+
+
+
 
     ],
     // mode: history

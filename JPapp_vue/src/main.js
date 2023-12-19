@@ -7,7 +7,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import * as ElIconModules from '@element-plus/icons'
 import store from '@/store'
-import 'lib-flexible'
+import '@/utils/flexible.js'
 
 
 const app = createApp(App)

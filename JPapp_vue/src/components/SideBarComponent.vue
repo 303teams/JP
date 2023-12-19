@@ -14,21 +14,16 @@
         </el-menu-item>
         <el-menu-item index="/viewCourse" :route="{ name: 'ViewCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>课程
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/course.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;课程
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/ShowGrade" :route="{ name: 'ShowGrade' }">
           <template #title>
-            <div>
-              <span>分数</span>
-            </div>
-          </template>
-        </el-menu-item>
-        <el-menu-item>
-          <template #title>
-            <div>
-              <span>其他</span>
-            </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/grade.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;成绩分析
           </template>
         </el-menu-item>
       </el-menu>
@@ -50,7 +45,9 @@
         </el-menu-item>
         <el-menu-item index="/ViewMyCourse" :route="{ name: 'ViewMyCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>已授课程
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/course.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;已授课程
           </template>
         </el-menu-item>
         <el-menu-item  index="/MessagePage" :route="{ name: 'MessagePage' }">
@@ -77,23 +74,30 @@
           <img :src="logo" alt="logo" class="image">
           <h1 class="header_1">简评</h1>
         </a>
-        <el-menu-item>
+        <el-menu-item index="/AdminHome" :route="{ name: 'AdminInfoPage' }">
           <template #title>
-          <el-icon><message /></el-icon>学生管理
+          <el-icon><user /></el-icon>个人信息
+          </template>
+        </el-menu-item>
+        <el-menu-item index="/StudentManage" :route="{ name: 'StudentManage' }">
+          <template #title>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/student.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;学生管理
           </template>
         </el-menu-item>
         <el-menu-item>
           <template #title>
-          <div>
-            <span>老师管理</span>
-          </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/teacher.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;教师管理
           </template>
         </el-menu-item>
         <el-menu-item>
           <template #title>
-          <div>
-            <span>成绩管理</span>
-          </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/coursemanage.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;课程管理
           </template>
         </el-menu-item>
       </el-menu>
