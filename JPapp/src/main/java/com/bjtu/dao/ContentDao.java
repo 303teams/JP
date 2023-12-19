@@ -21,7 +21,7 @@ public interface ContentDao {
     @MapKey("sno")
     public List<Map<String,Object>> findCTscoreByHId(Integer homeworkID);
 
-    public void setCTScore(Integer contentID,Integer score);
+    public void setCTScore(Integer contentID,double score);
 
     public Content findxCTById(Integer contentID,String sno);
 
@@ -39,8 +39,8 @@ public interface ContentDao {
 
     public void updateScore(Integer contentID);
 
-    @MapKey("courseID")
-    public Map<String,Map<String,Object>> getRankingByCT(Integer contentID,String sno);
+//    @MapKey("courseID")
+//    public Map<String,Map<String,Object>> getRankingByCT(Integer contentID,String sno);
 
     public Content findCTByHIDSno(Integer homeworkID,String sno);
 

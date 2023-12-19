@@ -8,7 +8,7 @@
         <select id="findTHCourse" resultType="java.util.Map" parameterType="string">
         SELECT course.*
         FROM teacher
-                 JOIN course ON teacher.id = course.tno
+            LEFT JOIN course ON teacher.id = course.tno
         WHERE teacher.id = #{id}
     </select>
 
@@ -17,7 +17,7 @@
         FROM student
                  JOIN sc ON student.id = sc.sno
                  JOIN course ON sc.cno = course.cno
-                 JOIN teacher ON course.tno = teacher.id
+                 LEFT JOIN teacher ON course.tno = teacher.id
         WHERE student.id = #{id}
     </select>
 

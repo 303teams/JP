@@ -34,7 +34,7 @@
                 LEFT JOIN
             content ON homework.homeworkID = content.homeworkID AND sc.sno = content.sno
         WHERE
-            homework.homeworkID = #{homeworkID};
+            homework.homeworkID = #{homeworkID} AND student.exist = 1;
 
     </select>
 
@@ -107,9 +107,9 @@
         WHERE contentID = #{contentID}
     </select>
 
-    <select id="getRankingByCT" resultType="java.util.Map">
+<!--    <select id="getRankingByCT" resultType="java.util.Map">-->
 
-    </select>
+<!--    </select>-->
 
     <select id="findCTscoreByHId" resultType="java.util.Map">
         SELECT
@@ -124,6 +124,7 @@
         WHERE
             homework.homeworkID = #{homeworkID};
     </select>
+
     <select id="findCTByHIDSno" resultType="com.bjtu.pojo.Content">
         SELECT *
         FROM
