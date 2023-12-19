@@ -41,7 +41,7 @@
       </template>
     </el-dialog>
 
-    <reset-password ref="ResetRef"></reset-password>
+    <reset-password :username="PassUsername" ref="ResetRef"></reset-password>
   </div>
 
 </template>
@@ -58,6 +58,7 @@ const ResetRef = ref();
 const codeShow = ref(true);
 const timer = ref(null);
 const count = ref();
+const PassUsername= ref('');
 const UserEmailVerifyForm = ref({
   username: '',
   email: '',
@@ -139,6 +140,7 @@ const confirmEmail = () =>{
       };
       http.confirmEmail(data).then(res => {
         if (res.data.code === 200) {
+          PassUsername.value = UserEmailVerifyForm.value.username;
           EmailVerifyDialogVis.value = false;
           reset();
           ElMessage.success("验证成功！");
