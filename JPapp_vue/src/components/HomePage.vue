@@ -32,7 +32,7 @@ body {
 }
 
 .app-main-height {
-  min-height: 87vh;
+  min-height: 83vh;
 }
 
 .layout-container-demo .el-header {

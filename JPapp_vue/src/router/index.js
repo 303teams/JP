@@ -18,6 +18,7 @@ import MessageDetail from "@/TeacherManagement/TeacherMessage/MessageDetail.vue"
 import ShowGrade from "@/StudentManagement/StudentGrade/ShowGrade.vue";
 import AdminInfoPage from "@/AdminManagement/AdminHome/AdminInfoPage.vue";
 import StudentManage from "@/AdminManagement/Management/StudentManage.vue";
+import EditStudent from "@/AdminManagement/Management/EditStudent.vue";
 
 const routerHistory = createWebHistory();
 
@@ -167,6 +168,12 @@ const router = createRouter({
                     component: StudentManage,
                     props: true,
                 },
+                {
+                    path: 'EditStudent',
+                    name:'EditStudent',
+                    component: EditStudent,
+                    props: true,
+                }
 
             ]
         }

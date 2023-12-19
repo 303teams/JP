@@ -47,20 +47,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<String> deleteStudent(String id) {
-        adminDao.deleteStudentByID(id);
+    public RspObject<String> deleteStudent(String[] ids) {
+        for(String id:ids){
+            adminDao.deleteStudentByID(id);
+        }
         return RspObject.success("成功删除学生！");
     }
     @Override
 
-    public RspObject<String> deleteTeacher(String id) {
-        adminDao.deleteTeacherByID(id);
+    public RspObject<String> deleteTeacher(String[] ids) {
+        for(String id:ids){
+            adminDao.deleteTeacherByID(id);
+        }
         return RspObject.success("成功删除老师！");
     }
 
     @Override
-    public RspObject<String> deleteCourse(String cno) {
-        adminDao.deleteCourseByCno(cno);
+    public RspObject<String> deleteCourse(String[] cnos) {
+        for(String cno:cnos){
+            adminDao.deleteCourseByCno(cno);
+        }
         return RspObject.success("成功删除课程！");
     }
 

@@ -442,5 +442,31 @@ const http = {
         }
         return request(config)
     },
+
+    //管理员删除学生
+    deleteStudent(data){
+        const config = {
+            url:'/admin/deleteStudent',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员查看学生课程信息
+    getStudentCourse(data){
+        const config = {
+            url:'/admin/findStudentCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
 }
 export default http

@@ -66,22 +66,22 @@ public class AdminController {
     //删除学生
     @AuthAccess
     @PostMapping("/deleteStudent")
-    public RspObject<String> deleteStudent(String id){
-        return adminService.deleteStudent(id);
+    public RspObject<String> deleteStudent(String[] ids){
+        return adminService.deleteStudent(ids);
     }
 
     //删除教师
     @AuthAccess
     @PostMapping("/deleteTeacher")
-    public RspObject<String> deleteTeacher(String id){
-        return adminService.deleteTeacher(id);
+    public RspObject<String> deleteTeacher(String[] ids){
+        return adminService.deleteTeacher(ids);
     }
 
     //删除课程
     @AuthAccess
     @PostMapping("/deleteCourse")
-    public RspObject<String> deleteCourse(String cno){
-        return adminService.deleteCourse(cno);
+    public RspObject<String> deleteCourse(String[] cnos){
+        return adminService.deleteCourse(cnos);
     }
 
     //查询学生
