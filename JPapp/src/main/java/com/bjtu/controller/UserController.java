@@ -83,7 +83,7 @@ public class UserController {
             emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
-            throw new ServiceException("验证码未发送至您的邮箱");
+            throw new ServiceException(500,e.getMessage());
         }
     }
 
