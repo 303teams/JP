@@ -44,5 +44,11 @@
         FROM score
         WHERE contentID = #{contentID}
     </select>
+    <select id="findSCByCIDAndSno" resultType="com.bjtu.pojo.Score">
+        SELECT *
+        FROM score
+        WHERE contentID = #{contentID}
+        AND sno = #{sno}
+    </select>
 
 </mapper>

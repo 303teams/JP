@@ -24,7 +24,7 @@ public class Content implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Timestamp submitTime;
 
-    private Integer score;
+    private double score;
     private Integer contentID1;
     private Integer contentID2;
     private Integer contentID3;

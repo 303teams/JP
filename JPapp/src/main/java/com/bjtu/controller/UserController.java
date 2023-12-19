@@ -65,6 +65,7 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(email,"邮箱不能为空！");
 
+        System.out.println(Utils.isMatchEmail(username,email));
         if(!Utils.isMatchEmail(username,email)){
             System.out.println("用户账号与邮箱不匹配！");
             throw new ServiceException(500,"用户账号与邮箱不匹配！");
@@ -85,14 +86,14 @@ public class UserController {
     @PostMapping("/verify")
     public RspObject<Object> verify(String code){
 //        System.out.println(session);
-//        System.out.println(session.getAttribute("vcode"));
+        System.out.println(session.getAttribute("vcode")+ " "+code);
         if(session.getAttribute("vcode").toString().equals(code)){
             System.out.println("验证码正确！");
             session.setAttribute("vcode",null);
             return RspObject.success("验证码正确！");
         }else{
             System.out.println("验证码错误！");
-            session.setAttribute("vcode",null);
+//            session.setAttribute("vcode",null);
             return RspObject.fail("验证码错误！");
         }
     }

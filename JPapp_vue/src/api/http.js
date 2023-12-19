@@ -168,6 +168,19 @@ const http = {
         return request(config)
     },
 
+    //学生提交作业
+    submitHomework(data){
+        const config = {
+            url:'/content/uploadCT',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
     //获取成绩分布信息
     getScoreInfo(data){
         const config = {
@@ -222,6 +235,19 @@ const http = {
         return request(config)
     },
 
+    //学生查看互评作业列表
+    getMutualHomeworkList(data){
+        const config = {
+            url:'/student/findCTsByCID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //学生查看互评评分列表
     getScoreList(data){
         const config = {
@@ -232,6 +258,112 @@ const http = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }
+        return request(config)
+    },
+
+    //学生获取总成绩
+    getTotalScore(){
+        const config = {
+            url:'/chart/getAllRanking',
+            method:'post',
+        }
+        return request(config)
+    },
+
+    //老师查看课程列表
+    getCourseList(){
+        const config = {
+            url:'/teacher/findCourse',
+            method:'post',
+        }
+        return request(config)
+    },
+
+    //老师查看课程作业列表
+    getHomeworkList(data){
+        const config = {
+            url:'/teacher/findHWbyCno',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //老师布置作业
+    assignHomework(data){
+        const config = {
+            url:'/homework/uploadHW',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //老师修改作业截止时间
+    changeDeadline(data){
+        const config = {
+            url:'/teacher/alterDdlByHID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //老师上传答案
+    uploadAnswer(data){
+        const config = {
+            url:'/homework/setAnswer',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //老师删除作业
+    deleteHomework(data){
+        const config = {
+            url:'/teacher/deleteHWByHId',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //老师查看学生作业列表
+    getStudentHomeworkList(data){
+        const config = {
+            url:'/teacher/findCTByHId',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //老师查看申诉列表
+    getAppealList(){
+        const config = {
+            url:'/teacher/findAppeal',
+            method:'post',
+        }
+        console.log("findAppeal")
         return request(config)
     },
 
@@ -275,5 +407,40 @@ const http = {
         console.log("handleAppeal")
         return request(config)
     },
+
+    //老师删除作业申诉
+    deleteAppeal(data){
+        const config = {
+            url:'/teacher/deleteAPByAID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //老师修改学生分数
+    changeScore(data){
+        const config = {
+            url:'/teacher/setCTScore',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    // //管理员获取所有学生信息
+    // getAllStudent(){
+    //     const config = {
+    //         url:'/admin/getAllStudent',
+    //         method:'post',
+    //     }
+    //     return request(config)
+    // },
 }
 export default http

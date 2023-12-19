@@ -22,7 +22,7 @@
       </div>
 
       <div class="comment" label="内容" prop="info">
-        <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语"/>
+        <el-input type="textarea" resize="none" :rows="4" v-model="info" placeholder="请输入评语" :maxlength="20"/>
         <el-button type="primary" @click="submitScore">提交</el-button>
       </div>
     </div>
@@ -108,7 +108,7 @@ const submitScore = () => {
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res);
-          window.alert("评分成功");
+          ElMessage.success("评分成功");
           Back();
         } else {
           window.alert("评分失败:" + res.data.msg);

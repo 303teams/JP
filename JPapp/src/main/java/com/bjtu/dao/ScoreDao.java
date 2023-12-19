@@ -15,4 +15,6 @@ public interface ScoreDao {
     public List<Score> findSCByCID(Integer contentID);
 
     public void setInvalid(Integer scoreID);
+
+    public Score findSCByCIDAndSno(Integer contentID,String sno);
 }

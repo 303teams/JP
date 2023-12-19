@@ -62,6 +62,7 @@ public class ScheduledTask {
     @Scheduled(cron = "*/1 * * * * ?")
     public void submitScan() throws InterruptedException {
         if (submitflag) {
+
             submitLock.lock();
             for (int i = 0; i < submitSet.size(); i++) {
                 if (submitSet.get(i).getSubmitDdl().getTime() < new Timestamp(System.currentTimeMillis()).getTime()) {
@@ -149,6 +150,26 @@ public class ScheduledTask {
                     .setHomeworkID(homeworkID)
                     .setScoreDdl(transfer(scoreDdl));
             scoreSet.add(homework);
+        }
+        scoreLock.unlock();
+    }
+
+//    删除一个作业
+    public void deleteHW(Integer homeworkID){
+        submitLock.lock();
+        for(int i = 0;i<submitSet.size(); i++){
+            if(submitSet.get(i).getHomeworkID() == homeworkID){
+                submitSet.remove(i);
+                break;
+            }
+        }
+        submitLock.unlock();
+        scoreLock.lock();
+        for(int i = 0;i<scoreSet.size(); i++){
+            if(scoreSet.get(i).getHomeworkID() == homeworkID){
+                scoreSet.remove(i);
+                break;
+            }
         }
         scoreLock.unlock();
     }

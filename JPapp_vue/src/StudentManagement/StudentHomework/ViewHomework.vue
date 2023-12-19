@@ -32,7 +32,7 @@
 
         <div class="custom-text-with-checkbox">
           <p class="custom-text">已完成互评</p>
-          <input type="checkbox" id="checkbox1" name="checkbox1" v-model="ifSubmit" disabled>
+          <input type="checkbox" id="checkbox1" name="checkbox1" v-model="isMutual" disabled>
         </div>
       </div>
 
@@ -46,9 +46,12 @@
       </div>
     </div>
 
-    <homework-submit :homeworkID="props.homeworkID" :cno="props.cno" v-if="currentStage === 'submission'"/>
-    <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" v-if="currentStage === 'peerReview'"/>
-    <grade-detail v-if = "currentStage === 'resultPublish'"></grade-detail>
+    <div v-if="currentStage === 'peerReview' && timeDifference !== null" style="text-align: start">
+      <p style="font-size: 40px;margin-top: 100px">互评将在{{tenMinutesLaterDateTime}}开始!</p>
+    </div>
+    <homework-submit :homeworkID="props.homeworkID" :submitTime="submitTime" :cno="props.cno" v-if="currentStage === 'submission'"/>
+    <evaluation-list :homeworkID="props.homeworkID" :contentID="contentID" @MutualNum="ifMutual" v-show="currentStage === 'peerReview' && timeDifference === null"/>
+    <grade-detail :homeworkID="props.homeworkID" v-if = "currentStage === 'resultPublish'"/>
   </div>
 
 </template>
@@ -60,16 +63,19 @@ import {useRouter} from "vue-router";
 import homeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
 import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
 import GradeDetail from "@/StudentManagement/StudentHomework/GradeDetail.vue";
+import {dayjs} from "element-plus";
 
 const router = useRouter();
 const submitDdl = history.state.submitDdl;
 const scoreDdl = history.state.scoreDdl;
 const contentID = history.state.contentID;
+const submitTime = history.state.submitTime;
 const props = defineProps(['homeworkID','cno']);
 const remainDays = ref();
 const currentStage = ref();
 const resultPublishProgress = ref();
 const currentTimestamp = new Date().getTime();
+const isMutual = ref(false);
 
 const calculateRemainingDays = () => {
   const currentDate = new Date(); // 当前日期
@@ -119,8 +125,33 @@ const ifSubmit = computed(() => {
   }
 });
 
+//是否互评
+const ifMutual = (value) => {
+  console.log(value);
+  if(value === 6){
+    isMutual.value = true;
+  }else {
+    isMutual.value = false;
+  }
+};
+
 const Back = () => {
   router.back();
+};
+
+const timeDifference = ref(null);
+const tenMinutesLaterTimestamp = new Date(submitDdl).getTime() + 10 * 60 * 1000;
+const tenMinutesLaterDateTime = dayjs(tenMinutesLaterTimestamp).format('YYYY-MM-DD HH:mm:ss');
+
+const calculateTimeDifference = () => {
+  const submissionDeadline = new Date(submitDdl).getTime();
+  const tenMinutesAfterDeadline = submissionDeadline + 10 * 60 * 1000;
+
+  if (currentTimestamp >= submissionDeadline && currentTimestamp <= tenMinutesAfterDeadline) {
+    timeDifference.value = Math.ceil((tenMinutesAfterDeadline - currentTimestamp) / (60 * 1000)); // 差值以分钟为单位
+  } else {
+    timeDifference.value = null; // 如果不在指定时间范围内，设置为 null
+  }
 };
 
 const JudgeState = () =>{
@@ -141,6 +172,7 @@ const JudgeState = () =>{
 
 onMounted(() => {
   JudgeState();
+  calculateTimeDifference();
   remainDays.value = calculateRemainingDays();
 });
 </script>

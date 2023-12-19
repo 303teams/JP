@@ -1,17 +1,16 @@
 <template>
   <div class="homeListMain">
     <div class = "score">
-      <div v-for="(item, index) in scoreList" :key="index" class="score-list">
-        <span>分数{{index+1}}：{{ item.score }}</span>
-        <div label="内容" prop="info" style="white-space: pre-wrap">
-          <p v-if="expandComments[index]">{{ item.content.split('\n').slice(0, 2).join('\n') }}</p>
-          <p v-else>{{ item.content }}</p>
-          <p class="toggle" v-show="expandComments[index]" @click="toggleExpand(index)">展开</p>
-          <p class="toggle" v-show="!expandComments[index]" @click="toggleExpand(index)">收起</p>
-        </div>
-      </div>
-      <span>我的分数：{{score}}</span>
+      <el-table
+          :data="scoreList"
+          style="width: 100%"
+      >
+        <el-table-column prop="score" label="学生评分" width="180" />
+        <el-table-column prop="content" label="评语" width="500"/>
+      </el-table>
+      <span style="font-size: 20px;margin-top: 50px">最终分数：{{score}}</span>
       <div class="appeal">
+        <p style="color:rgba(227,11,11,0.4)">对分数有疑问？在下面进行申诉！</p>
         <div style="width: 500px;margin-top: 30px" label="内容" prop="info">
           <el-input type="textarea" resize="none" :rows="8" v-model="info" placeholder="请输入申诉内容"/>
         </div>
@@ -36,10 +35,10 @@ const props = defineProps(["homeworkID"]);
 const score= history.state.score;
 const contentID = history.state.contentID;
 const info = ref();
-const expandComments = reactive({});
+// const expandComments = reactive({});
 
 const myChart = ref({});
-const myChartStyle = ref({ margin: "50px 20px 50px auto", width: "50%", height: "400px" }); // Adjusted margin
+const myChartStyle = ref({ margin: "50px 20px 50px auto", width: "50%", height: "400px" });
 
 const initEcharts = (chart, data) => {
   const option = {
@@ -64,24 +63,24 @@ const initEcharts = (chart, data) => {
         radius: "30%",
         data: [
           {
-            value: data.score_0,
-            name: "0分",
+            value: data.score_0_2,
+            name: "0-2分",
           },
           {
-            value: data.score_1_3,
-            name: "1-3分",
+            value: data.score_2_4,
+            name: "2-4分",
           },
           {
             value: data.score_4_6,
             name: "4-6分",
           },
           {
-            value: data.score_7_9,
-            name: "7-9分",
+            value: data.score_6_8,
+            name: "6-8分",
           },
           {
-            value: data.score_10,
-            name: "10分",
+            value: data.score_8_10,
+            name: "8-10分",
           },
         ],
       },
@@ -120,6 +119,7 @@ const fetchData = () => {
   const data1 = {
     homeworkID: props.homeworkID,
   };
+  console.log("homeworkID:", props.homeworkID)
   const data2 = {
     contentID: contentID,
   }
@@ -141,10 +141,10 @@ const fetchData = () => {
           console.log(res2)
           Object.assign(scoreList, res2.data.data);
 
-          // 初始化 expandComments
-          scoreList.forEach((item, index) => {
-            expandComments[index] = item.content.split('\n').length > 2;
-          });
+          //  初始化 expandComments
+          // scoreList.forEach((item, index) => {
+          //   expandComments[index] = item.content.split('\n').length > 2;
+          // });
         }else{
           window.alert("获取信息失败:" + res2.data.msg);
         }
@@ -155,9 +155,9 @@ const fetchData = () => {
   });
 };
 
-const toggleExpand = (index) => {
-  expandComments[index] = !expandComments[index];
-};
+// const toggleExpand = (index) => {
+//   expandComments[index] = !expandComments[index];
+// };
 
 
 onMounted(() => {
@@ -186,14 +186,8 @@ onMounted(() => {
   text-align: left;
 }
 
-.score-list{
-  margin-top: 80px;
-  font-size: 15px;
-  display: flex;
-  justify-content: start;
-  text-align: left;
-  flex-direction: column;
-  width: 500px;
+.score .el-table{
+  margin-top: 50px;
 }
 
 .toggle{

@@ -1,7 +1,6 @@
 package com.bjtu.dao;
 
-import com.bjtu.pojo.Admin;
-import com.bjtu.pojo.User;
+import com.bjtu.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,4 +18,28 @@ public interface AdminDao{
 //    public void updatePassword(String id,String password);
 
     public void updateEmail(String id, String email);
+
+    void insertStudent(Student student);
+
+    void insertTeacher(Teacher teacher);
+
+    void insertCourse(Course course);
+
+    void deleteStudentByID(String id);
+
+    void deleteTeacherByID(String id);
+
+    void deleteCourseByCno(String cno);
+
+    public Student findStudentByID(String id);
+
+    public Teacher findTeacherByID(String id);
+
+    public Course findCourseByCno(String cno);
+
+    public List<Student> findAllStudent();
+    public  List<Teacher> findAllTeacher();
+    public List<Course> findAllCourse();
+
+
 }

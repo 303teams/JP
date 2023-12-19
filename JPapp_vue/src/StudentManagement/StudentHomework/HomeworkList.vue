@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column label="作业成绩" width="120px" align="center">
           <template v-slot="scope">
-          <el-tooltip v-if="scope.row.score !== null" class="item" effect="dark" content="查看详情" placement="top">
+          <el-tooltip v-if="scope.row.submitTime !== null" class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleCheck(cno,scope.row)" style="cursor: pointer; color:dodgerblue">
             {{ scope.row.score }}
             <el-icon><Search /></el-icon>
@@ -102,7 +102,8 @@ const handleCheck = (cno,row) => {
       scoreDdl:row.scoreDdl,
       contentID:row.contentID,
       info:row.info,
-      score:row.score
+      score:row.score,
+      submitTime:row.submitTime
     }
   });
 };

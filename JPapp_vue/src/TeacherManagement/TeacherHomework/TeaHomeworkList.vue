@@ -55,7 +55,7 @@
           <el-upload
               v-if="scope.row.afilename === null"
               class="upload-demo"
-              action="http://localhost:8081/homework/setAnswer"
+              action="/homework/setAnswer"
               :http-request="(params) => uploadAnswer(params, scope.row)"
               :before-upload="beforeUpload"
               :on-success="successHandle"
@@ -70,6 +70,20 @@
             </template>
           </el-upload>
           <span v-else>已上传</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="right">
+          <template #default="scope">
+          <el-icon
+              size="40px"
+              @mouseenter="isHovered = true"
+              @mouseleave="isHovered = false"
+              @click="handleDelete(scope.$index, scope.row)"
+              style="cursor: pointer;color: rgba(87,86,86,0.55)"
+          >
+            <Delete v-if="!isHovered" />
+            <DeleteFilled v-else />
+          </el-icon>
           </template>
         </el-table-column>
       </el-table>
@@ -103,6 +117,9 @@
                 value-format="YYYY-MM-DD HH:mm:ss"
                 format="YYYY-MM-DD HH:mm:ss"
                 :disabled-date="disabledSubmitDate"
+                :disabled-hours="disabledSubmitHours"
+                :disabled-minutes="disabledSubmitMinutes"
+                :disabled-seconds="disabledSubmitSeconds"
                 placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="互评截止日期:" prop="scoreDdl" >
@@ -112,6 +129,9 @@
                 value-format="YYYY-MM-DD HH:mm:ss"
                 format="YYYY-MM-DD HH:mm:ss"
                 :disabled-date="disabledScoreDate"
+                :disabled-hours="disabledScoreHours"
+                :disabled-minutes="disabledScoreMinutes"
+                :disabled-seconds="disabledScoreSeconds"
                 placeholder="选择日期和时间"/>
           </el-form-item>
           <el-form-item label="上传附件" prop="content">
@@ -156,10 +176,10 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import axios from 'axios';
-import {ElConfigProvider, ElMessage} from 'element-plus';
+import {dayjs, ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRoute, useRouter} from "vue-router";
+import http from "@/api/http";
 
 const loading = ref(true);
 const currentPage = ref(1); // 从第一页开始
@@ -168,11 +188,11 @@ const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
 const dialogTableVisible = ref(false);
-const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const HomeworkFormRef =ref();
 const router = useRouter();
 const route =useRoute();
+const isHovered = ref(false);
 const courseName = ref('');
 const homeworkData = reactive({
   name: '',
@@ -208,38 +228,224 @@ const filterTableData = computed(() =>
 // 禁用日期
 const disabledSubmitDate = (time) => {
   if(homeworkData.scoreDdl === '') {
-    return time.getTime() < new Date() - 8.64e7;
+    return time.getTime() <= new Date() - 8.64e7;
   }else{
-    return time.getTime() > new Date(homeworkData.scoreDdl).getTime() || time.getTime() < new Date() - 8.64e7;
+    return time.getTime() >= new Date(homeworkData.scoreDdl).getTime() || time.getTime() < new Date() - 8.64e7;
   }
 };
+
+const disabledSubmitHours = () => {
+  if(homeworkData.submitDdl !=='') {
+    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+
+
+    if(homeworkData.scoreDdl === ''){
+      if(selectedDay === currentDay) {
+        return Array.from({length: currentHour}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      console.log("scoreDay:"+scoreDay)
+      console.log("selectedDay:"+selectedDay)
+      if(scoreDay === selectedDay) {
+        if(selectedDay === currentDay){
+          return Array.from({length: 24}, (_, index) => index < currentHour || index > scoreDdlHours ? index : null).filter(hour => hour !== null);
+        }else{
+          return Array.from({length: 24}, (_, index) => index > scoreDdlHours ? index : null).filter(hour => hour !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+};
+
+const disabledSubmitMinutes = (selectedHour) => {
+  if(homeworkData.submitDdl !=='') {
+    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if(homeworkData.scoreDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour) {
+        return Array.from({length: currentMinutes}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      const scoreDdlMinutes = new Date(homeworkData.scoreDdl).getMinutes();
+      if(scoreDay === selectedDay && selectedHour === scoreDdlHours) {
+        if(selectedDay === currentDay && selectedHour === currentHour) {
+          return Array.from({length: 60}, (_, index) => index < currentMinutes || index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index > scoreDdlMinutes ? index : null).filter(minute => minute !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+
+};
+
+const disabledSubmitSeconds = (selectedHour,selectedMinute) => {
+  if(homeworkData.submitDdl !=='') {
+    const selectedDate = new Date(homeworkData.submitDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const currentSeconds = new Date().getSeconds();
+
+    if(homeworkData.scoreDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+        return Array.from({length: currentSeconds}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const scoreDay = dayjs(new Date(homeworkData.scoreDdl).getTime()).format('YYYY-MM-DD');
+      const scoreDdlHours = new Date(homeworkData.scoreDdl).getHours();
+      const scoreDdlMinutes = new Date(homeworkData.scoreDdl).getMinutes();
+      const scoreDdlSeconds = new Date(homeworkData.scoreDdl).getSeconds();
+      if(scoreDay === selectedDay && selectedHour === scoreDdlHours && selectedMinute === scoreDdlMinutes) {
+        if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+          return Array.from({length: 60}, (_, index) => index < currentSeconds || index > scoreDdlSeconds ? index : null).filter(second => second !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index > scoreDdlSeconds ? index : null).filter(second => second !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }else{
+    return [];
+  }
+};
+
 
 const disabledScoreDate = (time) => {
   if(homeworkData.submitDdl === ''){
-    return time.getTime() < new Date() - 8.64e7;
+    return time.getTime() <= new Date() - 8.64e7;
   }else{
-    return time.getTime() < new Date(homeworkData.submitDdl).getTime();
+    const submitDdlDate = new Date(homeworkData.submitDdl).setHours(0, 0, 0, 0);
+    return time.getTime() < submitDdlDate;
   }
-
 };
 
+const disabledScoreHours = () => {
+  if(homeworkData.scoreDdl !== ''){
+    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+
+    if(homeworkData.submitDdl === ''){
+      if(selectedDay === currentDay) {
+        return Array.from({length: currentHour}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      if(submitDdlDay === selectedDay) {
+        if(selectedDay === currentDay){
+          return Array.from({length: 24}, (_, index) => index < submitDdlHours || index < currentHour ? index : null).filter(hour => hour !== null);
+        }else{
+          return Array.from({length: 24}, (_, index) => index < submitDdlHours ? index : null).filter(hour => hour !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
+
+const disabledScoreMinutes = (selectedHour) => {
+  if(homeworkData.scoreDdl !== ''){
+    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if(homeworkData.submitDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour) {
+        return Array.from({length: currentMinutes}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      const submitDdlMinutes = new Date(homeworkData.submitDdl).getMinutes();
+      if(submitDdlDay === selectedDay && selectedHour === submitDdlHours) {
+        if(selectedDay === currentDay && selectedHour === currentHour) {
+          return Array.from({length: 60}, (_, index) => index < submitDdlMinutes || index < currentMinutes ? index : null).filter(minute => minute !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index < submitDdlMinutes ? index : null).filter(minute => minute !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
+const disabledScoreSeconds = (selectedHour,selectedMinute) => {
+  if(homeworkData.scoreDdl !== ''){
+    const selectedDate = new Date(homeworkData.scoreDdl).getTime();
+    const selectedDay = dayjs(selectedDate).format('YYYY-MM-DD');
+    const currentDay = dayjs().format('YYYY-MM-DD');
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const currentSeconds = new Date().getSeconds();
+
+    if(homeworkData.submitDdl === ''){
+      if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+        return Array.from({length: currentSeconds}, (_, index) => index);
+      }else{
+        return [];
+      }
+    }else{
+      const submitDdlDay = dayjs(new Date(homeworkData.submitDdl).getTime()).format('YYYY-MM-DD');
+      const submitDdlHours = new Date(homeworkData.submitDdl).getHours();
+      const submitDdlMinutes = new Date(homeworkData.submitDdl).getMinutes();
+      const submitDdlSeconds = new Date(homeworkData.submitDdl).getSeconds();
+      if(submitDdlDay === selectedDay && selectedHour === submitDdlHours && selectedMinute === submitDdlMinutes) {
+        if(selectedDay === currentDay && selectedHour === currentHour && selectedMinute === currentMinutes) {
+          return Array.from({length: 60}, (_, index) => index < submitDdlSeconds || index < currentSeconds ? index : null).filter(second => second !== null);
+        }else{
+          return Array.from({length: 60}, (_, index) => index < submitDdlSeconds ? index : null).filter(second => second !== null);
+        }
+      }else{
+        return [];
+      }
+    }
+  }
+};
 
 
 const fetchData = () => {
   return new Promise((resolve, reject) => {
-    axios
-        .post(
-            'http://localhost:8081/teacher/findHWbyCno',
-            {
-              cno: props.cno,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'token': token,
-              },
-            }
-        )
+    const data1={
+      cno: props.cno,
+    }
+    http.getHomeworkList(data1)
         .then(res1 => {
           if (res1.data.code === 200) {
             // courseName.value = res1.data.data[0].courseName;
@@ -250,20 +456,11 @@ const fetchData = () => {
 
               // 使用promise实现多个接口的调用
               const promises = tableData.data.map(item => {
-                return axios.post(
-                    'http://localhost:8081/homework/downloadHW',
-                    null,
-                    {
-                      params: {
-                        homeworkId: item.homeworkID,
-                      },
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'token': token,
-                      },
-                      responseType: 'blob',
-                    }
-                ).then(res2 => {
+                const data2={
+                  homeworkId: item.homeworkID,
+                }
+                return http.downloadHomework(data2)
+                    .then(res2 => {
                   console.log(res2)
                   const blob = new Blob([res2.data], {type: 'application/octet-stream'});
                   const blobUrl = URL.createObjectURL(blob);
@@ -303,7 +500,13 @@ const updateFilteredData = () => {
 };
 
 const handleClick = (row) => {
-  router.push(`/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.homeworkID}`);
+  router.push({
+    path: `/teacherHome/ViewHomeworkSubmit/${props.cno}/${row.homeworkID}`,
+    state: {
+      submitDdl:row.submitDdl,
+      scoreDdl:row.scoreDdl,
+    }
+  });
 };
 
 const uploadHomework = () => {
@@ -350,20 +553,11 @@ const assignHomework = () => {
     formData.set('submitDdl', homeworkData.submitDdl);
       if (valid) {
         console.log(formData.get('scoreDdl'))
-        axios
-            .post(
-                'http://localhost:8081/homework/uploadHW',
-                formData,
-                {
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'token': token,
-                  },
-                }
-            )
+        http.assignHomework(formData)
             .then((res) => {
               if (res.data.code === 200) {
                 console.log(res)
+                ElMessage.success("作业发布成功");
                 resetFormData();
                 fetchData();
               } else {
@@ -394,15 +588,7 @@ const uploadAnswer = (params,row) =>{
   // 返回一个 Promise 对象，用于处理上传成功或失败的情况
   return new Promise((resolve, reject) => {
     // 发送文件上传请求
-    axios({
-      url: 'http://localhost:8081/homework/setAnswer',
-      method: 'post',
-      data: form,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'token': token,
-      }
-    })
+    http.uploadAnswer(form)
         .then(res => {
           // 处理上传成功的逻辑
           console.log('上传成功', res);
@@ -413,6 +599,35 @@ const uploadAnswer = (params,row) =>{
           console.error('上传失败', error);
           reject(error);  // 将错误信息传递给 Promise
         });
+  });
+};
+
+const handleDelete = (index, row) => {
+  // 在这里可以调用 ElMessageBox 弹出确认框
+  ElMessageBox.confirm('确定要删除这项作业吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    const data = {
+      homeworkID: row.homeworkID,
+    }
+    http.deleteHomework(data)
+        .then((res) => {
+          if (res.data.code === 200) {
+            console.log(res)
+            tableData.data.splice(index, 1);
+            updateFilteredData();
+            ElMessage.success('删除成功');
+          } else {
+            window.alert("删除失败:" + res.data.msg);
+          }
+        })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }).catch(() => {
   });
 };
 
@@ -433,7 +648,8 @@ onMounted(() => {
   fetchData();
   loading.value = false;
   courseName.value=route.params.courseName;
-  console.log(route.params.courseName)
+  console.log(route.params.courseName);
+
 });
 
 const Back = () => {
@@ -461,8 +677,8 @@ const Back = () => {
 
 .base_title {
   position: absolute;
-  top: -40px;
-  left: 170px;
+  top: -20px;
+  left: 120px;
 }
 
 .title {
@@ -487,7 +703,7 @@ const Back = () => {
 .search-container {
   display: flex;
   width: auto;
-  margin-top: 80px;
+  margin-top: 100px;
   margin-bottom: 10px;
 }
 
@@ -504,8 +720,8 @@ const Back = () => {
 .upload-button {
   position: absolute;
   top: 0;
-  right: 170px;
-  margin-top: 80px;
+  right: 120px;
+  margin-top: 100px;
   margin-bottom: 10px;
 }
 
