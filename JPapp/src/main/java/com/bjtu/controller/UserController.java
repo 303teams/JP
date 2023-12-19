@@ -13,13 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import com.bjtu.exception.ServiceException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -129,19 +126,6 @@ public class UserController {
         }else{
             return RspObject.fail("修改密码失败！");
         }
-//        String id = session.getAttribute("id").toString();
-//        System.out.println("当前用户："+id);
-//        String role = Utils.getUserType(id);
-//        if(role.equals("admin")){
-//            return adminService.modifyPassword(newPassword,oldPassword);
-//        }else if(role.equals("student")){
-//            return studentService.modifyPassword(newPassword,oldPassword);
-//        }else if(role.equals("teacher")) {
-//            return teacherService.modifyPassword(newPassword, oldPassword);
-//        }else{
-//            return RspObject.fail("修改密码失败！");
-//        }
-
 
     }
 
@@ -157,9 +141,9 @@ public class UserController {
         if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
         }else if(user.getClass() == Admin.class){
-            return teacherService.modifyEmail(email);
-        }else if(user.getClass() == Teacher.class){
             return adminService.modifyEmail(email);
+        }else if(user.getClass() == Teacher.class){
+            return teacherService.modifyEmail(email);
         }else{
             return RspObject.fail("修改邮箱失败！");
         }
@@ -177,15 +161,6 @@ public class UserController {
             throw new ServiceException("验证码未发送至您的邮箱");
         }
     }
-
-//    @AuthAccess
-//    @PostMapping ("/findAll")
-//    public RspObject<List<String>> findAllStudentsList() {
-//
-//        return studentService.findAll();
-//    }
-
-
 
 
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjtu.dao.ScDao">
+
+
+    <select id="findCourseInfoBySno" resultType="java.util.Map">
+        SELECT sc.cno,cname,score
+        FROM sc
+        JOIN course ON sc.cno = course.cno
+        WHERE sno = #{sno}
+    </select>
+
+</mapper>

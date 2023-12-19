@@ -10,33 +10,27 @@
       </el-descriptions>
       <el-button style="margin-top: 100px" type="primary" size="large" @click="Modifyinfo">修改</el-button>
     </el-card>
-    <StuModifyInfo ref="dia" @flesh="reload"></StuModifyInfo>
+    <StuModifyInfo ref="stuModifyInfoRef"></StuModifyInfo>
   </div>
 </template>
 
 
-<script>
-import {mapState} from "vuex";
-import StuModifyInfo from "@/StudentManagement/StudentHome/StuModifyInfo.vue";
+<script setup>
+import StuModifyInfo from "./StuModifyInfo.vue";
+import {computed, ref} from "vue";
+import { useStore } from 'vuex';
 
-export default {
-  components: {StuModifyInfo},
-  name: "InfoPage",
-
-  data() {
-    return {};
-  },
-  methods: {
-    Modifyinfo() {
-      this.$refs.dia.open();
-    },
-  },
-
-  computed:{
-     ...mapState(['id', 'name', 'sex', 'email', 'age'])
-  },
-
+const stuModifyInfoRef = ref();
+const store = useStore();
+const Modifyinfo = () => {
+  stuModifyInfoRef.value.open();
 };
+
+const id = computed(() => store.state.id);
+const name = computed(() => store.state.name);
+const sex = computed(() => store.state.sex);
+const email = computed(() => store.state.email);
+const age = computed(() => store.state.age);
 </script>
 
 <style scoped>

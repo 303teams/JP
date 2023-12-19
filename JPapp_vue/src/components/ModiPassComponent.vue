@@ -28,6 +28,7 @@
 import qs from 'qs';
 import {mapState} from "vuex";
 import {right} from "core-js/internals/array-reduce";
+import http from "@/api/http";
 
 export default {
   data() {
@@ -88,21 +89,11 @@ export default {
       // 验证表单是否合法
       this.$refs.ModifyPasswordRef.validate((valid) => {
         if (valid) {
-          let vm = this;
-
           // 把form对象的数据转换成URL编码的格式
-          let data = qs.stringify(vm.modifyPasswordForm);
-          this.axios({
-            url: 'http://localhost:8081/user/modifyPassword',
-            method: 'post',
-            data: data,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': localStorage.getItem('token')// 添加token到请求头中
-            }
-          }).then(res => {
+          const data = qs.stringify(this.modifyPasswordForm);
+          http.modifyPassword(data).then(res => {
             // 根据返回的数据来判断请求的结果
-            if (res.data.code === 200) {
+            if (res.code === 200) {
               // 修改成功，显示成功提示信息
               this.$message.success('修改成功');
               // 关闭对话框
@@ -110,7 +101,7 @@ export default {
               this.LeaveSystem()
             } else {
               // 修改失败，显示失败提示信息
-              this.$message.error('修改失败：' + res.data.msg);
+              this.$message.error('修改失败：' + res.msg);
             }
           }).catch(err => {
             // 发生未知错误，显示错误提示信息

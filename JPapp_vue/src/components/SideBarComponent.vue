@@ -14,21 +14,16 @@
         </el-menu-item>
         <el-menu-item index="/viewCourse" :route="{ name: 'ViewCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>课程
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/course.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;课程
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/ShowGrade" :route="{ name: 'ShowGrade' }">
           <template #title>
-            <div>
-              <span>分数</span>
-            </div>
-          </template>
-        </el-menu-item>
-        <el-menu-item>
-          <template #title>
-            <div>
-              <span>其他</span>
-            </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/grade.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;成绩分析
           </template>
         </el-menu-item>
       </el-menu>
@@ -50,14 +45,14 @@
         </el-menu-item>
         <el-menu-item index="/ViewMyCourse" :route="{ name: 'ViewMyCourse' }">
           <template #title>
-          <el-icon><message /></el-icon>作业
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/course.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;已授课程
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item  index="/MessagePage" :route="{ name: 'MessagePage' }">
           <template #title>
-          <div>
-            <span>学生列表</span>
-          </div>
+          <el-icon><bell/></el-icon>消息
           </template>
         </el-menu-item>
         <el-menu-item>
@@ -79,25 +74,30 @@
           <img :src="logo" alt="logo" class="image">
           <h1 class="header_1">简评</h1>
         </a>
-        <el-menu-item index="/StuManagement" :route="{ name: 'StuManagement' }">
+        <el-menu-item index="/AdminHome" :route="{ name: 'AdminInfoPage' }">
           <template #title>
-            <div>
-              <span>学生管理</span>
-            </div>
+          <el-icon><user /></el-icon>个人信息
           </template>
         </el-menu-item>
-        <el-menu-item index="/TeaManagement" :route="{ name: 'TeaManagement' }">
+        <el-menu-item>
           <template #title>
-          <div>
-            <span>老师管理</span>
-          </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/student.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;学生管理
           </template>
-        </el-menu-item >
-        <el-menu-item index="/CouManagement" :route="{ name: 'CouManagement' }">
+        </el-menu-item>
+        <el-menu-item>
           <template #title>
-          <div>
-            <span>课程管理</span>
-          </div>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/teacher.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;教师管理
+          </template>
+        </el-menu-item>
+        <el-menu-item>
+          <template #title>
+          <svg width="22" height="22">
+            <image xlink:href="@/assets/coursemanage.svg" width="22" height="22" />
+          </svg>&nbsp;&nbsp;课程管理
           </template>
         </el-menu-item>
       </el-menu>
@@ -118,11 +118,6 @@ export default {
 
   computed:{
     ...mapState(['role'])
-  },
-  methods:{
-    gotoPage(pageName){
-      this.$router.push({path:pageName})
-    }
   }
 }
 
@@ -135,7 +130,7 @@ export default {
 .el-side {
   background-color: rgba(101, 75, 65, 0.86);
   height: 100vh;
-  width: 200px;
+  width: 15vw;
 }
 
 /*侧边菜单背景颜色*/

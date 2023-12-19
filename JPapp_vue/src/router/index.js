@@ -4,16 +4,20 @@ import HomePage from "@/components/HomePage.vue";
 import StuInfoPage from "@/StudentManagement/StudentHome/StuInfoPage.vue";
 import TeaInfoPage from "@/TeacherManagement/TeacherHome/TeaInfoPage.vue";
 import HomeworkList from "@/StudentManagement/StudentHomework/HomeworkList.vue";
-import TeaManagement from "@/AdminManagement/AdminActivity/TeaManagement.vue";
-import HomManagement from "@/AdminManagement/AdminActivity/HomManagement.vue";
-import CouManagement from "@/AdminManagement/AdminActivity/CouManagement.vue";
-import StuManagement from "@/AdminManagement/AdminActivity/StuManagement.vue";
-import AdminfoPage from "@/AdminManagement/AdminHome/AdminfoPage.vue";
 import CourseList from "@/StudentManagement/StudentHomework/CourseList.vue";
 import HomeworkSubmit from "@/StudentManagement/StudentHomework/HomeworkSubmit.vue";
 import TeaCourseList from "@/TeacherManagement/TeacherHomework/TeacherCourseList.vue";
 import TeaHomeworkList from "@/TeacherManagement/TeacherHomework/TeaHomeworkList.vue";
 import HomeworkSubmitList from "@/TeacherManagement/TeacherHomework/HomeworkSubmitList.vue";
+import MutualEva from "@/StudentManagement/StudentHomework/MutualEva.vue";
+import MessagePage from "@/TeacherManagement/TeacherMessage/MessagePage.vue";
+import GradeDetail from "@/StudentManagement/StudentHomework/GradeDetail.vue";
+import ViewHomework from "@/StudentManagement/StudentHomework/ViewHomework.vue";
+import EvaluationList from "@/StudentManagement/StudentHomework/EvaluationList.vue";
+import MessageDetail from "@/TeacherManagement/TeacherMessage/MessageDetail.vue";
+import ShowGrade from "@/StudentManagement/StudentGrade/ShowGrade.vue";
+import AdminInfoPage from "@/AdminManagement/AdminHome/AdminInfoPage.vue";
+
 
 const routerHistory = createWebHistory();
 
@@ -50,9 +54,16 @@ const router = createRouter({
                 },
 
                 {
-                    path: 'viewHomework/:cno',
-                    name:'ViewHomework',
+                    path: 'viewHomeworkList/:cno',
+                    name:'ViewHomeworkList',
                     component: HomeworkList,
+                    props: true,
+                },
+
+                {
+                    path: 'viewHomework/:cno/:homeworkID',
+                    name:'ViewHomework',
+                    component: ViewHomework,
                     props: true,
                 },
 
@@ -60,6 +71,34 @@ const router = createRouter({
                     path: 'HomeworkSubmit/:cno/:homeworkID',
                     name:'HomeworkSubmit',
                     component: HomeworkSubmit,
+                    props: true,
+                },
+
+                {
+                    path: 'EvaluationList/:contentID',
+                    name:'EvaluationList',
+                    component: EvaluationList,
+                    props: true,
+                },
+
+                {
+                    path: 'MutualEva/:homeworkID/:contentID',
+                    name:'MutualEva',
+                    component: MutualEva,
+                    props: true,
+                },
+
+                {
+                    path: 'GradeDetail/:homeworkID',
+                    name:'GradeDetail',
+                    component: GradeDetail,
+                    props: true,
+                },
+
+                {
+                    path: 'ShowGrade',
+                    name:'ShowGrade',
+                    component: ShowGrade,
                     props: true,
                 }
             ]
@@ -93,56 +132,40 @@ const router = createRouter({
                     name:'ViewHomeworkSubmit',
                     component: HomeworkSubmitList,
                     props: true,
+                },
+
+                {
+                    path: 'MessagePage',
+                    name:'MessagePage',
+                    component: MessagePage,
+                    props: true,
+                },
+
+                {
+                    path: 'MessageDetail',
+                    name:'MessageDetail',
+                    component: MessageDetail,
+                    props: true,
                 }
+
             ]
         },
+
         {
-            path: '/adminHome',
-            name: 'adminHome',
+            path: '/AdminHome',
+            name: 'AdminHome',
             component: HomePage,
             children: [
                 {
-                    path: '/AdminInfoPage',
+                    path: '',
                     name:'AdminInfoPage',
-                    component: AdminfoPage
+                    component: AdminInfoPage
                 },
-                {
-                    path: '/StuManagement',
-                    name:'StuManagement',
-                    component: StuManagement
-                },
-                {
-                    path: '/TeaManagement',
-                    name:'TeaManagement',
-                    component: TeaManagement
-                },
-                {
-                    path: '/HomManagement',
-                    name:'HomManagement',
-                    component: HomManagement
-                },
-                {
-                    path: '/CouManagement',
-                    name:'CouManagement',
-                    component: CouManagement
-
-                }
             ]
-        },
+        }
 
 
-        // {
-        //     path: '/adminHome',
-        //     name: 'adminHome',
-        //     component: AdminPage,
-        //     // children: [
-        //     //     {
-        //     //         path: 'info',
-        //     //         name:'AdminInfoPage',
-        //     //         component: InfoPage
-        //     //     },
-        //     // ]
-        // }
+
 
     ],
     // mode: history

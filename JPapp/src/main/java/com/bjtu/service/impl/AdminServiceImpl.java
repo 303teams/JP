@@ -17,9 +17,82 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     AdminDao adminDao;
 
+
+    @Override
+    public RspObject<String> addStudent(Student student) {
+
+        if(Utils.userIsExist(student.getId())){
+            return RspObject.fail("用户已存在!");
+        }
+        adminDao.insertStudent(student);
+        return RspObject.success("成功插入学生！");
+    }
+
+    @Override
+    public RspObject<String> addTeacher(Teacher teacher) {
+
+        if(Utils.userIsExist(teacher.getId())){
+            return RspObject.fail("用户已存在!");
+        }
+        adminDao.insertTeacher(teacher);
+        return RspObject.success("成功插入老师！");
+    }
+    @Override
+    public RspObject<String> addCourse(Course course) {
+
+        adminDao.insertCourse(course);
+        return RspObject.success("成功插入课程！");
+    }
+
+    @Override
+    public RspObject<String> deleteStudent(String id) {
+        adminDao.deleteStudentByID(id);
+        return RspObject.success("成功删除学生！");
+    }
+    @Override
+
+    public RspObject<String> deleteTeacher(String id) {
+        adminDao.deleteTeacherByID(id);
+        return RspObject.success("成功删除老师！");
+    }
+
+    @Override
+    public RspObject<String> deleteCourse(String cno) {
+        adminDao.deleteCourseByCno(cno);
+        return RspObject.success("成功删除课程！");
+    }
+
+    @Override
+    public RspObject<Student> findStudent(String id) {
+        Student student = adminDao.findStudentByID(id);
+        if(student == null){
+            return RspObject.fail("该学生不存在！");
+        }else{
+            return RspObject.success("查询成功！",student);
+        }
+    }
+
+    @Override
+    public RspObject<Teacher> findTeacher(String id) {
+        Teacher teacher = adminDao.findTeacherByID(id);
+        if(teacher == null){
+            return RspObject.fail("该老师不存在！");
+        }else{
+            return RspObject.success("查询成功！",teacher);
+        }
+    }
+
+    @Override
+    public RspObject<Course> findCourse(String cno) {
+        Course course = adminDao.findCourseByCno(cno);
+        if(course == null){
+            return RspObject.fail("该课程不存在！");
+        }else{
+            return RspObject.success("查询成功！",course);
+        }
+    }
     @Override
     public RspObject<User> login(String id, String password) {
-        System.out.println(id + " " + password);
         Admin admin = adminDao.findByNum(id);
 //        System.out.println(admin);
         if (admin == null) {
@@ -43,15 +116,8 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    @Override
-    public RspObject<List<Admin>> searchAll() {
-        return null;
-    }
 
-    @Override
-    public RspObject<Boolean> deleteOne(String id) {
-        return null;
-    }
+
 
     @Override
     public RspObject<String> modifyEmail(String email) {

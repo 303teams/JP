@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 20px">
     <el-row v-if="items.length > 0">
       <el-col
           v-for="(item, index) in items"
@@ -10,10 +10,10 @@
           <img
               src="@/assets/img.png"
               class="image"
-              @click="courseEnter(item.cno)"
+              @click="courseEnter(item.cno,item.cname)"
           />
           <div class="info-content">
-            <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
+            <span class="course_name" @click="courseEnter(item.cno,item.cname)">{{item.cname}}</span>
             <span class="course_id">课程号: {{item.cno}}</span>
           </div>
 
@@ -32,25 +32,14 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import axios from 'axios';
 import {useRouter} from "vue-router";
+import http from "@/api/http";
 
 const items = ref([]);
-const token = localStorage.getItem('token');
 const router = useRouter();
 
 const fetchData = async () => {
-  axios
-      .post(
-          'http://localhost:8081/teacher/findCourse',
-          null,
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
+  http.getCourseList()
       .then((res) => {
         if (res.data.code === 200) {
           items.value = res.data.data;

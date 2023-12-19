@@ -7,7 +7,7 @@
                width="40%"
                :before-close="handleClose">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form :model="form" :rules="rules" ref="form" label-width="80px">
+        <el-form :model="form" :rules="rules" ref="StuFormRef" label-width="80px">
           <div class="updateinfo">
             <el-form-item label="名字" prop="name">
               <el-input style="width: 200px"  v-model="form.name"></el-input>
@@ -35,98 +35,84 @@
   </div>
 </template>
 
-<script>
-
+<script setup>
+import {defineExpose, reactive, ref} from 'vue';
 import qs from 'qs';
-import {mapState} from "vuex";
+import { useStore } from 'vuex';
+import {ElMessage} from "element-plus";
+import http from "@/api/http";
 
-export default {
-  data() {
-    return {
-      dialogVisible: false,
-      form: {
-        id: Number,
-        name: "",
-        sex: "",
-        age: Number,
-      },
-      rules: {
-        name: [
-          { required: true, message: "名字不能为空", trigger: "blur" },
-        ],
-        sex: [
-          { required: true, message: "性别不能为空", trigger: "blur" },
-        ],
-        age: [
-          { required: true, message: "年龄不能为空", trigger: "blur" },
-        ],
-      },
-    };
-  },
-  methods: {
-    load(){
-      Object.assign(this.form, this.$store.state)
-    },
-    open() {
-      this.dialogVisible = true;
-      this.load()
-    },
-    handleClose() {
-      this.dialogVisible = false;
-      this.$emit("flesh");
-    },
+const dialogVisible = ref(false);
+const StuFormRef = ref();
+const form = reactive({
+  name: "",
+  sex: "",
+  age: Number,
+});
+const rules = reactive({
+  name: [
+    { required: true, message: "名字不能为空", trigger: "blur" },
+  ],
+  sex: [
+    { required: true, message: "性别不能为空", trigger: "blur" },
+  ],
+  age: [
+    { required: true, message: "年龄不能为空", trigger: "blur" },
+  ],
+});
 
-    submitForm() {
-      // 验证表单是否合法
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          let vm = this;
-          // 把form对象的数据转换成URL编码的格式
-          let data = qs.stringify(vm.form);
-          this.axios({
-            url: 'http://localhost:8081/student/modifyInfo',
-            method: 'post',
-            data: data,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': localStorage.getItem('token') // 添加token到请求头中
-            }
-          }).then(res => {
-            // 根据返回的数据来判断请求的结果
-            if (res.data.code === 200) {
-              // 修改成功，显示成功提示信息
-              this.$message.success('修改成功');
-              // 使用Object.assign来复制form对象的值到Vuex的状态上
-              Object.assign(this.$store.state, this.form)
-              // 调用mutation来更新状态
-              this.$store.commit('updateInfo', this.$store.state)
-              // 关闭对话框
-              this.handleClose()
-            } else {
-              // 修改失败，显示失败提示信息
-              this.$message.error('修改失败：' + res.data.message);
-            }
-          }).catch(err => {
-            // 发生未知错误，显示错误提示信息
-            this.$message.error("发生未知错误！");
-            console.log(err);
-          })
-        } else {
-          // 表单不合法，提示错误
-          this.$message.error('请检查表单是否填写正确')
-          return false;
-        }
-      });
-    }
-  },
+const store = useStore();
 
-  computed:{
-    ...mapState([ 'id', 'name', 'sex', 'age'])
-  },
+const load = () => {
+  Object.assign(form, store.state);
 };
+
+const open = () => {
+  dialogVisible.value = true;
+  load();
+};
+
+const handleClose = () => {
+  dialogVisible.value = false;
+};
+
+const submitForm = () => {
+  // 验证表单是否合法
+  StuFormRef.value.validate((valid) => {
+    if (valid) {
+      // 把form对象的数据转换成URL编码的格式
+      const data = qs.stringify(form);
+      http.stuChangeInfo(data).then(res => {
+        // 根据返回的数据来判断请求的结果
+        if (res.data.code === 200) {
+          // 修改成功，显示成功提示信息
+          ElMessage.success('修改成功');
+          // 使用Object.assign来复制form对象的值到Vuex的状态上
+          Object.assign(store.state, form);
+          // 调用mutation来更新状态
+          store.commit('updateInfo', store.state);
+          // 关闭对话框
+          handleClose();
+        } else {
+          // 修改失败，显示失败提示信息
+          ElMessage.error('修改失败：' + res.data.msg);
+        }
+      }).catch(err => {
+        // 发生未知错误，显示错误提示信息
+        ElMessage.error("发生未知错误！");
+        console.log(err);
+      })
+    }
+  });
+};
+
+defineExpose({
+  open
+});
 </script>
 
 <style scoped>
+
 .updateinfo {
   overflow: auto;
 }

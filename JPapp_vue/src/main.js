@@ -1,19 +1,14 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index'
-import ElementUI from 'element-plus'
+import ElementUI, {ElMessage} from 'element-plus'
 import 'element-plus/theme-chalk/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import * as ElIconModules from '@element-plus/icons'
 import store from '@/store'
-import "lib-flexible-computer";
-import '@/utils/validator.js'
-import '@/utils/detectZoom.js'
-// import {detectZoom} from "@/utils/detectZoom";
+import '@/utils/flexible.js'
 
-// const m = detectZoom();
-// document.body.style.zoom = 100 / Number(m);
 
 const app = createApp(App)
 //  统一注册el-icon图标
@@ -39,7 +34,7 @@ for(let iconName in ElIconModules){
 //     }
 // })
 
-
+app.config.globalProperties.$message = ElMessage;
 app.use(router);
 app.use(ElementUI)
 app.use(VueAxios,axios)

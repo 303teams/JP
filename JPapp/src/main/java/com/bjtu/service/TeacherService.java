@@ -23,6 +23,7 @@ public interface TeacherService {
 
     public RspObject<String> modifyInfo(Teacher teacher);
 
+
     RspObject<List<Map<String, Object>>> findCourse(String id);
 
     RspObject<List<Homework>> findHWbyCno(String cno);
@@ -30,4 +31,18 @@ public interface TeacherService {
     RspObject<List<Content>> findCTByHId(Integer homeworkId);
 
     RspObject<Boolean> setCTScore(Integer contentId,Integer score);
+
+    RspObject<List<Map<String, Object>>> findAppeal(String id);
+    
+    Content findCTByID(Integer contentID);
+
+    Appeal findAPByID(Integer appealID);
+
+    RspObject<Boolean> setAP(Integer appealID,Integer num);
+
+    RspObject<Map<String,Object>> findAPByAID(Integer appealID);
+
+    RspObject<Boolean> deleteAPByAID(Integer appealID);
+
+    RspObject<Boolean> setCTWeightedScore(Integer contentId,Integer score);
 }

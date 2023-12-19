@@ -1,15 +1,13 @@
 package com.bjtu.dao;
-
-import cn.hutool.core.date.DateTime;
 import com.bjtu.pojo.Homework;
 import com.bjtu.service.HomeworkService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class HomeworkDaoTest {
@@ -21,11 +19,29 @@ class HomeworkDaoTest {
 
     @Test
     void insert() {
-        homeworkDao.insert(new Homework()
-                .setContent(null)
-                .setCno("1001")
-                .setFileName("123.txt")
-//                .setScoreDdl("2001-1-10")
-        );
+        Homework homework = new Homework();
+        homeworkDao.insert(homework);
+        System.out.println(homework.getHomeworkID());
+    }
+
+
+    @Test
+    void findHWById() {
+        System.out.println(homeworkDao.findHWById(573));
+    }
+
+    @Test
+    void findHWbyCno() {
+        System.out.println(homeworkDao.findHWbyCno("21301001","1001"));
+    }
+
+    @Test
+    void findSimpleAll() {
+        System.out.println(homeworkDao.findSimpleAll());
+    }
+
+    @Test
+    void findHWInfoByCno() {
+        System.out.println(homeworkDao.findHWInfoByCno("1001"));
     }
 }

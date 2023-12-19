@@ -14,6 +14,6 @@ class StudentDaoTest {
 
     @Test
     void findByNum() {
-        System.out.println(studentDao.findByNum("111"));
+        System.out.println(studentDao.findByNum("21301001"));
     }
 }

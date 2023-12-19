@@ -1,6 +1,5 @@
 package com.bjtu.service;
 
-import com.bjtu.dao.StudentDao;
 import com.bjtu.pojo.*;
 
 import java.util.List;
@@ -28,5 +27,15 @@ public interface StudentService {
 
 //    RspObject<List<Student>> findAll();
     RspObject<List<Homework>> findHWbyCno(String id,String cno);
+
+    RspObject<List<Content>> findCTsByCID(Integer contentID);
+
+//    RspObject<Boolean> setScore(Integer contentID, Integer score, String sno);
+
+    public RspObject<Boolean> score(Integer contentID,Integer score,String content);
+
+    public RspObject<Boolean> handleAppeal(Integer contentID, String appealContent);
+
+    public RspObject<List<Score>> findSCByCID(Integer contentID);
 
 }

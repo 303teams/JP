@@ -1,6 +1,7 @@
 package com.bjtu.controller;
 
 
+import cn.hutool.core.date.DateTime;
 import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.Content;
 import com.bjtu.pojo.RspObject;
@@ -20,6 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("content")
@@ -29,46 +35,55 @@ public class ContentController {
     ContentService contentService;
 
 //    学生上传作业
-    @AuthAccess
     @PostMapping("/uploadCT")
     public RspObject<Object> uploadCT(@RequestParam("file") MultipartFile file,
                                       @RequestParam String cno,
                                       @RequestParam Integer homeworkID,
                                       HttpServletResponse response) throws IOException {
-        Content content = new Content();
         User user = TokenUtils.getCurrentUser();
-    //        System.out.println(cno+" "+homeworkID+" "+user.getId());
-        String name = file.getOriginalFilename();
-    //        System.out.println("filename: "+name);
+        Content content = contentService.findCTByHIDSno(homeworkID,user.getId());
 
-        content.setContent(file.getBytes())
-                .setHomeworkID(homeworkID)
-                .setFileName(name)
-                .setSno(user.getId())
-                .setCno(cno) ;
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp currentTime = new Timestamp(currentTimeMillis);
 
-        contentService.addContent(content);
-        // 添加对响应头的修改
-        response.setHeader("Content-Disposition", "attachment;filename=" + name);
-        byte[] bytes = file.getBytes();
-        return RspObject.success("上传成功，当前thId：" , bytes);
+        if(content != null){
+            content.setContent(file.getBytes())
+                    .setFileName(file.getOriginalFilename())
+                    .setSubmitTime(currentTime);
+            return contentService.alterContent(content);
+        }else{
+            Content newContent = new Content();
+            String name = file.getOriginalFilename();
+
+            newContent.setContent(file.getBytes())
+                    .setHomeworkID(homeworkID)
+                    .setFileName(name)
+                    .setSno(user.getId())
+                    .setCno(cno)
+                    .setSubmitTime(currentTime);
+
+            contentService.addContent(newContent);
+            // 添加对响应头的修改
+            response.setHeader("Content-Disposition", "attachment;filename=" + name);
+            byte[] bytes = file.getBytes();
+            return RspObject.success("上传成功，当前thId：" , bytes);
+        }
+
     }
 
 //    学生/老师 下载 学生的作业
-    @AuthAccess
     @PostMapping("/downloadCT")
-    public ResponseEntity<byte[]> downloadCT(@RequestParam Integer contentID) {
-        System.out.println("hh"+ contentID);
+    public ResponseEntity<byte[]> downloadCT(Integer contentID) throws UnsupportedEncodingException {
         Content content1 = contentService.findById(contentID);
-
-        System.out.println("hh"+ contentID);
 
         byte[] content = content1.getContent();
         String fileName = content1.getFileName();
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+        headers.set("Content-Type","application/octet-stream; charset=UTF-8");
 
         return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }

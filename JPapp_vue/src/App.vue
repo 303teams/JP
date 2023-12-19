@@ -7,11 +7,17 @@
 </template>
 
 <script>
+//import DevicePixelRatio from './utils/devicePixelRatio';
 
 export default {
   name: 'App',
   components: {},
-  created() {}
+  created() {
+    //new DevicePixelRatio().init();
+  },
+
+  methods: {
+  }
 }
 </script>
 

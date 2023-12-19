@@ -1,71 +1,61 @@
 <template>
-  <el-row  v-if="items.length > 0">
-    <el-col
-        v-for="(item, index) in items"
-        :key="index"
-        :span="7"
-    >
-      <div class="course_info">
-        <img
-            src="@/assets/img.png"
-            class="image"
-            @click="courseEnter(item.cno)"
-        />
-        <div class="info-content">
-          <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
-          <span class="course_id">课程号: {{item.cno}}</span>
-          <span class="teacher_name">主讲教师：{{item.teacherName}}</span>
+  <div class="main_page">
+    <el-row  v-if="items.length > 0">
+      <el-col
+          v-for="(item, index) in items"
+          :key="index"
+          :span="7"
+      >
+        <div class="course_info">
+          <img
+              src="@/assets/img.png"
+              class="image"
+              @click="courseEnter(item.cno)"
+          />
+          <div class="info-content">
+            <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
+            <span class="course_id">课程号: {{item.cno}}</span>
+            <span class="teacher_name">主讲教师：{{item.teacherName}}</span>
+          </div>
+
+          <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
         </div>
 
-        <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
-      </div>
+        <el-divider />
+      </el-col>
 
-      <el-divider />
-    </el-col>
+    </el-row>
 
-  </el-row>
-
-  <div v-else>
-    <el-empty description="暂无已选课程"></el-empty>
+    <div v-else>
+      <el-empty description="暂无已选课程"></el-empty>
+    </div>
   </div>
 </template>
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import axios from 'axios';
 import {useRouter} from "vue-router";
+import http from "@/api/http";
 
 const items = ref([]);
-const token = localStorage.getItem('token');
 const router = useRouter();
 
 const fetchData = async () => {
-  axios
-      .post(
-          'http://localhost:8081/student/findCourse',
-          null,
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      ).then((res) => {
-        if (res.data.code === 200) {
-          items.value = res.data.data;
-          console.log(res)
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
-        }
-      })
-      .catch((err) => {
+  http.stuCourseList().then((res) => {
+    if (res.data.code === 200) {
+      items.value = res.data.data;
+      console.log(res)
+    } else {
+      window.alert("获取信息失败:" + res.data.msg);
+    }
+  }).catch((err) => {
         console.error("发生未知错误！");
         console.log(err);
       });
 };
 
 const courseEnter = (cno) => {
-    router.push(`/studentHome/viewHomework/${cno}`);
+    router.push(`/studentHome/viewHomeworkList/${cno}`);
 };
 
 onMounted(() => {
@@ -74,6 +64,10 @@ onMounted(() => {
 </script>
 
 <style>
+.main_page{
+  padding: 20px;
+}
+
 .el-col {
   margin-left: 30px;
 }

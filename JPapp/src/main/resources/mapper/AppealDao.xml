@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bjtu.dao.AppealDao">
+
+    <!--    插入作业号为contentID的appeal-->
+    <insert id="insertAppeal" parameterType="Appeal" useGeneratedKeys="true" keyProperty="contentID">
+        insert into appeal(sno, contentID,appealContent,time,status)
+        values (#{sno}, #{contentID}, #{appealContent},#{time},#{status})
+    </insert>
+
+
+    <update id="setCTScore"  parameterType="integer">
+        update score
+        SET score = #{score}
+        WHERE contentID = #{contentID}
+        AND sno = #{sno}
+    </update>
+    <delete id="deleteAPByAID">
+        DELETE FROM appeal
+        WHERE appealID = #{appealID}
+    </delete>
+
+    <select id="findAppeal" resultType="java.util.Map" parameterType="string">
+        SELECT h.name as hname,co.cname,a.contentID,a.appealContent,a.status,c.sno,s.name as sname,DATE_FORMAT(a.time, '%Y-%m-%d %H:%i:%s') as time,
+        appealID
+        FROM appeal a
+        JOIN content c ON a.contentID = c.contentID
+        JOIN homework h ON c.homeworkID = h.homeworkID
+        JOIN course co ON h.cno = co.cno
+        JOIN student s ON c.sno = s.id
+        WHERE co.tno = #{id};
+    </select>
+
+    <select id="findAPByID" resultType="Appeal">
+        SELECT *
+        FROM appeal
+        WHERE appeal.appealID = #{appealID};
+    </select>
+
+    <select id="findAPByAID" resultType="java.util.Map" parameterType="integer">
+        SELECT c.score,a.appealContent
+        FROM appeal a JOIN
+            content c ON a.contentID = c.contentID
+        WHERE a.appealID = #{appealID}
+    </select>
+
+    <update id="setAP">
+        update appeal
+        SET status = #{num}
+        WHERE appealID = #{appealID}
+    </update>
+
+
+
+</mapper>

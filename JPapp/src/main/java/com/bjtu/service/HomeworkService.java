@@ -18,4 +18,10 @@ public interface HomeworkService {
 
     void addHomework(Homework homework);
 
+    RspObject<Boolean> deleteByHId(Integer homeworkID);
+
+    RspObject<Boolean> setAnswer(Integer homeworkID,byte[] answer,String Afilename);
+
+    public RspObject<Boolean> alterDdlByHID(Integer homeworkID, String submitDdl,String scoreDdl);
+
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="homeListMain"  style="position: relative; display: flex; justify-content: center">
+  <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <div class="title">课程作业</div>
@@ -19,17 +19,35 @@
       <el-table :data="filterTableData"
                 class="HomeworkList"
                 size="large"
+                v-loading = "loading"
+                element-loading-text = "拼命加载中"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
         <el-table-column label="作业名称" width="150px" sortable prop="name" />
         <el-table-column label="课程名称" width="150px" sortable prop="courseName" />
         <el-table-column label="发布人" width="120px" prop="teacherName" />
-        <el-table-column label="截止时间" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="互评任务" width="200px" sortable prop="submitDdl" />
-        <el-table-column label="提交作业" width="120px">
+        <el-table-column label="提交截止时间" width="180px" sortable prop="submitDdl" />
+        <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
+        <el-table-column label="查看作业" width="140px" align="center">
           <template v-slot="scope">
-          <el-button size="large" v-if="scope.row.contentID === null" @click="handleSubmit(props.cno, scope.row.homeworkID)">提交</el-button>
-          <span v-else>已提交</span>
+          <el-button
+              @click="handleCheck(cno,scope.row)"
+              size="large"
+          >
+            查看作业
+          </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="作业成绩" width="120px" align="center">
+          <template v-slot="scope">
+          <el-tooltip v-if="scope.row.submitTime !== null" class="item" effect="dark" content="查看详情" placement="top">
+          <span @click="handleCheck(cno,scope.row)" style="cursor: pointer; color:dodgerblue">
+            {{ scope.row.score }}
+            <el-icon><Search /></el-icon>
+          </span>
+          </el-tooltip>
+
+          <span v-else>--</span>
           </template>
         </el-table-column>
       </el-table>
@@ -53,7 +71,7 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted,defineProps } from 'vue';
-import axios from 'axios';
+import http from '@/api/http';
 import { ElConfigProvider } from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import {useRouter} from "vue-router";
@@ -63,9 +81,9 @@ const pageSize = ref(10); //每页展示多少条数据
 const search = ref('');  // 搜索关键字
 const tableData = reactive({ data: [] });  //储存后端传来的数据
 const filteredData = ref([]); // 新的变量用于存储过滤后的数据
-const token = localStorage.getItem('token');
 const props = defineProps(['cno']);
 const router = useRouter();
+const loading = ref(true);
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -75,37 +93,37 @@ const filterTableData = computed(() =>
     )
 );
 
-//点击提交按钮
-const handleSubmit = (cno,homeworkID) => {
-  router.push(`/studentHome/HomeworkSubmit/${cno}/${homeworkID}`);
+const handleCheck = (cno,row) => {
+  router.push({
+    path:`/studentHome/viewHomework/${cno}/${row.homeworkID}`,
+    state: {
+      name:row.name,
+      submitDdl:row.submitDdl,
+      scoreDdl:row.scoreDdl,
+      contentID:row.contentID,
+      info:row.info,
+      score:row.score,
+      submitTime:row.submitTime
+    }
+  });
 };
 
-const fetchData = () => {
-  axios
-      .post(
-          'http://localhost:8081/student/findCTByCno',
-          {
-            cno: props.cno,
-          },
 
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'token': token,
-            },
-          }
-      )
-      .then((res) => {
-        if (res.data.code === 200) {
-          console.log(props.cno);
-          tableData.data = res.data.data;
-          console.log(res)
-          updateFilteredData(); // 更新过滤后的数据
-        } else {
-          window.alert("获取信息失败:" + res.data.msg);
-        }
-      })
-      .catch((err) => {
+
+const fetchData = () => {
+  const data = {
+    cno: props.cno,
+  }
+  http.stuHomeworkList(data).then((res) => {
+    if (res.data.code === 200) {
+      console.log(props.cno);
+      tableData.data = res.data.data;
+      console.log(res)
+      updateFilteredData(); // 更新过滤后的数据
+    } else {
+      window.alert("获取信息失败:" + res.data.msg);
+    }
+  }).catch((err) => {
         console.error("发生未知错误！");
         console.log(err);
       });
@@ -115,7 +133,7 @@ const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
           !search.value ||
-          data.cno.toLowerCase().includes(search.value.toLowerCase())
+          data.name.toLowerCase().includes(search.value.toLowerCase())
   );
 };
 
@@ -129,6 +147,7 @@ const Back = () => {
 
 onMounted(() => {
   fetchData();
+  loading.value = false;
 });
 
 
@@ -137,12 +156,15 @@ onMounted(() => {
 <style scoped>
 .homeListMain{
   margin-top: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .icon{
   position: absolute;
   top: -40px;
-  left: 50px;
+  left: 20px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
@@ -150,8 +172,8 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: -40px;
-  left: 170px;
+  top: 0px;
+  left: 80px;
 }
 
 .title {
@@ -172,6 +194,9 @@ onMounted(() => {
   margin-top: -10px;
 }
 
+.main{
+  margin-top: 40px;
+}
 
 .search-container {
   display: flex;
@@ -195,12 +220,9 @@ onMounted(() => {
   align-items: center;
   position: absolute;
   margin-top: 20px;
-  right: 170px;
+  right: 40px;
 }
 
-.main_page{
-  margin-top: 80px;
-}
 
 .HomeworkList{
   width: 100%;

@@ -7,12 +7,14 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 
 @Data
 @Accessors(chain = true)
-public class Homework {
+public class Homework implements Serializable {
 
     private Integer homeworkID;
     private String cno;
@@ -29,13 +31,13 @@ public class Homework {
         this.tno = tno;
     }
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private String submitDdl;
+    private Timestamp submitDdl;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private String scoreDdl;
+    private Timestamp scoreDdl;
 
 
     private String teacherName;
@@ -46,26 +48,18 @@ public class Homework {
     private Integer totalAmount;
     private Integer submitAmount;
 
+    private double score;
+
+    private String Afilename;
+    private byte[] answer;
+    private String info;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Timestamp submitTime;
+
     public Homework() {
     }
 
-
-
-//    public Homework(String id, String cno, String hname, String tno, Date ddl) {
-//        super(id, cno, hname, tno,ddl);
-//    }
-
-//    @Override
-//    public String toString() {
-//        return "Student{" +
-//                "id=" + super.getId() +
-//                ", name='" + super.getName() + "\'" +
-//                "，sex='" + sex + "\'" +
-//                ",email='" + super.getEmail() + "\'" +
-//                ", age=" + age +
-//                "，password='" + super.getPassword() + "\'" +
-//                '}';
-//    }
 }
 
 
