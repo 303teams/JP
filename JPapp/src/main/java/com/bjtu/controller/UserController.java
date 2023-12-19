@@ -92,7 +92,7 @@ public class UserController {
             return RspObject.success("验证码正确！");
         }else{
             System.out.println("验证码错误！");
-            session.setAttribute("vcode",null);
+//            session.setAttribute("vcode",null);
             return RspObject.fail("验证码错误！");
         }
     }
