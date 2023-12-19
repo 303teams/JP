@@ -10,13 +10,17 @@ import com.bjtu.service.impl.EmailService;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import com.bjtu.exception.ServiceException;
+
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("user")
@@ -35,17 +39,16 @@ public class UserController {
     @Autowired
     private HttpSession session;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
     @AuthAccess
     @PostMapping("login")
     public RspObject<User> login(String username, String password, String role){
-//        System.out.println(username+" "+password+" "+role);
 
 //        异常捕获
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(password,"密码不能为空！");
-
-//        后端存储用户id
-        session.setAttribute("id",username);
 
         if(role.equals("admin")){
             return adminService.login(username,password);
@@ -72,8 +75,11 @@ public class UserController {
         try{
             // 生成验证码
             String code = Utils.generateVerificationCode();
-            session.setAttribute("id",username);
-            session.setAttribute("vcode",code);
+
+            redisTemplate.opsForValue().set(username, code);
+//            验证码1分钟后过期
+            redisTemplate.expire(username,60, TimeUnit.SECONDS);
+
             emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
             return RspObject.success("验证码已发送至您的邮箱");
         } catch (Exception e) {
@@ -83,16 +89,16 @@ public class UserController {
 
     @AuthAccess
     @PostMapping("/verify")
-    public RspObject<Object> verify(String code){
-//        System.out.println(session);
-//        System.out.println(session.getAttribute("vcode"));
-        if(session.getAttribute("vcode").toString().equals(code)){
+    public RspObject<Object> verify(String id,String code){
+//        获取redis中的验证码
+        String vcode = (String) redisTemplate.opsForValue().get(id);
+        if(vcode.equals(code)){
             System.out.println("验证码正确！");
-            session.setAttribute("vcode",null);
+//            成功后删除验证码
+            redisTemplate.delete(id);
             return RspObject.success("验证码正确！");
         }else{
             System.out.println("验证码错误！");
-//            session.setAttribute("vcode",null);
             return RspObject.fail("验证码错误！");
         }
     }
@@ -100,8 +106,7 @@ public class UserController {
 
     @AuthAccess
     @PostMapping("/change")
-    public RspObject<String> change(String password){
-        String id = session.getAttribute("id").toString();
+    public RspObject<String> change(String id,String password){
         String role = Utils.getUserType(id);
         if(role.equals("admin")){
             return adminService.changePassword(id,password);
@@ -129,15 +134,32 @@ public class UserController {
 
     }
 
+    @PostMapping("sendEmail")
+    public RspObject<String> sendEmail(String email){
+        User user = TokenUtils.getCurrentUser();
+        try{
+            // 生成验证码
+            String code = Utils.generateVerificationCode();
+//            保存验证码
+            redisTemplate.opsForValue().set(user.getId(), code);
+            redisTemplate.expire(user.getId(),60, TimeUnit.SECONDS);
+            emailService.sendSimpleMessage(email, "绑定邮箱验证码", "您的验证码是：" + code);
+            return RspObject.success("验证码已发送至您的邮箱");
+        } catch (Exception e) {
+            throw new ServiceException("验证码未发送至您的邮箱");
+        }
+    }
+
     @PostMapping("/modifyEmail")
     public RspObject<String> modifyEmail(String code,String email){
-
-        if(!session.getAttribute("vcode").toString().equals(code)){
-            session.setAttribute("vcode",null);
+        User user = TokenUtils.getCurrentUser();
+//        获取redis中的验证码
+        String vcode = (String) redisTemplate.opsForValue().get(user.getId());
+        if(!vcode.equals(code)){
             return RspObject.fail("验证码错误！");
         }
-
-        User user = TokenUtils.getCurrentUser();
+//        将验证码删除
+        redisTemplate.delete(user.getId());
         if(user.getClass() == Student.class){
             return studentService.modifyEmail(email);
         }else if(user.getClass() == Admin.class){
@@ -146,19 +168,6 @@ public class UserController {
             return teacherService.modifyEmail(email);
         }else{
             return RspObject.fail("修改邮箱失败！");
-        }
-    }
-
-    @PostMapping("sendEmail")
-    public RspObject<String> sendEmail(String email){
-        try{
-            // 生成验证码
-            String code = Utils.generateVerificationCode();
-            session.setAttribute("vcode",code);
-            emailService.sendSimpleMessage(email, "绑定邮箱验证码", "您的验证码是：" + code);
-            return RspObject.success("验证码已发送至您的邮箱");
-        } catch (Exception e) {
-            throw new ServiceException("验证码未发送至您的邮箱");
         }
     }
 
