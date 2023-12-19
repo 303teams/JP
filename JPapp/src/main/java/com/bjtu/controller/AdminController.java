@@ -2,17 +2,17 @@ package com.bjtu.controller;
 
 import com.bjtu.config.AuthAccess;
 import com.bjtu.dao.AdminDao;
-import com.bjtu.pojo.Course;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
-import com.bjtu.pojo.Teacher;
+import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
+import com.bjtu.service.StudentService;
+import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("admin")
@@ -20,6 +20,8 @@ public class AdminController {
 
     @Autowired
     AdminService adminService;
+    @Autowired
+    StudentService studentService;
 
 
     //添加学生
@@ -121,4 +123,24 @@ public class AdminController {
         return adminService.findAllCourse();
     }
 
+    //展示选定学生课程信息
+    @PostMapping("/findStudentCourse")
+    public RspObject<List<Map<String, Object>>> CourseList(String id) {
+
+        return studentService.findCourse(id);
+    }
+
+    //展示学生未选课程
+//    @PostMapping("/findStudentUnCourse")
+//    public RspObject<List<Map<String, Object>>> UnCourseList(String id) {
+//
+//        return studentService.findUnCourse(id);
+//    }
+//    @PostMapping("/addStudentCourse")
+//    public RspObject<String> addStudentCourse(String cno) {
+//
+//
+//        return studentService.addStudentCourse(cno);
+//
+//    }
 }
