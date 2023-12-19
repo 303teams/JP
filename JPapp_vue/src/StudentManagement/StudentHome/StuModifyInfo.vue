@@ -58,6 +58,7 @@ const rules = reactive({
   ],
   age: [
     { required: true, message: "年龄不能为空", trigger: "blur" },
+    { type: "number", message: "年龄必须为数字", trigger: "blur" },
   ],
 });
 
