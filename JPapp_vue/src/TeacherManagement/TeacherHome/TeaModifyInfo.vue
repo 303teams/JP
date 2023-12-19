@@ -19,8 +19,14 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="年龄" prop="age">
-              <el-input v-model="TeaForm.age"></el-input>
+              <el-input
+                  style="width: 200px"
+                  v-model="TeaForm.age"
+                  type="text"
+                  maxlength="2"
+                  @input="handleInput" />
             </el-form-item>
+
           </div>
         </el-form>
       </div>
@@ -58,11 +64,17 @@ const rules = reactive({
   ],
   age: [
     { required: true, message: "年龄不能为空", trigger: "blur" },
-    { type: "number", message: "年龄必须为数字", trigger: "blur" },
   ],
 });
 
 const store = useStore();
+
+const handleInput = (e) => {
+  let value = e.replace(/[^\d]/g, ""); // 只能输入数字
+  value = value.replace(/^0+(\d)/, "$1"); // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
+  value = value.replace(/(\d{2})\d*/, '$1') // 最多保留15位整数
+  TeaForm.age = value
+};
 
 const load = () => {
   Object.assign(TeaForm, store.state);
