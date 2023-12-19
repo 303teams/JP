@@ -1,19 +1,19 @@
 <template>
-  <div class="main">
+  <div class="main-page">
     <div class="search-delete-add">
       <div>
-        <el-button type="primary" @click="handleEdit">
+        <el-button type="primary" size="large" @click="handleEdit">
           <el-icon><plus/></el-icon>添加
         </el-button>
-        <el-button type="danger" @click="handleDelete">
+        <el-button type="danger" size="large" @click="handleDelete">
           <el-icon><delete/></el-icon>批量删除
         </el-button>
       </div>
       <div class="search-container">
         <div class="search_input">
-          <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
+          <el-input v-model="search" size="large" placeholder="输入用户名搜索" />
         </div>
-        <el-button size="large" class="search_button" @click="clickSearch">
+        <el-button type="primary" size="large" class="search_button" @click="clickSearch">
           <el-icon style="vertical-align: middle">
             <Search />
           </el-icon>
@@ -26,9 +26,6 @@
         <el-table-column label="Date" prop="date" />
         <el-table-column label="Name" prop="name" />
         <el-table-column align="right">
-          <template #header>
-          <el-input v-model="search" size="small" placeholder="Type to search" />
-          </template>
           <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
           >编辑</el-button
@@ -82,15 +79,22 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main{
+.main-page {
   background: #fff;
   border-radius: 4px;
   overflow: hidden;
+  padding: 20px;
 }
 
 .search-delete-add{
   display: flex;
   justify-content: space-between;
   padding: 10px;
+}
+
+.search-container {
+  display: flex;
+  width: auto;
+  margin-bottom: 10px;
 }
 </style>

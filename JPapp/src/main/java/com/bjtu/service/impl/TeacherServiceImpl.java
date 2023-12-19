@@ -42,6 +42,8 @@ public class TeacherServiceImpl implements TeacherService {
             return RspObject.fail("该教师不存在!");
         } else if (!teacher.getPassword().equals(password)) {
             return RspObject.fail("密码错误!");
+        }else if(teacher.getExist() != 1){
+            return RspObject.fail("该教师已不在本校任教!");
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
             teacher.setToken(token);
@@ -169,7 +171,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<Boolean> setCTScore(Integer contentID, Integer score) {
+    public RspObject<Boolean> setCTScore(Integer contentID, double score) {
         try {
             contentDao.setCTScore(contentID,score);
             return RspObject.success("修改成功！",Boolean.TRUE);

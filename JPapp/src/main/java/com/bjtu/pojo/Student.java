@@ -11,6 +11,7 @@ public class Student extends User {
 
     private String sex;
     private Integer age;
+    private Integer exist;
 
     public Student() {
     }
@@ -21,17 +22,6 @@ public class Student extends User {
         this.age = age;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + super.getId() +
-                ", name='" + super.getName() + "\'" +
-                "，sex='" + sex + "\'" +
-                ",email='" + super.getEmail() + "\'" +
-                ", age=" + age +
-                "，password='" + super.getPassword() + "\'" +
-                '}';
-    }
 }
 
 

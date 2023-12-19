@@ -60,7 +60,7 @@
     <el-dialog title="修改成绩" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyScoreDia" width="30%">
         <div>
           <p>当前分数：{{ currentScore }}</p>
-          <el-input v-model="newScore" style="width: 150px;" placeholder="输入新的分数"></el-input>
+          <el-input v-model="newScore" style="width: 150px;" @input="handleEdit" placeholder="输入新的分数"/>
         </div>
 
       <template #footer>
@@ -133,6 +133,18 @@ let scoreDdl = history.state.scoreDdl;
 const newSubmitDdl = ref('');
 const newScoreDdl = ref('');
 
+
+// 在 Input 值改变时触发
+const handleEdit = (e) => {
+  let value = e.replace(/[^\d.]/g, '') // 只能输入数字和.
+  value = value.replace(/^\./g, '')  //第一个字符不能是.
+  value = value.replace(/\.{2,}/g, '.') // 不能连续输入.
+  value = value.replace(/(\.\d+)\./g, '$1') // .后面不能再输入.
+  value = value.replace(/^0+(\d)/, '$1') // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
+  value = value.replace(/(\d{15})\d*/, '$1') // 最多保留15位整数
+  value = value.replace(/(\.\d{2})\d*/, '$1')// 最多保留2位小数
+  newScore.value = value
+}
 
 // 禁用日期
 const disabledSubmitDate = (time) => {
