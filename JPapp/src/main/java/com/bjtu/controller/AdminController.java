@@ -136,11 +136,24 @@ public class AdminController {
 //
 //        return studentService.findUnCourse(id);
 //    }
-//    @PostMapping("/addStudentCourse")
-//    public RspObject<String> addStudentCourse(String cno) {
-//
-//
-//        return studentService.addStudentCourse(cno);
-//
-//    }
+    //添加学生选课
+    @PostMapping("/addStudentCourse")
+    public RspObject<Boolean> addStudentCourse(String id,String cno) {
+
+        return studentService.addStudentCourse(id,cno);
+    }
+
+    //删除学生课程
+    @PostMapping("/deleteStudentCourse")
+    public RspObject<Boolean> deleteStudentCourse(String id,String cno) {
+
+        return studentService.deleteStudentCourse(id,cno);
+    }
+
+//    修改课程任教老师
+    @PostMapping("/modifyCourseTeacher")
+    public RspObject<Boolean> modifyCourseTeacher(String id,String cno) {
+
+        return adminService.modifyCourseTeacher(id,cno);
+    }
 }

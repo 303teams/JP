@@ -21,5 +21,12 @@
         WHERE student.id = #{id}
     </select>
 
+    <!--    根据cno和id修改course中的tno-->
+    <update id="updateCourseTno" parameterType="java.util.Map">
+        update course set tno = #{id}
+        where cno = #{cno}
+    </update>
+
+
 
 </mapper>
