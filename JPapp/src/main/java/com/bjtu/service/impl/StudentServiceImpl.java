@@ -48,9 +48,8 @@ public class StudentServiceImpl implements StudentService  {
             return RspObject.fail("该学生不存在!");
         } else if (!student.getPassword().equals(password)) {
             return RspObject.fail("密码错误!");
-        }else if(student.getExist() != 1){
-            return RspObject.fail("该学生已退学!");
-        } else {
+        }  else {
+
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
@@ -281,4 +280,14 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+    @Override
+    public RspObject<Boolean> addStudentCourse(String id, String cno) {
+        int score = 0;
+        return scDao.addStudentCourse(id,cno,score);
+    }
+
+    @Override
+    public RspObject<Boolean> deleteStudentCourse(String id, String cno) {
+        return scDao.deleteStudentCourse(id,cno);
+    }
 }

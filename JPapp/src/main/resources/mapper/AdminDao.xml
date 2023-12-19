@@ -22,14 +22,6 @@
         insert into course(cno,cname) values (#{cno}, #{cname})
     </insert>
 
-    <delete id="deleteStudentByID" parameterType="string">
-        delete from student where id = #{id}
-    </delete>
-
-    <delete id="deleteTeacherByID" parameterType="string">
-        delete from teacher where id = #{id}
-    </delete>
-
     <delete id="deleteCourseByCno" parameterType="string">
         delete from course where cno = #{cno}
     </delete>
@@ -49,6 +41,18 @@
     <delete id="deleteByNum" parameterType="string">
         delete from admin where id = #{num}
     </delete>
+
+    <!--    将id为id的学生的exist值设为0-->
+    <update id="deleteStudentByID">
+        update student set exist = 0
+        where id = #{id}
+    </update>
+
+    <!--    将id为id的教师的exist值设为0-->
+    <update id="deleteTeacherByID">
+        update teacher set exist = 0
+        where id = #{id}
+    </update>
 
     <select id="findAllStudent" resultType="Student">
         select * from student

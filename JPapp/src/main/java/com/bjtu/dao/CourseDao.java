@@ -1,5 +1,7 @@
 package com.bjtu.dao;
 
+import com.bjtu.pojo.Course;
+import com.bjtu.pojo.RspObject;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +18,9 @@ public interface CourseDao {
 //    查询学生课程
     @MapKey("contentID")
     public List<Map<String, Object>> findSTCourse(String id);
+
+    //查询课程
+    public Course findCourseByCno(String cno);
+
+    public void updateCourseTno(String id,String cno);
 }
