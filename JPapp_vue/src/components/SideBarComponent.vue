@@ -79,7 +79,7 @@
           <el-icon><user /></el-icon>个人信息
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/StudentManage" :route="{ name: 'StudentManage' }">
           <template #title>
           <svg width="22" height="22">
             <image xlink:href="@/assets/student.svg" width="22" height="22" />
