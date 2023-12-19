@@ -171,7 +171,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<Boolean> setCTScore(Integer contentID, Integer score) {
+    public RspObject<Boolean> setCTScore(Integer contentID, double score) {
         try {
             contentDao.setCTScore(contentID,score);
             return RspObject.success("修改成功！",Boolean.TRUE);

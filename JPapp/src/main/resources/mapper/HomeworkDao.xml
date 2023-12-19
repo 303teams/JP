@@ -65,9 +65,11 @@
         FROM
             homework H
                 JOIN sc ON H.cno = sc.cno
-                LEFT JOIN content C ON H.homeworkID = C.homeworkID AND sc.sno = C.sno
+                JOIN student ON sc.sno = student.id
+                LEFT JOIN content C
+                    ON H.homeworkID = C.homeworkID AND sc.sno = C.sno
         WHERE
-            H.cno = #{cno}
+            H.cno = #{cno} AND student.exist = 1
         GROUP BY
             H.homeworkID, H.content, H.cno;
 
