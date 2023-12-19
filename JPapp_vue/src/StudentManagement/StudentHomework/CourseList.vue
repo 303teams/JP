@@ -1,30 +1,31 @@
 <template>
   <div class="main_page">
-    <el-row  v-if="items.length > 0">
-      <el-col
-          v-for="(item, index) in items"
-          :key="index"
-          :span="7"
-      >
-        <div class="course_info">
-          <img
-              src="@/assets/img.png"
-              class="image"
-              @click="courseEnter(item.cno)"
-          />
-          <div class="info-content">
-            <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
-            <span class="course_id">课程号: {{item.cno}}</span>
-            <span class="teacher_name">主讲教师：{{item.teacherName}}</span>
+    <div style="padding: 20px" v-if="items.length > 0">
+      <el-row>
+        <el-col
+            v-for="(item, index) in items"
+            :key="index"
+            :span="7"
+        >
+          <div class="course_info">
+            <img
+                src="@/assets/img.png"
+                class="image"
+                @click="courseEnter(item.cno)"
+            />
+            <div class="info-content">
+              <span class="course_name" @click="courseEnter(item.cno)">{{item.cname}}</span>
+              <span class="course_id">课程号: {{item.cno}}</span>
+              <span class="teacher_name">主讲教师：{{item.teacherName}}</span>
+            </div>
+
+            <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
           </div>
+          <el-divider />
+        </el-col>
 
-          <el-button class="button" @click="courseEnter(item.cno)">进入课程</el-button>
-        </div>
-
-        <el-divider />
-      </el-col>
-
-    </el-row>
+      </el-row>
+    </div>
 
     <div v-else>
       <el-empty description="暂无已选课程"></el-empty>
@@ -65,7 +66,7 @@ onMounted(() => {
 
 <style>
 .main_page{
-  padding: 20px;
+  background-color: #fff;
 }
 
 .el-col {

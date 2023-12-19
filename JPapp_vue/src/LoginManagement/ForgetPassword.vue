@@ -68,7 +68,7 @@ const EmailRules = reactive({
     {required: true, message: "请输入用户名", trigger: "blur"},
   ],
   email: [
-    {required: true, type: "email", trigger: "blur"},
+    {required: true, type: "email", trigger: "blur",message: "请输入正确的邮箱"},
   ],
   code: [
     {required: true, message: "请输入验证码", trigger: "blur"},

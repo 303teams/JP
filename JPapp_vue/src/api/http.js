@@ -434,13 +434,13 @@ const http = {
         return request(config)
     },
 
-    //管理员获取所有学生信息
-    getAllStudent(){
-        const config = {
-            url:'/admin/getAllStudent',
-            method:'post',
-        }
-        return request(config)
-    },
+    // //管理员获取所有学生信息
+    // getAllStudent(){
+    //     const config = {
+    //         url:'/admin/getAllStudent',
+    //         method:'post',
+    //     }
+    //     return request(config)
+    // },
 }
 export default http

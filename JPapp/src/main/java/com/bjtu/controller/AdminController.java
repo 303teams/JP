@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("admin")
 public class AdminController {
@@ -86,6 +88,24 @@ public class AdminController {
     @PostMapping("/findCourse")
     public RspObject<Course> findCourse(String cno){
         return adminService.findCourse(cno);
+    }
+
+    //显示所有学生
+    @PostMapping("findAllStudent")
+    public RspObject<List<Student>> findAllStudent(){
+        return adminService.findAllStudent();
+    }
+
+    //显示所有老师
+    @PostMapping("findAllTeacher")
+    public RspObject<List<Teacher>> findAllTeacher(){
+        return adminService.findAllTeacher();
+    }
+
+    //显示所有课程
+    @PostMapping("findAllCourse")
+    public RspObject<List<Course>> findAllCourse(){
+        return adminService.findAllCourse();
     }
 
 }
