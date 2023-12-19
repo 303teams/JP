@@ -48,6 +48,8 @@ public class StudentServiceImpl implements StudentService  {
             return RspObject.fail("该学生不存在!");
         } else if (!student.getPassword().equals(password)) {
             return RspObject.fail("密码错误!");
+        }else if(student.getExist() != 1){
+            return RspObject.fail("该学生已退学!");
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
