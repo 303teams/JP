@@ -36,4 +36,10 @@ public interface AdminDao{
     public Teacher findTeacherByID(String id);
 
     public Course findCourseByCno(String cno);
+
+    public List<Student> findAllStudent();
+    public  List<Teacher> findAllTeacher();
+    public List<Course> findAllCourse();
+
+
 }

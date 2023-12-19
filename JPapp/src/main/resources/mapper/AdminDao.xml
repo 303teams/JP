@@ -50,6 +50,18 @@
         delete from admin where id = #{num}
     </delete>
 
+    <select id="findAllStudent" resultType="Student">
+        select * from student
+    </select>
+
+    <select id="findAllTeacher" resultType="Teacher">
+        select * from teacher
+    </select>
+
+    <select id="findAllCourse" resultType="Course">
+        select * from course
+    </select>
+
     <select id="findAll" resultType="Admin">
         select * from admin
     </select>
