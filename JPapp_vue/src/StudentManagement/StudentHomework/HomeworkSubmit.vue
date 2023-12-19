@@ -21,6 +21,7 @@
           <el-upload
               class="upload-demo"
               action="#"
+              ref="submitFile"
               :auto-upload="false"
               :on-change="handleChange"
               :on-remove="handleRemove"
@@ -67,6 +68,7 @@ const name = history.state.name;
 const submitDdl = history.state.submitDdl;
 const submitTime = history.state.submitTime;
 const HomeworkInfo = history.state.info;
+const submitFile = ref();
 const submitHomeworkForm = reactive({
   files: null,
   ContentInfo: null,
@@ -80,6 +82,12 @@ const rules = {
 
 
 const handleChange = (file,fileList) => {
+  const isLt10M = file.size / 1024 / 1024 < 100;
+  if (!isLt10M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+    submitFile.value.handleRemove(file);
+    return;
+  }
   const fileName = fileList.length > 0 ? fileList[0].name : '';
   submitHomeworkForm.files = fileList;
   submitHomeworkForm.info = fileName;
