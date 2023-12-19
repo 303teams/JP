@@ -33,6 +33,10 @@ public interface AdminService {
     public RspObject<String> changePassword(String id, String password);
 
     public RspObject<String> modifyPassword(String newPassword,String oldPassword);
+    public RspObject<List<Course>> findAllCourse();
+    public RspObject<List<Student>> findAllStudent();
+    public RspObject<List<Teacher>> findAllTeacher();
+
 
 
 }

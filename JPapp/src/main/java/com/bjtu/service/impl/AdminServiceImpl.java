@@ -91,6 +91,37 @@ public class AdminServiceImpl implements AdminService {
             return RspObject.success("查询成功！",course);
         }
     }
+
+    @Override
+    public RspObject<List<Course>> findAllCourse() {
+        List<Course> course = adminDao.findAllCourse();
+        if(course == null){
+            return RspObject.fail("不存在课程！");
+        }else{
+            return RspObject.success("查询成功！",course);
+        }
+    }
+
+    @Override
+    public RspObject<List<Student>> findAllStudent() {
+        List<Student> student = adminDao.findAllStudent();
+        if(student == null){
+            return RspObject.fail("不存在学生！");
+        }else{
+            return RspObject.success("查询成功！",student);
+        }
+    }
+
+    @Override
+    public RspObject<List<Teacher>> findAllTeacher() {
+        List<Teacher> teacher = adminDao.findAllTeacher();
+        if(teacher == null){
+            return RspObject.fail("不存在老师！");
+        }else{
+            return RspObject.success("查询成功！",teacher);
+        }
+    }
+
     @Override
     public RspObject<User> login(String id, String password) {
         Admin admin = adminDao.findByNum(id);
