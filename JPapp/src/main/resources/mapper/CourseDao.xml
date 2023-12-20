@@ -21,6 +21,18 @@
         WHERE student.id = #{id}
     </select>
 
+    <!--    根据cno查询没有教这门课的其他所有老师-->
+    <select id="findUnTeacher" resultType="com.bjtu.pojo.Teacher" parameterType="string">
+        SELECT teacher.*
+        FROM teacher
+        WHERE teacher.id NOT IN (
+            SELECT tno
+            FROM course
+            WHERE cno = #{cno}
+        )
+    </select>
+
+
     <!--    根据cno和id修改course中的tno-->
     <update id="updateCourseTno" parameterType="java.util.Map">
         update course set tno = #{id}

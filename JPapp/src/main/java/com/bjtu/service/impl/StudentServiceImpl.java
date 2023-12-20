@@ -307,15 +307,28 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+
     @Override
-    public RspObject<Boolean> addStudentCourse(String id, String cno) {
+    public RspObject<String> addStudentCourse(String id, String cno) {
         int score = 0;
-        return scDao.addStudentCourse(id,cno,score);
+        scDao.addStudentCourse(id,cno,score);
+        return RspObject.success("增加选课成功！");
+
     }
 
     @Override
-    public RspObject<Boolean> deleteStudentCourse(String id, String cno) {
-        return scDao.deleteStudentCourse(id,cno);
+    public RspObject<String> deleteStudentCourse(String id, String cno) {
+        scDao.deleteStudentCourse(id,cno);
+        return RspObject.success("删除选课成功！");
+    }
+
+    @Override
+    public RspObject<List<Course>> findUnCourse(String id) {
+        try{
+            return RspObject.success("查询成功！",scDao.findCourseNotSelected(id));
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
     }
 
     @Override

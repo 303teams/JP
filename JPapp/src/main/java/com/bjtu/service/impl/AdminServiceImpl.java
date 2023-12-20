@@ -121,9 +121,19 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<Boolean> modifyCourseTeacher(String id,String cno) {
+    public RspObject<List<Teacher>> findUnTeacher(String cno) {
+        List<Teacher> teacher = courseDao.findUnTeacher(cno);
+        if(teacher == null){
+            return RspObject.fail("不存在！");
+        }else{
+            return RspObject.success("查询成功！",teacher);
+        }
+    }
+
+    @Override
+    public RspObject<String> modifyCourseTeacher(String id,String cno) {
         courseDao.updateCourseTno(id,cno);
-        return RspObject.success("修改成功！",Boolean.TRUE);
+        return RspObject.success("修改成功！");
     }
 
     @Override

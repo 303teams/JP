@@ -37,7 +37,10 @@ public interface AdminService {
     public RspObject<List<Student>> findAllStudent();
     public RspObject<List<Teacher>> findAllTeacher();
 
-    public RspObject<Boolean> modifyCourseTeacher(String id,String cno);
+    public RspObject<String> modifyCourseTeacher(String id,String cno);
+
+    public RspObject<List<Teacher>> findUnTeacher(String cno);
+
 
 
 
