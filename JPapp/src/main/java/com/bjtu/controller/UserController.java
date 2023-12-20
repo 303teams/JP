@@ -65,9 +65,9 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(email,"邮箱不能为空！");
 
-        if(Utils.userIsExist(username)){
+        if(!Utils.userIsExist(username)){
             return RspObject.fail("该用户不存在！");
-        }else if(Utils.userIsOK(username)){
+        }else if(!Utils.userIsOK(username)){
             return RspObject.fail("该用户账户未激活！");
         }else if(!Utils.isMatchEmail(username,email)){
             return RspObject.fail("用户名与邮箱不匹配！");
