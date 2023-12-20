@@ -148,18 +148,25 @@ const resetData = () => {
 }
 
 const save =() =>{
-  http.addTeacher(form).then(res =>{
-    if(res.data.code === 200){
-      ElMessage.success("添加成功！")
-      resetData();
-      fetchData();
-    }else{
-      ElMessage.error("添加失败:" + res.data.msg);
+  Ref.value.validate((valid) => {
+    if (valid) {
+      http.addTeacher(form).then(res =>{
+        if(res.data.code === 200){
+          ElMessage.success("添加成功！")
+          resetData();
+          fetchData();
+        }else{
+          ElMessage.error("添加失败:" + res.data.msg);
+        }
+      })
+          .catch(err => {
+            console.log(err);
+          });
+    } else {
+      console.log('error submit!!');
+      return false;
     }
-  })
-      .catch(err => {
-        console.log(err);
-      });
+  });
 };
 
 // 将表格中的数据按pageSize切片
@@ -246,13 +253,14 @@ const handleDelete = (row) => {
 
 const handleEdit = (row) =>{
   router.push({
-    path: '/adminHome/EditStudent',
+    path: '/adminHome/EditTeacher',
     state:{
       id:row.id,
       name:row.name,
       sex:row.sex,
       email:row.email,
-      age:row.age
+      age:row.age,
+      password:row.password
     }
   })
 }

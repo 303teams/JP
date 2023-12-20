@@ -67,8 +67,12 @@ const fetchData = () => {
 
 };
 
-const scoredDataCount = computed(() =>
-    tableData.value.filter(item => item.score !== null).length);
+
+const scoredDataCount = computed(() => {
+  // 如果 tableData 不为 null，则进行计算，否则返回 null 或其他默认值
+  return tableData.value ? tableData.value.filter(item => item.score !== null).length : null;
+});
+
 
 const setValue = () => {
   emit('MutualNum',scoredDataCount.value);

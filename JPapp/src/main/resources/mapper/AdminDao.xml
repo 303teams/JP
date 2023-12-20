@@ -18,7 +18,7 @@
         insert into teacher(id,password,sex,name,age,email) values (#{id}, #{password},#{sex},#{name},#{age},#{email})
     </insert>
 
-    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="cno">
         insert into course(cno,cname) values (#{cno}, #{cname})
     </insert>
 
@@ -67,7 +67,7 @@
     <select id="findAllCourse" resultType="Course">
         select course.cno,course.cname,course.tno,teacher.name as tname
         from course
-        join teacher on course.tno = teacher.id
+        left join teacher on course.tno = teacher.id
     </select>
 
     <select id="findAll" resultType="Admin">

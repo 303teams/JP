@@ -21,6 +21,7 @@ import StudentManage from "@/AdminManagement/Management/studentManage.vue";
 import EditStudent from "@/AdminManagement/Management/EditStudent.vue";
 import TeacherManage from "@/AdminManagement/Management/teacherManage.vue";
 import CourseManage from "@/AdminManagement/Management/courseManage.vue";
+import EditTeacher from "@/AdminManagement/Management/EditTeacher.vue";
 
 const routerHistory = createWebHistory();
 
@@ -186,6 +187,12 @@ const router = createRouter({
                     path: 'CourseManage',
                     name: 'CourseManage',
                     component: CourseManage,
+                    props:true,
+                },
+                {
+                    path: 'EditTeacher',
+                    name: 'EditTeacher',
+                    component: EditTeacher,
                     props:true,
                 }
             ]

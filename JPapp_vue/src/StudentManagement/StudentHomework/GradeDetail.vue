@@ -108,7 +108,7 @@ const HandleAppeal = () =>{
           ElMessageBox.confirm(res.data.msg, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            type: 'warning',
+            type: 'success',
           }).then(() => {
           }).catch(()=>{
           });

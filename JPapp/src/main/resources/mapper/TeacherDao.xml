@@ -37,6 +37,11 @@
         where id = #{id}
     </update>
 
+    <update id="alterTeacherByID">
+        update teacher set name = #{name},age = #{age},sex = #{sex},password = #{password},email = #{email}
+        where id = #{id}
+    </update>
+
     <!--    <select id="findByStudentNum" resultType="student">-->
     <!--        select * from student where sno = #{sno}-->
     <!--    </select>-->

@@ -147,18 +147,25 @@ const resetData = () => {
 }
 
 const save =() =>{
-  http.addStudent(form).then(res =>{
-    if(res.data.code === 200){
-      ElMessage.success("添加成功！")
-      resetData();
-      fetchData();
-    }else{
-      ElMessage.error("添加失败:" + res.data.msg);
+  Ref.value.validate((valid) => {
+    if (valid) {
+      http.addStudent(form).then(res =>{
+        if(res.data.code === 200){
+          ElMessage.success("添加成功！")
+          resetData();
+          fetchData();
+        }else{
+          ElMessage.error("添加失败:" + res.data.msg);
+        }
+      })
+          .catch(err => {
+            console.log(err);
+          });
+    } else {
+      console.log('error submit!!');
+      return false;
     }
-  })
-      .catch(err => {
-        console.log(err);
-      });
+  });
 };
 
 // 将表格中的数据按pageSize切片
@@ -252,7 +259,8 @@ const handleEdit = (row) =>{
       name:row.name,
       sex:row.sex,
       email:row.email,
-      age:row.age
+      age:row.age,
+      password:row.password
     }
   })
 }

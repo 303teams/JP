@@ -38,5 +38,10 @@
         sex = #{sex} where id = #{id}
     </update>
 
+    <update id="alterStudentByID">
+        update student set name = #{name},age = #{age},sex = #{sex},password = #{password},email = #{email}
+        where id = #{id}
+    </update>
+
 
 </mapper>

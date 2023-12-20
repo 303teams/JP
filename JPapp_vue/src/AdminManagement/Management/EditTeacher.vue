@@ -162,12 +162,12 @@ const initData = () =>{
 const Modifyinfo =() =>{
   InfoRef.value.validate((valid) =>{
     if(valid){
-      ElMessageBox.confirm('确定要修改学生信息吗？', '提示', {
+      ElMessageBox.confirm('确定要修改老师信息吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        http.modifyStudentInfo(Info).then(res =>{
+        http.modifyTeacherInfo(Info).then(res =>{
           if(res.data.code === 200){
             ElMessage.success("修改成功！")
           }else{
@@ -179,8 +179,8 @@ const Modifyinfo =() =>{
       }).catch(()=>{
       });
     }else{
-      ElMessage.error("请检查表单是否填写正确")
-    }
+        ElMessage.error("请检查表单是否填写正确")
+      }
   })
 }
 
@@ -195,7 +195,7 @@ const handleDelete = (row) =>{
       cno: row.cno,
     }
 
-    http.deleteStudentCourse(data).then(res =>{
+    http.deleteTeacherCourse(data).then(res =>{
       if(res.data.code === 200) {
         ElMessage.success("删除课程成功！")
         fetchData()
@@ -221,7 +221,7 @@ const handleAdd = (row) =>{
       cno: row.cno,
     }
 
-    http.addStudentCourse(data).then(res =>{
+    http.addTeacherCourse(data).then(res =>{
       if(res.data.code === 200) {
         ElMessage.success("添加课程成功！")
         fetchData()
@@ -239,8 +239,8 @@ const fetchData = () => {
     id: id,
   }
   Promise.all([
-    http.getStudentCourse(data),
-    http.getStudentUnCourse(data)
+    http.getTeacherCourse(data),
+    http.getTeacherUnCourse(data)
   ]).then(([res1, res2]) =>{
     if (res1.data.code === 200) {
       console.log(res1)

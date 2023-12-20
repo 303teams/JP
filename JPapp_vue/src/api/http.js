@@ -521,6 +521,45 @@ const http = {
         return request(config)
     },
 
+    //管理员查看学生未选课程
+    getStudentUnCourse(data){
+        const config = {
+            url:'/admin/findStudentUnCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员修改学生信息
+    modifyStudentInfo(data){
+        const config = {
+            url:'/admin/alterStudentByID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员添加学生选课
+    addStudentCourse(data){
+        const config = {
+            url:'/admin/addStudentCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //管理员删除学生选课
     deleteStudentCourse(data){
         const config = {
@@ -569,11 +608,129 @@ const http = {
         return request(config)
     },
 
+    //管理员修改老师信息
+    modifyTeacherInfo(data){
+        const config = {
+            url:'/admin/alterTeacherByID',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员查看老师课程信息
+    getTeacherCourse(data){
+        const config = {
+            url:'/admin/findTeacherCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员查看老师未选课程
+    getTeacherUnCourse(data){
+        const config = {
+            url:'/admin/findTeacherUnCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员添加老师授课
+    addTeacherCourse(data){
+        const config = {
+            url:'/admin/addTeacherCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        console.log("addTeacherCourse")
+        return request(config)
+    },
+
+    //管理员删除老师授课
+    deleteTeacherCourse(data){
+        const config = {
+            url:'/admin/deleteTeacherCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //管理员获取所有课程信息
     getAllCourse(){
         const config = {
             url:'/admin/findAllCourse',
             method:'post',
+        }
+        return request(config)
+    },
+
+    //管理员增加课程信息
+    addCourse(data){
+        const config = {
+            url:'/admin/addCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员删除课程信息
+    deleteCourse(data){
+        const config = {
+            url:'/admin/deleteCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //获取可更改的老师
+    getTeacher(data){
+        const config = {
+            url:'/admin/findTeacherUnCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //更改课程老师
+    updateTeacher(data){
+        const config = {
+            url:'/admin/modifyCourseTeacher',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         }
         return request(config)
     },
