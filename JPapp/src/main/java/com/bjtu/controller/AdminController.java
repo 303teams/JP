@@ -28,26 +28,30 @@ public class AdminController {
     @AuthAccess
 
     @PostMapping("/addStudent")
-    public RspObject<String> addStudent(String id,String name,String sex,String password){
-
+    public RspObject<String> addStudent(String id,String name,String sex,Integer age,String password,String email){
+        System.out.println(age);
         Student student = new Student();
         student.setId(id);
         student.setName(name);
         student.setSex(sex);
+        student.setAge(age);
         student.setPassword(password);
+        student.setEmail(email);
         return adminService.addStudent(student);
     }
 
     //添加教师
     @AuthAccess
     @PostMapping("/addTeacher")
-    public RspObject<String> addTeacher(String id,String name,String sex,String password){
+    public RspObject<String> addTeacher(String id,String name,String sex,Integer age,String password,String email){
 
         Teacher teacher = new Teacher();
         teacher.setId(id);
         teacher.setName(name);
         teacher.setSex(sex);
+        teacher.setAge(age);
         teacher.setPassword(password);
+        teacher.setEmail(email);
         return adminService.addTeacher(teacher);
     }
 
@@ -131,29 +135,36 @@ public class AdminController {
     }
 
     //展示学生未选课程
-//    @PostMapping("/findStudentUnCourse")
-//    public RspObject<List<Map<String, Object>>> UnCourseList(String id) {
-//
-//        return studentService.findUnCourse(id);
-//    }
+    @PostMapping("/findStudentUnCourse")
+    public RspObject<List<Course>> UnCourseList(String id) {
+
+        return studentService.findUnCourse(id);
+    }
     //添加学生选课
     @PostMapping("/addStudentCourse")
-    public RspObject<Boolean> addStudentCourse(String id,String cno) {
+    public RspObject<String> addStudentCourse(String id,String cno) {
 
         return studentService.addStudentCourse(id,cno);
+
     }
 
     //删除学生课程
     @PostMapping("/deleteStudentCourse")
-    public RspObject<Boolean> deleteStudentCourse(String id,String cno) {
+    public RspObject<String> deleteStudentCourse(String id,String cno) {
 
         return studentService.deleteStudentCourse(id,cno);
     }
 
+    //展示未教授此门课程的其他所有老师
+    @PostMapping("/findTeacherUnCourse")
+    public RspObject<List<Teacher>> UnTeacherList(String cno) {
+
+        return adminService.findUnTeacher(cno);
+    }
+
 //    修改课程任教老师
     @PostMapping("/modifyCourseTeacher")
-    public RspObject<Boolean> modifyCourseTeacher(String id,String cno) {
-
+    public RspObject<String> modifyCourseTeacher(String id,String cno) {
         return adminService.modifyCourseTeacher(id,cno);
     }
 }

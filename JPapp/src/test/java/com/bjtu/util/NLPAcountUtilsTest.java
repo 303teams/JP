@@ -11,7 +11,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class NLPUtilsTest {
+class NLPAcountUtilsTest {
 
     @Autowired
     NLPUtils nlpUtils;

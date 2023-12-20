@@ -10,6 +10,7 @@ public class Course implements Serializable {
     private String cno;
     private String tno;
     private String cname;
+    private String tname;
     public Course(){}
 
 }

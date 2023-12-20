@@ -6,8 +6,7 @@ import com.bjtu.pojo.*;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.MathUtils;
 import com.bjtu.util.TokenUtils;
-import com.bjtu.util.Utils;
-import org.apache.ibatis.annotations.Param;
+import com.bjtu.util.AcountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -68,7 +66,7 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<Boolean> insert(Student student) {
-        if(Utils.userIsExist(student.getId())){
+        if(AcountUtils.userIsExist(student.getId())){
             return RspObject.fail("用户已存在!",Boolean.FALSE);
         }else{
             studentDao.insert(student);
@@ -141,12 +139,6 @@ public class StudentServiceImpl implements StudentService  {
             return RspObject.success("信息修改成功!");
         }
     }
-
-//    @Override
-//    public RspObject<List<Student>> findAll(){
-//        return RspObject.success("查询成功！",studentDao.findAll());
-//    }
-
 
     public RspObject<List<Map<String, Object>>> findCourse(String id){
         try {
@@ -307,15 +299,28 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
+
     @Override
-    public RspObject<Boolean> addStudentCourse(String id, String cno) {
+    public RspObject<String> addStudentCourse(String id, String cno) {
         int score = 0;
-        return scDao.addStudentCourse(id,cno,score);
+        scDao.addStudentCourse(id,cno,score);
+        return RspObject.success("增加选课成功！");
+
     }
 
     @Override
-    public RspObject<Boolean> deleteStudentCourse(String id, String cno) {
-        return scDao.deleteStudentCourse(id,cno);
+    public RspObject<String> deleteStudentCourse(String id, String cno) {
+        scDao.deleteStudentCourse(id,cno);
+        return RspObject.success("删除选课成功！");
+    }
+
+    @Override
+    public RspObject<List<Course>> findUnCourse(String id) {
+        try{
+            return RspObject.success("查询成功！",scDao.findCourseNotSelected(id));
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
     }
 
     @Override

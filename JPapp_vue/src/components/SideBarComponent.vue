@@ -86,14 +86,14 @@
           </svg>&nbsp;&nbsp;学生管理
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/TeacherManage" :route="{name: 'TeacherManage'}">
           <template #title>
           <svg width="22" height="22">
             <image xlink:href="@/assets/teacher.svg" width="22" height="22" />
           </svg>&nbsp;&nbsp;教师管理
           </template>
         </el-menu-item>
-        <el-menu-item>
+        <el-menu-item index="/CourseManage" :route="{name: 'CourseManage'}">
           <template #title>
           <svg width="22" height="22">
             <image xlink:href="@/assets/coursemanage.svg" width="22" height="22" />

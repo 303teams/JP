@@ -11,11 +11,11 @@
     </insert>
 
     <insert id="insertStudent" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into student(id,password,sex,name) values (#{id}, #{password},#{sex},#{name})
+        insert into student(id,password,sex,name,age,email) values (#{id}, #{password},#{sex},#{name},#{age},#{email})
     </insert>
 
     <insert id="insertTeacher" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into teacher(id,password,sex,name) values (#{id}, #{password},#{sex},#{name})
+        insert into teacher(id,password,sex,name,age,email) values (#{id}, #{password},#{sex},#{name},#{age},#{email})
     </insert>
 
     <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
@@ -65,7 +65,9 @@
     </select>
 
     <select id="findAllCourse" resultType="Course">
-        select * from course
+        select course.cno,course.cname,course.tno,teacher.name as tname
+        from course
+        join teacher on course.tno = teacher.id
     </select>
 
     <select id="findAll" resultType="Admin">
@@ -81,15 +83,4 @@
         where id = #{id}
     </update>
 
-    <!--    <select id="findByStudentNum" resultType="student">-->
-    <!--        select * from student where sno = #{sno}-->
-    <!--    </select>-->
-
-    <!--    <select id="findByTeacherNum" resultType="teacher">-->
-    <!--        select * from teacher where tno = #{tno}-->
-    <!--    </select>-->
-
-    <!--    <select id="findByAdminNum" resultType="admin">-->
-    <!--        select * from admin where id = #{mno}-->
-    <!--    </select>-->
 </mapper>

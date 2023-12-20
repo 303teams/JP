@@ -261,6 +261,19 @@ const http = {
         return request(config)
     },
 
+    //学生是否被查重
+    getCheck(data){
+        const config = {
+            url:'/student/isSimilar',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //学生获取总成绩
     getTotalScore(){
         const config = {
@@ -296,6 +309,19 @@ const http = {
     assignHomework(data){
         const config = {
             url:'/homework/uploadHW',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //老师修改作业内容
+    changeHomework(data){
+        const config = {
+            url:'/homework/alterHWByHID',
             method:'post',
             data:data,
             headers: {
@@ -434,6 +460,19 @@ const http = {
         return request(config)
     },
 
+    //老师查看查重列表
+    getCheckList(data){
+        const config = {
+            url:'/teacher/findSimilarCTs',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //管理员获取所有学生信息
     getAllStudent(){
         const config = {
@@ -456,6 +495,19 @@ const http = {
         return request(config)
     },
 
+    //管理员添加学生
+    addStudent(data){
+        const config = {
+            url:'/admin/addStudent',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
     //管理员查看学生课程信息
     getStudentCourse(data){
         const config = {
@@ -465,6 +517,63 @@ const http = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
+        }
+        return request(config)
+    },
+
+    //管理员删除学生选课
+    deleteStudentCourse(data){
+        const config = {
+            url:'/admin/deleteStudentCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员获取所有老师信息
+    getAllTeacher(){
+        const config = {
+            url:'/admin/findAllTeacher',
+            method:'post',
+        }
+        return request(config)
+    },
+
+    //管理员添加老师
+    addTeacher(data){
+        const config = {
+            url:'/admin/addTeacher',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员删除老师
+    deleteTeacher(data){
+        const config = {
+            url:'/admin/deleteTeacher',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员获取所有课程信息
+    getAllCourse(){
+        const config = {
+            url:'/admin/findAllCourse',
+            method:'post',
         }
         return request(config)
     },

@@ -4,14 +4,11 @@ import com.bjtu.dao.*;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.TeacherService;
-import com.bjtu.task.ScheduledTask;
 import com.bjtu.util.TokenUtils;
-import com.bjtu.util.Utils;
+import com.bjtu.util.AcountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +50,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public RspObject<Boolean> insert(Teacher teacher) {
-        if(Utils.userIsExist(teacher.getId())){
+        if(AcountUtils.userIsExist(teacher.getId())){
             return RspObject.fail("用户已存在!",Boolean.FALSE);
         }else{
             teacherDao.insert(teacher);

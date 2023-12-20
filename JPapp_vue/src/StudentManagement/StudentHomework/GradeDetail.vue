@@ -9,6 +9,7 @@
         <el-table-column prop="content" label="评语" width="500"/>
       </el-table>
       <span style="font-size: 20px;margin-top: 50px">最终分数：{{score}}</span>
+      <span v-if="check" style="font-size: 20px;color:red">你的作业有查重记录！如有疑问，请进行申诉</span>
       <div class="appeal">
         <p style="color:rgba(227,11,11,0.4)">对分数有疑问？在下面进行申诉！</p>
         <div style="width: 500px;margin-top: 30px" label="内容" prop="info">
@@ -22,19 +23,18 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
 import {reactive, onMounted, defineProps, ref} from "vue";
 import * as echarts from "echarts";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import http from "@/api/http";
 
-const router = useRouter();
 const tableData = reactive([]);
 const scoreList = reactive([]);
 const props = defineProps(["homeworkID"]);
 const score= history.state.score;
 const contentID = history.state.contentID;
 const info = ref();
+const check = ref(false);
 // const expandComments = reactive({});
 
 const myChart = ref({});
@@ -104,7 +104,14 @@ const HandleAppeal = () =>{
      .then((res) => {
         if (res.data.code === 200) {
           ElMessage.success("申诉提交成功")
-          router.back();
+          //申诉结果
+          ElMessageBox.confirm(res.data.msg, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }).then(() => {
+          }).catch(()=>{
+          });
         } else {
           window.alert("提交失败:" + res.data.msg);
         }
@@ -126,9 +133,10 @@ const fetchData = () => {
 
   Promise.all([
       http.getScoreInfo(data1),
-      http.getScoreList(data2)
+      http.getScoreList(data2),
+      http.getCheck(data2)
   ])
-      .then(([res1, res2]) => {
+      .then(([res1, res2, res3]) => {
         if (res1.data.code === 200) {
           console.log(res1)
           Object.assign(tableData, res1.data.data);
@@ -147,6 +155,14 @@ const fetchData = () => {
           // });
         }else{
           window.alert("获取信息失败:" + res2.data.msg);
+        }
+
+        if(res3.data.code === 200) {
+          console.log(res3)
+          check.value= res3.data.data;
+          console.log(check)
+        }else{
+          window.alert("获取信息失败:" + res3.data.msg);
         }
       })
       .catch(error => {

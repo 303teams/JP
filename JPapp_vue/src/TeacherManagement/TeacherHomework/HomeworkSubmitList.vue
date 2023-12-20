@@ -16,7 +16,8 @@
           <span style="vertical-align: middle"> 查询 </span>
         </el-button>
 
-        <div style="margin-left: 130px">
+        <div>
+          <el-button @click="modifyContent" size="large" class="modify-ddl-button">修改作业内容</el-button>
           <el-button @click="modifyDdl" size="large" class="modify-ddl-button">修改截止时间</el-button>
         </div>
       </div>
@@ -34,7 +35,18 @@
           <span v-else>未提交</span>
           </template>
         </el-table-column>
-        <el-table-column label="作业成绩" width="120px" align="center" sortable prop="score" />
+        <el-table-column label="作业成绩" width="120px" align="center" sortable>
+          <template v-slot="scope">
+          <el-tooltip v-if="scope.row.similarAmount > 0" class="item" effect="dark" content="点击查看查重名单" placement="top">
+          <span @click="ClickSimilar(scope.row)" style="cursor: pointer; color:red">
+            {{ scope.row.score }}
+            <el-icon><Search /></el-icon>
+          </span>
+          </el-tooltip>
+
+          <span v-else>{{ scope.row.score }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="140px">
           <template v-slot="scope">
           <el-button size="large" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
@@ -71,6 +83,46 @@
       </template>
     </el-dialog>
 
+    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" @close="closeDia" width="50%" >
+      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+        <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
+          <el-form-item label="上传附件" prop="content">
+            <el-upload
+                class="upload-demo"
+                drag
+                action="#"
+                :auto-upload="false"
+                ref="uploadFile"
+                :on-change="handleChange"
+                :on-remove="handleRemove"
+                :on-exceed="handleExceed"
+                :before-upload="beforeUpload"
+                :file-list="homeworkData.content"
+                limit="1"
+            >
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                拖动文件到这或者 <em>点击上传</em>
+              </div>
+              <template #tip>
+              <div class="el-upload__tip">
+                文件大小不超过100Mb
+              </div>
+              </template>
+            </el-upload>
+          </el-form-item>
+          <el-form-item  label="作业内容" prop="info">
+            <div style="width: 400px">
+              <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
+            </div>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span class="dialog-footer">
+        <el-button @click="modifyHomework">提交</el-button>
+        <el-button @click="closeDia">取消</el-button>
+      </span>
+    </el-dialog>
     <el-dialog title="修改截止时间" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyDdlDia" width="30%">
       <div class="modify-ddl">
         <p>当前提交截止时间：{{submitDdl}}</p>
@@ -106,6 +158,8 @@
       </template>
     </el-dialog>
   </div>
+
+  <review-details ref="ReviewDetailRef"></review-details>
 </template>
 
 
@@ -115,6 +169,7 @@ import {dayjs, ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
  import {useRouter} from "vue-router";
 import http from "@/api/http";
+import ReviewDetails from "@/TeacherManagement/TeacherHomework/ReviewDetails.vue";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -132,7 +187,11 @@ let submitDdl = history.state.submitDdl;
 let scoreDdl = history.state.scoreDdl;
 const newSubmitDdl = ref('');
 const newScoreDdl = ref('');
-
+const ReviewDetailRef= ref();
+const homeworkData = reactive({
+  content: [],
+  info: '',
+});
 
 // 在 Input 值改变时触发
 const handleEdit = (e) => {
@@ -146,6 +205,10 @@ const handleEdit = (e) => {
 
   newScore.value = value;
 }
+
+const ClickSimilar = (row) =>{
+  ReviewDetailRef.value.openDetailDialog(row.contentID);
+};
 
 // 禁用日期
 const disabledSubmitDate = (time) => {
@@ -478,6 +541,59 @@ const modifyDdl = () => {
   modifyDdlDia.value = true;
 };
 
+const dialogTableVisible = ref(false);
+const modifyContent = () => {
+  dialogTableVisible.value = true;
+};
+
+const homeFormRules = reactive({
+  content: [
+    { required: true, message: "请上传作业附件", trigger: "change" },
+  ],
+});
+
+const HomeworkFormRef = ref();
+const modifyHomework = () => {
+  HomeworkFormRef.value.validate((valid) => {
+    const formData = new FormData();
+    formData.set('homeworkID', props.homeworkID);
+    if(homeworkData.content){
+      for(const file of homeworkData.content){
+        if(file.raw){
+          formData.append('file', file.raw);
+        }
+      }
+    }
+    if(homeworkData.info){
+      formData.set('info', homeworkData.info);
+    }
+    if (valid) {
+      console.log(formData.get('scoreDdl'))
+      http.changeHomework(formData)
+          .then((res) => {
+            if (res.data.code === 200) {
+              console.log(res)
+              ElMessage.success("作业修改成功");
+              closeDia();
+              fetchData();
+            } else {
+              window.alert("上传失败:" + res.data.msg);
+              closeDia();
+            }
+          })
+          .catch((err) => {
+            console.error("发生未知错误！");
+            closeDia();
+            console.log(err);
+          });
+    }
+  });
+};
+const closeDia = () => {
+  dialogTableVisible.value = false;
+  HomeworkFormRef.value.resetFields();
+};
+
 const modiDdlSubmit = () =>{
   const data = {
     homeworkID: props.homeworkID,
@@ -503,6 +619,35 @@ const modiDdlSubmit = () =>{
         console.error("发生未知错误！");
         console.log(err);
       });
+}
+
+const uploadFile= ref();
+const handleChange = (file,fileList) => {
+  const isLt100M = file.size / 1024 / 1024 < 100;
+  console.log(file.size)
+  if (!isLt100M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+    uploadFile.value.handleRemove(file)
+    return;
+  }
+  homeworkData.content = fileList;
+};
+
+const handleRemove = (file,fileList) => {
+  homeworkData.content = fileList;  // 移除文件
+};
+
+const handleExceed = () => {
+  ElMessage.warning(`最多只能上传1个附件`);
+};
+
+const beforeUpload = (file) => {
+  const isLt100M = file.size / 1024 / 1024 < 100;
+  console.log(file.size)
+  if (!isLt100M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+  }
+  return isLt100M;
 }
 
 const clickSearch = () => {

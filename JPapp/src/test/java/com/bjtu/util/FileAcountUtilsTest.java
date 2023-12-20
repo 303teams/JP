@@ -11,7 +11,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class FileUtilsTest {
+class FileAcountUtilsTest {
 
     @Autowired
     HomeworkDao homeworkDao;

@@ -32,10 +32,10 @@
             <div class="delete-button" @click.stop="deleteMessage(item)">
               <el-icon
                   size="40px"
-                  @mouseenter="isHovered = true"
-                  @mouseleave="isHovered = false"
+                  @mouseenter="hoveredRowIndex = scope.$index"
+                  @mouseleave="hoveredRowIndex = null"
               >
-                <Delete v-if="!isHovered" />
+                <Delete v-if="hoveredRowIndex !== scope.$index" />
                 <DeleteFilled v-else />
               </el-icon>
             </div>
@@ -71,7 +71,7 @@ const pageSize = 10;
 const currentPage = ref(1);
 const tableData = ref([]);  //储存后端传来的数据
 const router = useRouter();
-const isHovered = ref(false);
+const hoveredRowIndex = ref(null);
 
 const deleteMessage = (item) => {
   // 在这里可以调用 ElMessageBox 弹出确认框

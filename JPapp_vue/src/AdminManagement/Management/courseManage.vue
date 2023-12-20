@@ -2,7 +2,7 @@
   <div class="main-page">
     <div class="search-delete-add">
       <div>
-        <el-button type="primary" size="large" @click="handleEdit">
+        <el-button type="primary" size="large" @click="handleAdd">
           <el-icon><plus/></el-icon>添加
         </el-button>
         <el-button type="danger" size="large" @click="handleDelete">
@@ -23,13 +23,11 @@
     </div>
     <div class="table-data">
       <el-table :data="filterTableData" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="学号" prop="id" width="180"/>
-        <el-table-column label="姓名" prop="name" width="150"/>
-        <el-table-column label="性别" prop="sex" width="150"/>
-        <el-table-column label="年龄" prop="age" width="200" show-overflow-tooltip/>
-        <el-table-column label="邮箱" prop="email" width="200" show-overflow-tooltip/>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column type="selection"/>
+        <el-table-column label="课程号" prop="cno"/>
+        <el-table-column label="课程名" prop="cname"/>
+        <el-table-column label="授课教师" prop="tname" />
+        <el-table-column align="center" label="操作">
           <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.row)"
           >编辑</el-button
@@ -61,6 +59,40 @@
 
   </div>
 
+  <el-dialog title="添加课程" :close-on-click-modal="false" :lock-scroll="false" v-model="AddDialogVis" @close="resetData" width="40%">
+    <el-form ref="Ref" label-width="80px" :model="form" :rules="rules">
+      <el-form-item label="职工号" prop="id">
+        <el-input v-model.number="form.id" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model.trim="form.name" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-radio-group v-model="form.sex">
+          <el-radio label="男">男</el-radio>
+          <el-radio label="女">女</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="年龄" prop="age">
+        <el-input
+            style="width: 200px"
+            v-model="form.age"
+            type="text"
+            maxlength="2"
+            @input="handleInput" />
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model.trim="form.password" autocomplete="off" type="password" />
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model.trim="form.email" autocomplete="off" />
+      </el-form-item>
+    </el-form>
+    <div class="dialog-footer">
+      <el-button @click="resetData">取 消</el-button>
+      <el-button type="primary" @click="save">确 定</el-button>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -78,6 +110,33 @@ const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(15); //每页展示多少条数据
 const search = ref('')
 const router = useRouter();
+const AddDialogVis = ref(false);
+const Ref = ref();
+const form = reactive({
+  cno: '',
+  cname:'',
+})
+
+const resetData = () => {
+  AddDialogVis.value = false;
+  Ref.value.resetFields();
+  Ref.value.clearValidate();
+}
+
+const save =() =>{
+  http.addStudent(form).then(res =>{
+    if(res.data.code === 200){
+      ElMessage.success("添加成功！")
+      resetData();
+      fetchData();
+    }else{
+      ElMessage.error("添加失败:" + res.data.msg);
+    }
+  })
+      .catch(err => {
+        console.log(err);
+      });
+};
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -99,6 +158,10 @@ const clickSearch = () => {
 const handleSelectionChange = (val) => {
   multipleSelection.value = val;
 };
+
+const handleAdd = () =>{
+  AddDialogVis.value = true;
+}
 
 const handleDelete = (row) => {
   if (row.id) {
@@ -143,7 +206,7 @@ const handleDelete = (row) => {
             fetchData();
             console.log(res)
           } else {
-            ElMessage.error("获取信息失败:" + res.data.msg);
+            ElMessage.error("删除失败:" + res.data.msg);
           }
         })
             .catch((err) => {
@@ -171,7 +234,7 @@ const handleEdit = (row) =>{
   })
 }
 const fetchData = () => {
-  http.getAllStudent()
+  http.getAllCourse()
       .then(res => {
         if(res.data.code === 200){
           tableData.data = res.data.data;
@@ -180,7 +243,7 @@ const fetchData = () => {
           window.alert("获取信息失败:" + res.data.msg);
         }
       }).catch(err => {
-        console.log(err);
+    console.log(err);
   })
 
 
@@ -225,5 +288,10 @@ onMounted(() => {
 
 .demo-pagination-block{
   margin-top: 20px;
+}
+
+.el-table__header, .el-table__body, .el-table__footer{
+  width:100% !important;
+  table-layout: fixed !important;
 }
 </style>

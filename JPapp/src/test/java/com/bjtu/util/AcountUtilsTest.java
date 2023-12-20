@@ -4,21 +4,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
-class UtilsTest {
+class AcountUtilsTest {
 
     @Autowired
-    Utils utils;
+    AcountUtils acountUtils;
 
     @Test
     void userIsExist() {
-        System.out.println(utils.userIsExist("21001002"));
+        System.out.println(acountUtils.userIsExist("21001002"));
     }
 
     @Test
     void isMatchEmail() {
-        System.out.println(utils.isMatchEmail("21001002","2461172547@qq.com"));
+        System.out.println(acountUtils.isMatchEmail("21001002","2461172547@qq.com"));
     }
 }
