@@ -26,7 +26,7 @@
                 size="large"
                 stripe
                 :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" width="120px" sortable prop="name" />
+        <el-table-column label="作业名称" width="120px" sortable prop="name" show-overflow-tooltip/>
         <el-table-column label="作业截止时间" width="180px" sortable prop="submitDdl" />
         <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
         <el-table-column label="作业内容" width="100px" prop="content" >
@@ -76,12 +76,12 @@
           <template #default="scope">
           <el-icon
               size="40px"
-              @mouseenter="isHovered = true"
-              @mouseleave="isHovered = false"
+              @mouseenter="hoveredRowIndex = scope.$index"
+              @mouseleave="hoveredRowIndex = null"
               @click="handleDelete(scope.$index, scope.row)"
               style="cursor: pointer;color: rgba(87,86,86,0.55)"
           >
-            <Delete v-if="!isHovered" />
+            <Delete v-if="hoveredRowIndex !== scope.$index" />
             <DeleteFilled v-else />
           </el-icon>
           </template>
@@ -193,7 +193,7 @@ const props = defineProps(['cno']);
 const HomeworkFormRef =ref();
 const router = useRouter();
 const route =useRoute();
-const isHovered = ref(false);
+const hoveredRowIndex = ref(null);
 const courseName = ref('');
 const uploadFile = ref('');
 const homeworkData = reactive({

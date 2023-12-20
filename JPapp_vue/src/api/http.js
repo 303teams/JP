@@ -261,6 +261,19 @@ const http = {
         return request(config)
     },
 
+    //学生是否被查重
+    getCheck(data){
+        const config = {
+            url:'/student/isSimilar',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //学生获取总成绩
     getTotalScore(){
         const config = {
@@ -296,6 +309,19 @@ const http = {
     assignHomework(data){
         const config = {
             url:'/homework/uploadHW',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //老师修改作业内容
+    changeHomework(data){
+        const config = {
+            url:'/homework/alterHWByHID',
             method:'post',
             data:data,
             headers: {
