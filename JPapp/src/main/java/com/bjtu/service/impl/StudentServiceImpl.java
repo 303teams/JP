@@ -8,12 +8,15 @@ import com.bjtu.util.MathUtils;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -39,6 +42,12 @@ public class StudentServiceImpl implements StudentService  {
     @Autowired
     ScDao scDao;
 
+    @Resource
+    RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    EmailService emailService;
+
     @Override
     public RspObject<User> login(String id, String password) {
 
@@ -54,6 +63,32 @@ public class StudentServiceImpl implements StudentService  {
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
+        }
+    }
+
+    @Override
+    public RspObject<Object> email(String username, String email) {
+        Student student = studentDao.findByNum(username);
+        if(student == null){
+            return RspObject.fail("该学生不存在！");
+        }else if(student.getExist() == 0){
+            return RspObject.fail("该学生已退学！");
+        }else if(!Utils.isMatchEmail(username,email)){
+            System.out.println("用户账号与邮箱不匹配！");
+            throw new ServiceException(500,"用户账号与邮箱不匹配！");
+        }
+        try{
+            // 生成验证码
+            String code = Utils.generateVerificationCode();
+
+            redisTemplate.opsForValue().set(username, code);
+//            验证码1分钟后过期
+            redisTemplate.expire(username,60, TimeUnit.SECONDS);
+
+            emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
+            return RspObject.success("验证码已发送至您的邮箱");
+        } catch (Exception e) {
+            throw new ServiceException(500,e.getMessage());
         }
     }
 
@@ -280,5 +315,6 @@ public class StudentServiceImpl implements StudentService  {
             throw new ServiceException(500,e.getMessage());
         }
     }
+
 
 }

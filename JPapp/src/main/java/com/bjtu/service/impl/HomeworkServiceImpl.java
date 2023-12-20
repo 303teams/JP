@@ -10,6 +10,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.task.ScheduledTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialException;
 import java.util.List;
@@ -68,6 +69,19 @@ public class HomeworkServiceImpl implements HomeworkService {
             homeworkDao.updateSubmitDdl(homeworkID,submitDdl);
             scheduledTask.alterSubmitDdl(homeworkID,submitDdl);
             return RspObject.success("修改成功",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
+    @Override
+    public RspObject<Object> alterHWByHID(Integer homeworkID, MultipartFile file,String info) {
+        try{
+//            重新设置作业内容
+            homeworkDao.alterHWByHID(homeworkID,file.getBytes(),file.getOriginalFilename(),info);
+//            将答案清空
+            homeworkDao.resetAnswer(homeworkID);
+            return RspObject.success("修改作业成功!");
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
         }

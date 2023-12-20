@@ -38,4 +38,6 @@ public interface StudentService {
 
     public RspObject<List<Score>> findSCByCID(Integer contentID);
 
+    public RspObject<Object> email(String username,String email);
+
 }

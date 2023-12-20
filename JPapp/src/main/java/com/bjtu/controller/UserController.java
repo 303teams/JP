@@ -36,9 +36,6 @@ public class UserController {
     @Autowired
     EmailService emailService;
 
-    @Autowired
-    private HttpSession session;
-
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -68,23 +65,7 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(email,"邮箱不能为空！");
 
-        if(!Utils.isMatchEmail(username,email)){
-            System.out.println("用户账号与邮箱不匹配！");
-            throw new ServiceException(500,"用户账号与邮箱不匹配！");
-        }
-        try{
-            // 生成验证码
-            String code = Utils.generateVerificationCode();
-
-            redisTemplate.opsForValue().set(username, code);
-//            验证码1分钟后过期
-            redisTemplate.expire(username,60, TimeUnit.SECONDS);
-
-            emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
-            return RspObject.success("验证码已发送至您的邮箱");
-        } catch (Exception e) {
-            throw new ServiceException(500,e.getMessage());
-        }
+        return studentService.email(username,email);
     }
 
     @AuthAccess
@@ -102,7 +83,6 @@ public class UserController {
             return RspObject.fail("验证码错误！");
         }
     }
-
 
     @AuthAccess
     @PostMapping("/change")
