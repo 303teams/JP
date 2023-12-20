@@ -6,7 +6,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
-@Component
+//@Component
+
+/**
+ * 弃用
+ */
 public class NLPUtils {
 
     //设置APPID/AK/SK
@@ -14,6 +18,7 @@ public class NLPUtils {
     public static final String API_KEY = "qosW94h4iX6OELcYDMDtwo6a";
     public static final String SECRET_KEY = "X6W5k2I2fFfFzAxNQyubQEakvP4xtNkK";
 
+    //短文本相似度检测（不支持本项目）
     public JSONObject similarityCheck(String text1,String text2){
         // 初始化一个AipNlp
         AipNlp client = new AipNlp(APP_ID, API_KEY, SECRET_KEY);

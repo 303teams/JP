@@ -45,4 +45,6 @@ public interface TeacherService {
     RspObject<Boolean> deleteAPByAID(Integer appealID);
 
     RspObject<Boolean> setCTWeightedScore(Integer contentId,Integer score);
+
+    RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID);
 }

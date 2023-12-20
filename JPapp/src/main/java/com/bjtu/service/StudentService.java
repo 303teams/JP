@@ -39,6 +39,7 @@ public interface StudentService {
     public RspObject<List<Score>> findSCByCID(Integer contentID);
     public RspObject<Boolean> addStudentCourse(String id,String cno);
 
-
     RspObject<Boolean> deleteStudentCourse(String id, String cno);
+
+    RspObject<Boolean> isSimilar(Integer contentID);
 }

@@ -68,4 +68,14 @@ public class StudentController {
         return studentService.findSCByCID(contentID);
     }
 
+    /**
+     * 判断是否有被查重
+     * @param contentID
+     * @return
+     */
+    @PostMapping("/isSimilar")
+    public RspObject<Boolean> isSimilar(Integer contentID){
+        return studentService.isSimilar(contentID);
+    }
+
 }

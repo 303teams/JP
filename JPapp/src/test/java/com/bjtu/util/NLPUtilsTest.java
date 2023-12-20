@@ -23,8 +23,8 @@ class NLPUtilsTest {
     @Test
     void similarityCheck() {
 //        System.out.println(nlpUtils.similarityCheck("我是中国人","我是中国人"));
-        FileObject fileObject1 = fileUtils.getTextFromDoc(homeworkDao.findHWById(654).getContent());
-        FileObject fileObject2 = fileUtils.getTextFromDocx(homeworkDao.findHWById(649).getContent());
-        System.out.println(nlpUtils.similarityCheck(fileObject1.getContent(),fileObject2.getContent()));
+//        FileObject fileObject1 = fileUtils.getTextFromDoc(homeworkDao.findHWById(654).getContent());
+//        FileObject fileObject2 = fileUtils.getTextFromDocx(homeworkDao.findHWById(664).getContent());
+//        System.out.println(nlpUtils.similarityCheck(fileObject1.getContent(),fileObject2.getContent()));
     }
 }

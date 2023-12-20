@@ -24,6 +24,18 @@
         Where homeworkID = #{homeworkID}
     </update>
 
+    <update id="alterHWByHID">
+        UPDATE homework
+        SET content = #{content}, fileName = #{fileName}, info = #{info}
+        WHERE homeworkID = #{homeworkID}
+    </update>
+
+    <update id="resetAnswer">
+        Update homework
+        Set answer = null,Afilename = null
+        Where homeworkID = #{homeworkID}
+    </update>
+
     <delete id="deleteByHId">
         delete from homework
         where homeworkID = #{homeworkID}

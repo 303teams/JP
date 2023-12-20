@@ -45,4 +45,6 @@ public interface ContentDao {
     public Content findCTByHIDSno(Integer homeworkID,String sno);
 
     public void alterContent(Content content);
+
+    public List<Map<String,Object>> findSimilarCTs(Integer contentID);
 }

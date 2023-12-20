@@ -8,12 +8,15 @@ import com.bjtu.util.MathUtils;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -38,6 +41,12 @@ public class StudentServiceImpl implements StudentService  {
 
     @Autowired
     ScDao scDao;
+
+    @Resource
+    RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    EmailService emailService;
 
     @Override
     public RspObject<User> login(String id, String password) {
@@ -289,5 +298,19 @@ public class StudentServiceImpl implements StudentService  {
     @Override
     public RspObject<Boolean> deleteStudentCourse(String id, String cno) {
         return scDao.deleteStudentCourse(id,cno);
+    }
+
+    @Override
+    public RspObject<Boolean> isSimilar(Integer contentID) {
+        try{
+//            查询是否有查重记录
+            if(contentDao.findSimilarCTs(contentID).isEmpty()){
+                return RspObject.success("无查重记录！",Boolean.FALSE);
+            }else{
+                return RspObject.success("有查重记录！",Boolean.TRUE);
+            }
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
     }
 }
