@@ -8,7 +8,7 @@
       </el-header>
 
       <el-main>
-        <router-view></router-view>
+        <router-view class="app-main-height"/>
       </el-main>
     </el-container>
   </el-container>
@@ -31,6 +31,10 @@ body {
   height: 100vh;
 }
 
+.app-main-height {
+  min-height: 83vh;
+}
+
 .layout-container-demo .el-header {
   height: 8vh;
   padding: 0;
@@ -38,7 +42,8 @@ body {
 }
 
 .layout-container-demo .el-main {
-  padding: 0 0 80px 30px;
+  background: #f6f8f9;
+  padding: 20px;
   height: 92vh;
   width: 85vw;
   overflow: auto;

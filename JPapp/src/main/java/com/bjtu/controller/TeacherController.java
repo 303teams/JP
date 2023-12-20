@@ -52,7 +52,7 @@ public class TeacherController {
 
 //    教师修改学生分数
     @PostMapping("/setCTScore")
-    public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,double score){
+    public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Double score){
             return teacherService.setCTScore(contentID, score);
     }
 

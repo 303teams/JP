@@ -140,6 +140,7 @@
                 drag
                 action="#"
                 :auto-upload="false"
+                ref="uploadFile"
                 :on-change="handleChange"
                 :on-remove="handleRemove"
                 :on-exceed="handleExceed"
@@ -194,6 +195,7 @@ const router = useRouter();
 const route =useRoute();
 const isHovered = ref(false);
 const courseName = ref('');
+const uploadFile = ref('');
 const homeworkData = reactive({
   name: '',
   content: [],
@@ -519,6 +521,13 @@ const clickSearch = () => {
 };
 
 const handleChange = (file,fileList) => {
+  const isLt100M = file.size / 1024 / 1024 < 100;
+  console.log(file.size)
+  if (!isLt100M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+    uploadFile.value.handleRemove(file)
+    return;
+  }
   homeworkData.content = fileList;
 };
 
@@ -532,6 +541,7 @@ const handleExceed = () => {
 
 const beforeUpload = (file) => {
   const isLt100M = file.size / 1024 / 1024 < 100;
+  console.log(file.size)
   if (!isLt100M) {
     ElMessage.error('上传文件大小不能超过 100MB!');
   }

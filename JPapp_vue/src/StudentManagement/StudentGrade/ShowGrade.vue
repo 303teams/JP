@@ -1,8 +1,9 @@
 <template>
   <div class="demo-collapse">
     <el-collapse v-model="activeNames" @change="handleChange" v-if="tableData.length > 0">
-      <el-collapse-item v-for="item in tableData" :key="item.cno" :title="item.cname" :name="item.cno">
+      <el-collapse-item class="score_item" v-for="item in tableData" :key="item.cno" :title="item.cname" :name="item.cno">
         <div :id="`lineChart-${item.cno}`" :style="{width: '600px', height: '400px'}"></div>
+        <div>总成绩：{{item.score}}</div>
       </el-collapse-item>
     </el-collapse>
     <el-empty v-else />
@@ -26,7 +27,6 @@ const fetchData = async () => {
   http.getTotalScore().then((res) => {
     if (res.data.code === 200) {
       Object.assign(tableData, res.data.data);
-      tableData[0].ranks=[1,2,3,4,5,6,7,8,9,10];
       setTimeout(() => {
         initialEcharts(charts, tableData);
       }, 1)
@@ -40,17 +40,6 @@ const fetchData = async () => {
         console.log(err);
       })
 
-  // tableData.push({
-  //   cno: '1',
-  //   cname: '数据结构',
-  //   score: '10',
-  //   ranks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  // });
-  //
-  // setTimeout(() => {
-  //   initialEcharts(charts, tableData);
-  // }, 1)
-
 };
 
 const initialEcharts = (chartsObject, data) => {
@@ -59,7 +48,7 @@ const initialEcharts = (chartsObject, data) => {
     const option = {
       xAxis: {
         type: 'category',
-        data: item.ranks.map((_, index) => index)
+        data: item.ranks.map((_, index) => index+1)
       },
       yAxis: {
         type: 'value',
@@ -90,3 +79,12 @@ onMounted(() => {
 });
 
 </script>
+
+<style scoped>
+.score_item{
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  text-align: left;
+}
+</style>

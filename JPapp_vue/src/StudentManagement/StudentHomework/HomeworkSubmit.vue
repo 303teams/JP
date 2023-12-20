@@ -21,6 +21,7 @@
           <el-upload
               class="upload-demo"
               action="#"
+              ref="submitFile"
               :auto-upload="false"
               :on-change="handleChange"
               :on-remove="handleRemove"
@@ -45,7 +46,7 @@
     </div>
     <span class="dialog-footer">
         <el-button @click="Back()">返回</el-button>
-        <el-button type="primary" @click="submitHomework">确认</el-button>
+        <el-button type="primary" @click="submitHomework">{{ submitTime ? '重新提交' : '确认提交' }}</el-button>
     </span>
   </div>
 
@@ -58,14 +59,16 @@ import http from "@/api/http";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 
-const props = defineProps(['homeworkID','cno']);
+const props = defineProps(['homeworkID','cno',]);
 const router = useRouter();
 const SubmitHomeworkRef = ref();
 const blobUrl = ref();
 const fileName = ref();
 const name = history.state.name;
 const submitDdl = history.state.submitDdl;
+const submitTime = history.state.submitTime;
 const HomeworkInfo = history.state.info;
+const submitFile = ref();
 const submitHomeworkForm = reactive({
   files: null,
   ContentInfo: null,
@@ -79,6 +82,12 @@ const rules = {
 
 
 const handleChange = (file,fileList) => {
+  const isLt10M = file.size / 1024 / 1024 < 100;
+  if (!isLt10M) {
+    ElMessage.error('上传文件大小不能超过 100MB!');
+    submitFile.value.handleRemove(file);
+    return;
+  }
   const fileName = fileList.length > 0 ? fileList[0].name : '';
   submitHomeworkForm.files = fileList;
   submitHomeworkForm.info = fileName;

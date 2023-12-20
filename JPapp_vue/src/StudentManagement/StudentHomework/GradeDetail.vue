@@ -8,8 +8,9 @@
         <el-table-column prop="score" label="学生评分" width="180" />
         <el-table-column prop="content" label="评语" width="500"/>
       </el-table>
-      <span>我的分数：{{score}}</span>
+      <span style="font-size: 20px;margin-top: 50px">最终分数：{{score}}</span>
       <div class="appeal">
+        <p style="color:rgba(227,11,11,0.4)">对分数有疑问？在下面进行申诉！</p>
         <div style="width: 500px;margin-top: 30px" label="内容" prop="info">
           <el-input type="textarea" resize="none" :rows="8" v-model="info" placeholder="请输入申诉内容"/>
         </div>
@@ -62,24 +63,24 @@ const initEcharts = (chart, data) => {
         radius: "30%",
         data: [
           {
-            value: data.score_0,
-            name: "0分",
+            value: data.score_0_2,
+            name: "0-2分",
           },
           {
-            value: data.score_1_3,
-            name: "1-3分",
+            value: data.score_2_4,
+            name: "2-4分",
           },
           {
             value: data.score_4_6,
             name: "4-6分",
           },
           {
-            value: data.score_7_9,
-            name: "7-9分",
+            value: data.score_6_8,
+            name: "6-8分",
           },
           {
-            value: data.score_10,
-            name: "10分",
+            value: data.score_8_10,
+            name: "8-10分",
           },
         ],
       },
@@ -118,6 +119,7 @@ const fetchData = () => {
   const data1 = {
     homeworkID: props.homeworkID,
   };
+  console.log("homeworkID:", props.homeworkID)
   const data2 = {
     contentID: contentID,
   }

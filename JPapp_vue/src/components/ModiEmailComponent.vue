@@ -5,7 +5,7 @@
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="modifyEmailForm" ref="ModifyEmailRef" label-width="80px" :rules="rules">
           <el-form-item label="新邮箱" prop="email">
-            <el-input  v-model="modifyEmailForm.email" style="width: 200px" placeholder="请输入邮箱"></el-input>
+            <el-input  v-model="modifyEmailForm.email" :disabled="emailInput" style="width: 200px" placeholder="请输入邮箱"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
             <div style="display: flex; align-items: center;">
@@ -40,6 +40,7 @@ export default {
       timer: null,
       count: '',
       modifyEmailDialogVis: false,
+      emailInput: false,
       modifyEmailForm: {
         email: "",
         code: "",
@@ -74,6 +75,7 @@ export default {
             this.count--;
           } else {
             this.codeShow = true;
+            this.emailInput = true;
             clearInterval(this.timer);
             this.timer = null;
           }
@@ -98,6 +100,7 @@ export default {
         http.SendEmail(data).then(res => {
         if (res.code === 200) {
           this.$message.success("验证码发送成功！");
+          this.emailInput = true;
           this.CountDown();
         } else {
           this.$message.warning("验证码发送失败:" + res.msg)

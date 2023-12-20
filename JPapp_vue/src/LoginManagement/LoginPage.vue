@@ -3,6 +3,11 @@
     <div class = "login">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="LoginRef" label-width="80px" :model="user" :rules="rules">
+          <div style="display:flex;justify-content:start;">
+            <img :src="logo" class="image">
+            <p class="header_1">简评</p>
+          </div>
+
           <h3 style="color:white">欢迎登录!</h3>
           <el-form-item label="用户名:" label-width="5em" prop="username">
             <el-input
@@ -48,7 +53,7 @@ import http from '@/api/http';
 import ForgetPassword from '@/LoginManagement/ForgetPassword.vue';
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
-
+import logo from "@/assets/logo.png";
 
 const LoginRef = ref();
 const EmailVerifyRef = ref();
@@ -64,7 +69,6 @@ const rules = reactive({
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 });
-
 
 const login = () => {
   LoginRef.value.validate((valid) => {
@@ -140,6 +144,31 @@ const EmailVerify = () => {
   margin: 0;
   padding: 0;
   border: 0
+}
+
+.image{
+  width: 120px;
+  height: 120px;
+  margin-left: 20px;
+}
+
+.header_1{
+  height: 50px;
+  margin-top: 35px;
+  font-size: 43px;
+  background-image: -webkit-linear-gradient(
+      left,
+      rgb(42, 134, 141),
+      rgba(121, 120, 82, 0.86) 20%,
+      #3498db 40%,
+      #e74c3c 60%,
+      #09ff009a 80%,
+      rgba(82, 196, 204, 0.281) 100%
+  );
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-background-size: 200% 100%;
+  -webkit-animation: masked-animation 4s linear infinite;
 }
 
 </style>

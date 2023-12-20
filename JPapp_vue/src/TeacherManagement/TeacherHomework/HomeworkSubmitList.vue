@@ -30,14 +30,7 @@
         <el-table-column label="提交时间" width="200px" align="center" sortable prop="submitTime" />
         <el-table-column label="作业提交内容" align="center" width="150px">
           <template v-slot="scope">
-          <el-link
-              v-if="scope.row.contentID !== null"
-              :href="scope.row.blobUrl"
-              :download="scope.row.fileName"
-              style="color: dodgerblue; text-decoration: underline"
-          >
-            下载作业
-          </el-link>
+          <el-button type="text" v-if="scope.row.contentID !== null" @click="DownloadCT(scope.row)">查看作业</el-button>
           <span v-else>未提交</span>
           </template>
         </el-table-column>
@@ -67,7 +60,7 @@
     <el-dialog title="修改成绩" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyScoreDia" width="30%">
         <div>
           <p>当前分数：{{ currentScore }}</p>
-          <el-input v-model="newScore" style="width: 150px;" placeholder="输入新的分数"></el-input>
+          <el-input v-model="newScore" style="width: 150px;" @input="handleEdit" placeholder="输入新的分数"/>
         </div>
 
       <template #footer>
@@ -140,6 +133,19 @@ let scoreDdl = history.state.scoreDdl;
 const newSubmitDdl = ref('');
 const newScoreDdl = ref('');
 
+
+// 在 Input 值改变时触发
+const handleEdit = (e) => {
+  let value = e.replace(/[^\d.]/g, '') // 只能输入数字和.
+  value = value.replace(/^\./g, '')  //第一个字符不能是.
+  value = value.replace(/\.{2,}/g, '.') // 不能连续输入.
+  value = value.replace(/(\.\d+)\./g, '$1') // .后面不能再输入.
+  value = value.replace(/^0+(\d)/, '$1') // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
+  value = value.replace(/(\d{15})\d*/, '$1') // 最多保留15位整数
+  value = value.replace(/(\.\d{2})\d*/, '$1')// 最多保留2位小数
+
+  newScore.value = value;
+}
 
 // 禁用日期
 const disabledSubmitDate = (time) => {
@@ -363,65 +369,63 @@ const filterTableData = computed(() =>
 
 
 const fetchData = () => {
-  return new Promise((resolve, reject) => {
-    const data1 = {
-      homeworkID: props.homeworkID,
-    };
+  const data1 = {
+    homeworkID: props.homeworkID,
+  };
 
-    http.getStudentHomeworkList(data1)
-        .then(res1 => {
-          console.log(res1);
-          if (res1.data.code === 200) {
-            console.log(props.cno);
-            tableData.data = res1.data.data;
-
-            // 使用promise实现多个接口的调用
-            const promises = tableData.data.map(item => {
-              const data2 = {
-                contentID: item.contentID,
-              };
-              return http.downloadCT(data2)
-                  .then(res2 => {
-                    console.log(res2);
-                    const blob = new Blob([res2.data], { type: 'application/octet-stream' });
-                    const blobUrl = URL.createObjectURL(blob);
-
-                    // 给每项作业分配url用来下载
-                    item.blobUrl = blobUrl;
-                  });
-            });
-
-            console.log(tableData.data);
-            // 使用Promise.all来执行promises数组里的所有promise
-            return Promise.all(promises);
-          } else {
+  http.getStudentHomeworkList(data1)
+      .then(res1 => {
+        console.log(res1);
+        if (res1.data.code === 200) {
+          console.log(props.cno);
+          tableData.data = res1.data.data;
+        }else {
             window.alert("获取信息失败:" + res1.data.msg);
-            reject("获取信息失败:" + res1.data.msg);
           }
-        })
-        .then(() => {
-          // 将已提交作业的学生放在列表前面排序
-          tableData.data.sort((a, b) => {
-            if (a.contentID !== null && b.contentID === null) {
-              return -1;
-            } else if (a.contentID === null && b.contentID !== null) {
-              return 1;
-            } else {
-              return 0;
-            }
-          });
-
-          updateFilteredData(); // 更新过滤后的数据
-          resolve({ success: true, message: 'Data fetched successfully' });
-        })
-        .catch(error => {
-          console.error("发生未知错误！");
-          console.log(error);
-
-          reject("发生未知错误！");
+      }).then(() => {
+        // 将已提交作业的学生放在列表前面排序
+        tableData.data.sort((a, b) => {
+          if (a.contentID !== null && b.contentID === null) {
+            return -1;
+          } else if (a.contentID === null && b.contentID !== null) {
+            return 1;
+          } else {
+            return 0;
+          }
         });
-  });
+
+        updateFilteredData(); // 更新过滤后的数据
+      }).catch(error => {
+        console.error("发生未知错误！");
+        console.log(error);
+      });
 };
+
+const DownloadCT = (row) =>{
+  const data = {
+    contentID: row.contentID,
+  };
+  http.downloadCT(data)
+      .then(res => {
+        console.log(res);
+        const blob = new Blob([res.data], { type: 'application/octet-stream' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = row.fileName;
+
+        // 模拟点击下载
+        link.click();
+
+        // 释放 URL 对象
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch(err => {
+        console.error("发生未知错误！");
+        console.log(err);
+      });
+}
 
 const updateFilteredData = () => {
   filteredData.value = tableData.data.filter(
@@ -440,6 +444,15 @@ const modifyScore = (contentId,score) => {
 };
 
 const modiScoreSubmit = () => {
+  if(newScore.value === ''){
+    ElMessage.error("分数不能为空");
+    return;
+  }
+
+  if(newScore.value > 10){
+    ElMessage.error("分数必须在0-10之间");
+    return;
+  }
   const data = {
     contentID: currentContentID.value,
     score: newScore.value,
@@ -475,16 +488,18 @@ const modiDdlSubmit = () =>{
       .then((res) => {
         if (res.data.code === 200) {
           console.log(res)
-          modifyDdlDia.value = false;
           submitDdl = newSubmitDdl.value;
           scoreDdl = newScoreDdl.value;
+          modifyDdlDia.value = false;
           fetchData();
           ElMessage.success("修改成功");
         } else {
           window.alert("修改失败:" + res.data.msg);
+          modifyDdlDia.value = false;
         }
       })
       .catch((err) => {
+        modifyDdlDia.value = false;
         console.error("发生未知错误！");
         console.log(err);
       });

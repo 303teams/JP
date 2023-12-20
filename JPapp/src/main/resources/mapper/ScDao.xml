@@ -13,4 +13,12 @@
         WHERE sno = #{sno}
     </select>
 
+    <insert id="addStudentCourse">
+        insert into sc(sno,cno,score)
+        values (#{sno}, #{cno},#{score})
+    </insert>
+
+    <delete id="deleteStudentCourse">
+        delete from sc where sno = #{sno} and cno = #{cno}
+    </delete>
 </mapper>
