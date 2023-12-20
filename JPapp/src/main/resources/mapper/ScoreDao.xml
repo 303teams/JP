@@ -24,6 +24,13 @@
         WHERE scoreID = #{scoreID}
     </update>
 
+    <update id="setInvalidByCID">
+        UPDATE score
+        SET valid = 0
+        WHERE contentID = #{contentID1} OR
+        contentID = #{contentID2}
+    </update>
+
     <!--    作业号为contentID，对应的评分人为sno的打分信息-->
     <select id="findxCTById" resultType="com.bjtu.pojo.Content">
         SELECT

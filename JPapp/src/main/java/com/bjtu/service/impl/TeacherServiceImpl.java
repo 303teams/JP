@@ -153,7 +153,7 @@ public class TeacherServiceImpl implements TeacherService {
             return RspObject.success("查询成功！",homeworks);
         } catch (Exception e) {
             e.printStackTrace(); // 记录异常
-            return RspObject.fail("查询失败！");
+            throw new ServiceException(500,e.getMessage());
         }
     }
 
@@ -166,7 +166,7 @@ public class TeacherServiceImpl implements TeacherService {
             }
             return RspObject.success("查询成功！",contents);
         }catch (Exception e){
-            throw new ServiceException(500,"查询失败！");
+            throw new ServiceException(500,e.getMessage());
         }
     }
 
