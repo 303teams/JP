@@ -138,7 +138,7 @@
     </select>
 
     <select id="findSimilarCTs" resultType="java.util.Map">
-        SELECT contentID2 AS contentID,
+        SELECT s.contentID2 AS contentID,
                similar,
                st.id AS sno,
                st.name AS sname
@@ -146,7 +146,7 @@
             s.contentID2 = c.contentID
         JOIN student st ON
             c.sno = st.id
-        WHERE contentID1 = #{contentID}
+        WHERE s.contentID1 = #{contentID}
 
     </select>
     <select id="findContentByCTID">
