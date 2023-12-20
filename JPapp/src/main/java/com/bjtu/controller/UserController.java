@@ -8,7 +8,7 @@ import com.bjtu.service.TeacherService;
 import com.bjtu.service.impl.EmailService;
 
 import com.bjtu.util.TokenUtils;
-import com.bjtu.util.Utils;
+import com.bjtu.util.AcountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+
 import com.bjtu.exception.ServiceException;
 
 import java.util.concurrent.TimeUnit;
@@ -65,16 +65,16 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(email,"邮箱不能为空！");
 
-        if(!Utils.userIsExist(username)){
+        if(!AcountUtils.userIsExist(username)){
             return RspObject.fail("该用户不存在！");
-        }else if(!Utils.userIsOK(username)){
+        }else if(!AcountUtils.userIsOK(username)){
             return RspObject.fail("该用户账户未激活！");
-        }else if(!Utils.isMatchEmail(username,email)){
+        }else if(!AcountUtils.isMatchEmail(username,email)){
             return RspObject.fail("用户名与邮箱不匹配！");
         }else{
             try{
                 // 生成验证码
-                String code = Utils.generateVerificationCode();
+                String code = AcountUtils.generateVerificationCode();
 
                 redisTemplate.opsForValue().set(username, code);
 //            验证码1分钟后过期
@@ -107,7 +107,7 @@ public class UserController {
     @AuthAccess
     @PostMapping("/change")
     public RspObject<String> change(String id,String password){
-        String role = Utils.getUserType(id);
+        String role = AcountUtils.getUserType(id);
         if(role.equals("admin")){
             return adminService.changePassword(id,password);
         }else if(role.equals("student")){
@@ -139,7 +139,7 @@ public class UserController {
         User user = TokenUtils.getCurrentUser();
         try{
             // 生成验证码
-            String code = Utils.generateVerificationCode();
+            String code = AcountUtils.generateVerificationCode();
 //            保存验证码
             redisTemplate.opsForValue().set(user.getId(), code);
             redisTemplate.expire(user.getId(),60, TimeUnit.SECONDS);

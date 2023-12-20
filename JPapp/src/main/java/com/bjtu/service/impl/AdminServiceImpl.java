@@ -6,7 +6,7 @@ import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
 import com.bjtu.util.TokenUtils;
-import com.bjtu.util.Utils;
+import com.bjtu.util.AcountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public RspObject<String> addStudent(Student student) {
 
-        if(Utils.userIsExist(student.getId())){
+        if(AcountUtils.userIsExist(student.getId())){
             return RspObject.fail("用户已存在!");
         }
         adminDao.insertStudent(student);
@@ -33,7 +33,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public RspObject<String> addTeacher(Teacher teacher) {
 
-        if(Utils.userIsExist(teacher.getId())){
+        if(AcountUtils.userIsExist(teacher.getId())){
             return RspObject.fail("用户已存在!");
         }
         adminDao.insertTeacher(teacher);
@@ -153,7 +153,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public RspObject<Boolean> insert(Admin admin) {
-        if(Utils.userIsExist(admin.getId())){
+        if(AcountUtils.userIsExist(admin.getId())){
             return RspObject.fail("用户已存在!",Boolean.FALSE);
         }else{
             adminDao.insert(admin);
