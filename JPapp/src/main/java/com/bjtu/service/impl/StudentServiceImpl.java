@@ -6,8 +6,7 @@ import com.bjtu.pojo.*;
 import com.bjtu.service.StudentService;
 import com.bjtu.util.MathUtils;
 import com.bjtu.util.TokenUtils;
-import com.bjtu.util.Utils;
-import org.apache.ibatis.annotations.Param;
+import com.bjtu.util.AcountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService  {
@@ -68,7 +66,7 @@ public class StudentServiceImpl implements StudentService  {
 
     @Override
     public RspObject<Boolean> insert(Student student) {
-        if(Utils.userIsExist(student.getId())){
+        if(AcountUtils.userIsExist(student.getId())){
             return RspObject.fail("用户已存在!",Boolean.FALSE);
         }else{
             studentDao.insert(student);

@@ -100,6 +100,7 @@ public class HomeworkController {
         return new ResponseEntity<>(answer, headers, HttpStatus.OK);
     }
 
+//    教师修改作业
     @PostMapping("/alterHWByHID")
     public RspObject<Object> alterHWByHID(Integer homeworkID,MultipartFile file,String info){
         return homeworkService.alterHWByHID(homeworkID,file,info);

@@ -19,8 +19,5 @@ public interface CourseDao {
     @MapKey("contentID")
     public List<Map<String, Object>> findSTCourse(String id);
 
-    //查询课程
-    public Course findCourseByCno(String cno);
-
     public void updateCourseTno(String id,String cno);
 }

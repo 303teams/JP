@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import java.util.Random;
 
 @Component
-public class Utils {
+public class AcountUtils {
 
     private static StudentDao staticStudentDao;
     private static TeacherDao staticTeachertDao;
