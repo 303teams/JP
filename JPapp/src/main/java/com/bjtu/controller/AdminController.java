@@ -5,6 +5,7 @@ import com.bjtu.dao.AdminDao;
 import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
 import com.bjtu.service.StudentService;
+import com.bjtu.service.TeacherService;
 import com.bjtu.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,8 @@ public class AdminController {
     AdminService adminService;
     @Autowired
     StudentService studentService;
-
+    @Autowired
+    TeacherService teacherService;
 
     //添加学生
     @AuthAccess
@@ -134,6 +136,11 @@ public class AdminController {
         return studentService.findCourse(id);
     }
 
+    //展示选定老师课程信息
+    @PostMapping("/findTeacherCourse")
+    public RspObject<List<Map<String, Object>>> TeacherCourseList(String id) {
+        return teacherService.findCourse(id);
+    }
     //展示学生未选课程
     @PostMapping("/findStudentUnCourse")
     public RspObject<List<Course>> UnCourseList(String id) {

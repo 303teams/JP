@@ -47,4 +47,5 @@ public interface TeacherService {
     RspObject<Boolean> setCTWeightedScore(Integer contentId,Integer score);
 
     RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID);
+
 }
