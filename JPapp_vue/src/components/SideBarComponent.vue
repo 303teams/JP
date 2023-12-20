@@ -55,13 +55,6 @@
           <el-icon><bell/></el-icon>消息
           </template>
         </el-menu-item>
-        <el-menu-item>
-          <template #title>
-          <div>
-            <span>其他</span>
-          </div>
-          </template>
-        </el-menu-item>
       </el-menu>
     </el-aside>
   </div>
@@ -81,7 +74,7 @@
         </el-menu-item>
         <el-menu-item index="/StudentManage" :route="{ name: 'StudentManage' }">
           <template #title>
-          <svg width="22" height="22">
+          <svg width="22" height="22" class="svg">
             <image xlink:href="@/assets/student.svg" width="22" height="22" />
           </svg>&nbsp;&nbsp;学生管理
           </template>
@@ -132,6 +125,9 @@ export default {
   height: 100vh;
   width: 15vw;
 }
+
+
+
 
 /*侧边菜单背景颜色*/
 .el-menu {
@@ -187,5 +183,6 @@ export default {
   margin-top: 17px;
   margin-right: 10px; /* 调整Logo和文字之间的间距 */
 }
+
 
 </style>
