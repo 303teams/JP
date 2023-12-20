@@ -434,6 +434,19 @@ const http = {
         return request(config)
     },
 
+    //老师查看查重列表
+    getCheckList(data){
+        const config = {
+            url:'/teacher/findSimilarCTs',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //管理员获取所有学生信息
     getAllStudent(){
         const config = {
