@@ -38,8 +38,8 @@
     </update>
 
     <update id="alterTeacherByID">
-        update teacher set name = #{new_name},age = #{new_age},sex = #{new_sex},password = #{password},email = #{new_email}
-        where id = #{new_id}
+        update teacher set name = #{name},age = #{age},sex = #{sex},password = #{password},email = #{email}
+        where id = #{id}
     </update>
 
     <!--    <select id="findByStudentNum" resultType="student">-->

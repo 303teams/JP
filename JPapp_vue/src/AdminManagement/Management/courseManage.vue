@@ -24,7 +24,7 @@
     <div class="table-data">
       <el-table :data="filterTableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection"/>
-        <el-table-column label="课程号" prop="cno"/>
+        <el-table-column label="课程号" prop="cno" sortable/>
         <el-table-column label="课程名" prop="cname"/>
         <el-table-column label="授课教师" prop="tname" />
         <el-table-column align="center" label="操作">
@@ -61,36 +61,31 @@
 
   <el-dialog title="添加课程" :close-on-click-modal="false" :lock-scroll="false" v-model="AddDialogVis" @close="resetData" width="40%">
     <el-form ref="Ref" label-width="80px" :model="form" :rules="rules">
-      <el-form-item label="职工号" prop="id">
-        <el-input v-model.number="form.id" autocomplete="off" />
+      <el-form-item label="课程号" prop="cno">
+        <el-input v-model="form.cno" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model.trim="form.name" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="性别" prop="sex">
-        <el-radio-group v-model="form.sex">
-          <el-radio label="男">男</el-radio>
-          <el-radio label="女">女</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input
-            style="width: 200px"
-            v-model="form.age"
-            type="text"
-            maxlength="2"
-            @input="handleInput" />
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model.trim="form.password" autocomplete="off" type="password" />
-      </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model.trim="form.email" autocomplete="off" />
+      <el-form-item label="课程名" prop="cname">
+        <el-input v-model.trim="form.cname" autocomplete="off" />
       </el-form-item>
     </el-form>
     <div class="dialog-footer">
       <el-button @click="resetData">取 消</el-button>
       <el-button type="primary" @click="save">确 定</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog title="更改授课教师" :close-on-click-modal="false" :lock-scroll="false" v-model="EditDialogVis" @close="resetEditData" width="40%">
+    <el-select v-model="new_teacher" placeholder="请选择一个教师">
+      <el-option
+          v-for="item in teachers"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+      />
+    </el-select>
+    <div class="dialog-footer">
+      <el-button @click="resetEditData">取 消</el-button>
+      <el-button type="primary" @click="HandleSubmit">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -101,7 +96,6 @@ import {Delete} from "@element-plus/icons-vue";
 import http from "@/api/http";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import {ElConfigProvider, ElMessage, ElMessageBox} from "element-plus";
-import {useRouter} from "vue-router";
 
 const tableData = reactive({data:[]});
 const filteredData = ref([]);
@@ -109,13 +103,25 @@ const multipleSelection = ref([]);
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(15); //每页展示多少条数据
 const search = ref('')
-const router = useRouter();
 const AddDialogVis = ref(false);
 const Ref = ref();
+const EditDialogVis = ref(false);
+const new_teacher= ref('');
+const chosenCno= ref('');
 const form = reactive({
   cno: '',
   cname:'',
 })
+
+const rules = reactive({
+  cno: [{ required: true, trigger: 'blur', message: '课程号不能为空' },
+    {
+      message: '请输入5-10位数字或大小写字母组成的课程号',
+      pattern: /^[a-zA-Z0-9]{4,10}$/,
+      trigger: ['blur'],
+    },],
+  cname: [{ required: true, trigger: 'blur', message: '课程名不能为空' }],
+});
 
 const resetData = () => {
   AddDialogVis.value = false;
@@ -123,19 +129,55 @@ const resetData = () => {
   Ref.value.clearValidate();
 }
 
-const save =() =>{
-  http.addStudent(form).then(res =>{
-    if(res.data.code === 200){
-      ElMessage.success("添加成功！")
-      resetData();
-      fetchData();
-    }else{
-      ElMessage.error("添加失败:" + res.data.msg);
+const resetEditData = () => {
+  new_teacher.value='';
+  EditDialogVis.value = false;
+}
+
+const HandleSubmit = () =>{
+  if(new_teacher.value === '') {
+    ElMessage.warning("请选择一个教师!");
+  }else{
+    const data = {
+      id: new_teacher.value,
+      cno: chosenCno.value
     }
-  })
-      .catch(err => {
-        console.log(err);
-      });
+    http.updateTeacher(data).then(res =>{
+      if(res.data.code === 200){
+        ElMessage.success("更改成功！")
+        resetEditData();
+        fetchData();
+      }else{
+        ElMessage.error("更改失败:" + res.data.msg);
+      }
+    })
+        .catch(err => {
+          console.log(err);
+        });
+  }
+}
+
+const save =() =>{
+  Ref.value.validate((valid) => {
+    if (valid) {
+      http.addCourse(form).then(res =>{
+        if(res.data.code === 200){
+          ElMessage.success("添加成功！")
+          resetData();
+          fetchData();
+        }else{
+          ElMessage.error("添加失败:" + res.data.msg);
+        }
+      })
+          .catch(err => {
+            console.log(err);
+          });
+    } else {
+      console.log('error submit!!');
+      return false;
+    }
+  });
+
 };
 
 // 将表格中的数据按pageSize切片
@@ -164,17 +206,17 @@ const handleAdd = () =>{
 }
 
 const handleDelete = (row) => {
-  if (row.id) {
-    ElMessageBox.confirm('确定要删除这个学生吗？', '提示', {
+  if (row.cno) {
+    ElMessageBox.confirm('确定要删除这门课程吗？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
       // 用户点击了确定后的逻辑
       const data = {
-        ids: row.id,
+        cnos: row.cno,
       }
-      http.deleteStudent(data).then((res) => {
+      http.deleteCourse(data).then((res) => {
         if (res.data.code === 200) {
           ElMessage.success("删除成功");
           fetchData();
@@ -191,16 +233,16 @@ const handleDelete = (row) => {
     });
   } else {
     if (multipleSelection.value.length > 0) {
-      ElMessageBox.confirm('确定要删除这些学生吗？', '提示', {
+      ElMessageBox.confirm('确定要删除这些课程吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
         // 用户点击了确定后的逻辑
         const data = {
-          ids: multipleSelection.value.map((item) => item.id).join()
+          cnos: multipleSelection.value.map((item) => item.cno).join()
         }
-        http.deleteStudent(data).then((res) => {
+        http.deleteCourse(data).then((res) => {
           if (res.data.code === 200) {
             ElMessage.success("删除成功");
             fetchData();
@@ -221,17 +263,23 @@ const handleDelete = (row) => {
   }
 };
 
+const teachers= ref([]);
 const handleEdit = (row) =>{
-  router.push({
-    path: '/adminHome/EditStudent',
-    state:{
-      id:row.id,
-      name:row.name,
-      sex:row.sex,
-      email:row.email,
-      age:row.age
+  chosenCno.value = row.cno;
+  const data = {
+    cno: chosenCno.value,
+  }
+  http.getTeacher(data).then(res =>{
+    if(res.data.code === 200){
+      teachers.value = res.data.data;
+      EditDialogVis.value = true;
+    }else{
+      ElMessage.error("获取信息失败:" + res.data.msg);
     }
   })
+      .catch(err => {
+        console.log(err);
+      });
 }
 const fetchData = () => {
   http.getAllCourse()
@@ -290,8 +338,10 @@ onMounted(() => {
   margin-top: 20px;
 }
 
-.el-table__header, .el-table__body, .el-table__footer{
-  width:100% !important;
-  table-layout: fixed !important;
+.dialog-footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
 }
 </style>
