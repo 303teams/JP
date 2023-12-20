@@ -28,26 +28,30 @@ public class AdminController {
     @AuthAccess
 
     @PostMapping("/addStudent")
-    public RspObject<String> addStudent(String id,String name,String sex,String password){
-
+    public RspObject<String> addStudent(String id,String name,String sex,Integer age,String password,String email){
+        System.out.println(age);
         Student student = new Student();
         student.setId(id);
         student.setName(name);
         student.setSex(sex);
+        student.setAge(age);
         student.setPassword(password);
+        student.setEmail(email);
         return adminService.addStudent(student);
     }
 
     //添加教师
     @AuthAccess
     @PostMapping("/addTeacher")
-    public RspObject<String> addTeacher(String id,String name,String sex,String password){
+    public RspObject<String> addTeacher(String id,String name,String sex,Integer age,String password,String email){
 
         Teacher teacher = new Teacher();
         teacher.setId(id);
         teacher.setName(name);
         teacher.setSex(sex);
+        teacher.setAge(age);
         teacher.setPassword(password);
+        teacher.setEmail(email);
         return adminService.addTeacher(teacher);
     }
 

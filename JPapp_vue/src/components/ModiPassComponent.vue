@@ -52,7 +52,8 @@ export default {
       },
       rules: {
         oldPassword: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
-        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' },
+          { min: 7, message: '新密码长度必须大于6位', trigger: 'blur' },],
         confirmPassword: [
           { required: true, validator: validatePass2, trigger: 'blur' },
         ],

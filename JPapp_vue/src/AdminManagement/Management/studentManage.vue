@@ -63,16 +63,24 @@
   <el-dialog title="添加学生" :close-on-click-modal="false" :lock-scroll="false" v-model="AddDialogVis" @close="resetData" width="40%">
     <el-form ref="Ref" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="学号" prop="id">
-        <el-input v-model.trim="form.id" autocomplete="off" />
+        <el-input v-model.number="form.id" autocomplete="off" />
       </el-form-item>
       <el-form-item label="姓名" prop="name">
         <el-input v-model.trim="form.name" autocomplete="off" />
       </el-form-item>
       <el-form-item label="性别" prop="sex">
-        <el-input v-model.trim="form.sex" autocomplete="off" />
+        <el-radio-group v-model="form.sex">
+          <el-radio label="男">男</el-radio>
+          <el-radio label="女">女</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="年龄" prop="age">
-        <el-input v-model.trim="form.age" autocomplete="off" />
+        <el-input
+            style="width: 200px"
+            v-model="form.age"
+            type="text"
+            maxlength="2"
+            @input="handleInput" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model.trim="form.password" autocomplete="off" type="password" />
@@ -109,27 +117,49 @@ const Ref = ref();
 const form = reactive({
   id: '',
   name:'',
-  sex:'',
+  sex:'男',
   age:'',
   password: '',
   email: '',
 })
 
 const rules = reactive({
-  id: [{ required: true, trigger: 'blur', message: '学号不能为空' }],
+  id: [{ required: true, trigger: 'blur', message: '学号不能为空' },
+    { type: "number", message: "学号必须为整数" },],
   name: [{ required: true, trigger: 'blur', message: '姓名不能为空' }],
   sex: [{ required: true, trigger: 'blur', message: '性别不能为空' }],
   age:[{ required: true, trigger: 'blur', message: '年龄不能为空' }],
-  password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
-  email: [ { required: true, trigger: 'blur', message: '邮箱不能为空' },
-      { type: 'email', trigger: 'blur', message: '请输入正确的邮箱格式' }],
+  password: [{ required: true, trigger: 'blur', message: '密码不能为空' },
+    { min: 7, message: '密码长度必须大于6位', trigger: 'blur' },],
 });
+
+const handleInput = (e) => {
+  let value = e.replace(/[^\d]/g, ""); // 只能输入数字
+  value = value.replace(/^0+(\d)/, "$1"); // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
+  value = value.replace(/(\d{2})\d*/, '$1') // 最多保留15位整数
+  form.age = value
+};
 
 const resetData = () => {
   AddDialogVis.value = false;
   Ref.value.resetFields();
   Ref.value.clearValidate();
 }
+
+const save =() =>{
+  http.addStudent(form).then(res =>{
+    if(res.data.code === 200){
+      ElMessage.success("添加成功！")
+      resetData();
+      fetchData();
+    }else{
+      ElMessage.error("添加失败:" + res.data.msg);
+    }
+  })
+      .catch(err => {
+        console.log(err);
+      });
+};
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>

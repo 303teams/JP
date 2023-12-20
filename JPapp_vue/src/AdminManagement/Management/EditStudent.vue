@@ -3,19 +3,22 @@
     <div class="basic-info">
       <el-form >
         <el-form-item label="学号:" label-width="5em">
-          <el-input v-model="new_id"/>
+          <el-input v-model="Info.new_id"/>
         </el-form-item>
         <el-form-item label="姓名:" label-width="5em">
-          <el-input v-model="new_name" />
+          <el-input v-model="Info.new_name" />
         </el-form-item>
         <el-form-item label="性别:" label-width="5em">
-          <el-input v-model="new_sex"/>
+          <el-radio-group v-model="Info.new_sex">
+            <el-radio label="男">男</el-radio>
+            <el-radio label="女">女</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="年龄:" label-width="5em">
-          <el-input v-model="new_age"/>
+          <el-input v-model="Info.new_age"/>
         </el-form-item>
         <el-form-item label="邮箱:" label-width="5em">
-          <el-input v-model="new_email"/>
+          <el-input v-model="Info.new_email"/>
         </el-form-item>
       </el-form>
     </div>
@@ -56,7 +59,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {ElConfigProvider, ElMessage, ElMessageBox} from "element-plus";
 import http from "@/api/http";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
@@ -66,15 +69,16 @@ const name = history.state.name;
 const sex = history.state.sex;
 const age = history.state.age;
 const email = history.state.email;
-const new_id = ref('');
-const new_name = ref('');
-const new_sex = ref('');
-const new_age = ref('');
-const new_email = ref('');
 const CourseList= ref([]);
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(5); //每页展示多少条数据
-
+const Info = reactive({
+  new_id:'',
+  new_name:'',
+  new_sex:'',
+  new_age:'',
+  new_email:''
+})
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
     CourseList.value.slice(
@@ -84,11 +88,11 @@ const filterTableData = computed(() =>
 );
 
 const initData = () =>{
-  new_id.value = id;
-  new_name.value = name;
-  new_sex.value = sex;
-  new_age.value = age;
-  new_email.value = email;
+  Info.new_id = id;
+  Info.new_name = name;
+  Info.new_sex = sex;
+  Info.new_age = age;
+  Info.new_email = email;
 }
 
 const handleDelete = (row) =>{

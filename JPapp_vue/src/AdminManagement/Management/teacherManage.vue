@@ -2,7 +2,7 @@
   <div class="main-page">
     <div class="search-delete-add">
       <div>
-        <el-button type="primary" size="large" @click="handleEdit">
+        <el-button type="primary" size="large" @click="handleAdd">
           <el-icon><plus/></el-icon>添加
         </el-button>
         <el-button type="danger" size="large" @click="handleDelete">
@@ -61,6 +61,41 @@
 
   </div>
 
+  <el-dialog title="添加老师" :close-on-click-modal="false" :lock-scroll="false" v-model="AddDialogVis" @close="resetData" width="40%">
+    <el-form ref="Ref" label-width="80px" :model="form" :rules="rules">
+      <el-form-item label="职工号" prop="id">
+        <el-input v-model.number="form.id" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model.trim="form.name" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-radio-group v-model="form.sex">
+          <el-radio label="男">男</el-radio>
+          <el-radio label="女">女</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="年龄" prop="age">
+        <el-input
+            style="width: 200px"
+            v-model="form.age"
+            type="text"
+            maxlength="2"
+            @input="handleInput" />
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model.trim="form.password" autocomplete="off" type="password" />
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model.trim="form.email" autocomplete="off" />
+      </el-form-item>
+    </el-form>
+    <div class="dialog-footer">
+      <el-button @click="resetData">取 消</el-button>
+      <el-button type="primary" @click="save">确 定</el-button>
+    </div>
+  </el-dialog>
+
 </template>
 
 <script setup>
@@ -78,6 +113,54 @@ const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(15); //每页展示多少条数据
 const search = ref('')
 const router = useRouter();
+const AddDialogVis = ref(false);
+const Ref = ref();
+const form = reactive({
+  id: '',
+  name:'',
+  sex:'男',
+  age:'',
+  password: '',
+  email: '',
+})
+
+const rules = reactive({
+  id: [{ required: true, trigger: 'blur', message: '职工号不能为空' },
+    { type: "number", message: "职工号必须为整数" },],
+  name: [{ required: true, trigger: 'blur', message: '姓名不能为空' }],
+  sex: [{ required: true, trigger: 'blur', message: '性别不能为空' }],
+  age:[{ required: true, trigger: 'blur', message: '年龄不能为空' }],
+  password: [{ required: true, trigger: 'blur', message: '密码不能为空' },
+    { min: 7, message: '密码长度必须大于6位', trigger: 'blur' },],
+});
+
+const handleInput = (e) => {
+  let value = e.replace(/[^\d]/g, ""); // 只能输入数字
+  value = value.replace(/^0+(\d)/, "$1"); // 第一位0开头，0后面为数字，则过滤掉，取后面的数字
+  value = value.replace(/(\d{2})\d*/, '$1') // 最多保留15位整数
+  form.age = value
+};
+
+const resetData = () => {
+  AddDialogVis.value = false;
+  Ref.value.resetFields();
+  Ref.value.clearValidate();
+}
+
+const save =() =>{
+  http.addTeacher(form).then(res =>{
+    if(res.data.code === 200){
+      ElMessage.success("添加成功！")
+      resetData();
+      fetchData();
+    }else{
+      ElMessage.error("添加失败:" + res.data.msg);
+    }
+  })
+      .catch(err => {
+        console.log(err);
+      });
+};
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -100,9 +183,12 @@ const handleSelectionChange = (val) => {
   multipleSelection.value = val;
 };
 
+const handleAdd = () =>{
+  AddDialogVis.value = true;
+}
 const handleDelete = (row) => {
   if (row.id) {
-    ElMessageBox.confirm('确定要删除这个学生吗？', '提示', {
+    ElMessageBox.confirm('确定要删除这个老师吗？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
@@ -111,7 +197,7 @@ const handleDelete = (row) => {
       const data = {
         ids: row.id,
       }
-      http.deleteStudent(data).then((res) => {
+      http.deleteTeacher(data).then((res) => {
         if (res.data.code === 200) {
           ElMessage.success("删除成功");
           fetchData();
@@ -128,7 +214,7 @@ const handleDelete = (row) => {
     });
   } else {
     if (multipleSelection.value.length > 0) {
-      ElMessageBox.confirm('确定要删除这些学生吗？', '提示', {
+      ElMessageBox.confirm('确定要删除这些老师吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -137,7 +223,7 @@ const handleDelete = (row) => {
         const data = {
           ids: multipleSelection.value.map((item) => item.id).join()
         }
-        http.deleteStudent(data).then((res) => {
+        http.deleteTeacher(data).then((res) => {
           if (res.data.code === 200) {
             ElMessage.success("删除成功");
             fetchData();

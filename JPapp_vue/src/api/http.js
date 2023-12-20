@@ -495,6 +495,19 @@ const http = {
         return request(config)
     },
 
+    //管理员添加学生
+    addStudent(data){
+        const config = {
+            url:'/admin/addStudent',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
     //管理员查看学生课程信息
     getStudentCourse(data){
         const config = {
@@ -526,6 +539,32 @@ const http = {
         const config = {
             url:'/admin/findAllTeacher',
             method:'post',
+        }
+        return request(config)
+    },
+
+    //管理员添加老师
+    addTeacher(data){
+        const config = {
+            url:'/admin/addTeacher',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员删除老师
+    deleteTeacher(data){
+        const config = {
+            url:'/admin/deleteTeacher',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         }
         return request(config)
     },

@@ -11,11 +11,11 @@
     </insert>
 
     <insert id="insertStudent" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into student(id,password,sex,name) values (#{id}, #{password},#{sex},#{name})
+        insert into student(id,password,sex,name,age,email) values (#{id}, #{password},#{sex},#{name},#{age},#{email})
     </insert>
 
     <insert id="insertTeacher" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into teacher(id,password,sex,name) values (#{id}, #{password},#{sex},#{name})
+        insert into teacher(id,password,sex,name,age,email) values (#{id}, #{password},#{sex},#{name},#{age},#{email})
     </insert>
 
     <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
