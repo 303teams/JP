@@ -58,11 +58,12 @@ class StudentServiceImplTest {
 
     @Test
     void handleAppeal() {
-        System.out.println(studentService.handleAppeal(2,"我不满意"));
+        System.out.println(studentService.handleAppeal(105,"我不满意"));
     }
 
     @Test
     void findHWbyCno() {
         System.out.println(studentService.findHWbyCno("21301001","1001"));
     }
+
 }
