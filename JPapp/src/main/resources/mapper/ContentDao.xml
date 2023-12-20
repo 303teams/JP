@@ -24,9 +24,9 @@
             content.contentID AS contentID,
             content.submitTime AS submitTime,
             content.score AS score,
-            content.fileName AS fileName
+            content.fileName AS fileName,
             (SELECT COUNT(*) FROM similarity
-            WHERE contentID1 = content.contentID OR contentID2 = content.contentID)
+            WHERE contentID1 = content.contentID)
             AS similarAmount
         FROM
             sc
@@ -138,7 +138,26 @@
     </select>
 
     <select id="findSimilarCTs" resultType="java.util.Map">
+        SELECT contentID2 AS contentID,
+               similar,
+               st.id AS sno,
+               st.name AS sname
+        FROM similarity s JOIN content c ON
+            s.contentID2 = c.contentID
+        JOIN student st ON
+            c.sno = st.id
+        WHERE contentID1 = #{contentID}
 
+    </select>
+    <select id="findContentByCTID">
+        SELECT content, fileName
+        FROM content
+        WHERE contentID = #{contentID}
+    </select>
+    <select id="findCTIDByHID" resultType="java.lang.Integer">
+        SELECT contentID
+        FROM content
+        WHERE homeworkID = #{homeworkID}
     </select>
 
 </mapper>

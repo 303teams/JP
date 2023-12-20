@@ -60,4 +60,8 @@ class ContentDaoTest {
         System.out.println(contentDao.findCTscoreByHId(603));
     }
 
+    @Test
+    void findSimilarCTs() {
+        System.out.println(contentDao.findSimilarCTs(29));
+    }
 }

@@ -16,4 +16,5 @@ public interface ScDao {
     RspObject<Boolean> addStudentCourse(String id, String cno,int score);
 
     RspObject<Boolean> deleteStudentCourse(String id, String cno);
+
 }
