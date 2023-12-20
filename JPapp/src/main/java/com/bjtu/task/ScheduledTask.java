@@ -40,7 +40,7 @@ public class ScheduledTask {
     private static boolean scoreflag = true;
 
 //    最高可接受查重率
-    private double MAX_SIMILARITY = 0.8;
+    private double MAX_SIMILARITY = 90;
 
     @Autowired
     ContentDao contentDao;
