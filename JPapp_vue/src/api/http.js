@@ -468,5 +468,36 @@ const http = {
         }
         return request(config)
     },
+
+    //管理员删除学生选课
+    deleteStudentCourse(data){
+        const config = {
+            url:'/admin/deleteStudentCourse',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
+    //管理员获取所有老师信息
+    getAllTeacher(){
+        const config = {
+            url:'/admin/findAllTeacher',
+            method:'post',
+        }
+        return request(config)
+    },
+
+    //管理员获取所有课程信息
+    getAllCourse(){
+        const config = {
+            url:'/admin/findAllCourse',
+            method:'post',
+        }
+        return request(config)
+    },
 }
 export default http
