@@ -33,10 +33,11 @@
 </template>
 
 <script setup>
-import {reactive, ref, defineExpose} from "vue";
+import {reactive, ref, defineExpose, defineProps} from "vue";
 import http from "@/api/http";
 import {ElMessage} from "element-plus";
 
+const props = defineProps(['username']);
 const resetPasswordDialogVis = ref(false);
 const ResetPasswordRef = ref();
 const resetPasswordForm = reactive({
@@ -68,8 +69,11 @@ const changePassword = () => {
   ResetPasswordRef.value.validate((valid) => {
     if (valid) {
       const data = {
+        id: props.username,
         password: resetPasswordForm.newPassword,
       };
+
+      console.log(props.username)
       http.changePassword(data)
           .then((res) => {
             if (res.data.code === 200) {

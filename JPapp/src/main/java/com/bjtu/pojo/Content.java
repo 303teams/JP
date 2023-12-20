@@ -24,13 +24,16 @@ public class Content implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Timestamp submitTime;
 
-    private double score;
+    private Double score;
     private Integer contentID1;
     private Integer contentID2;
     private Integer contentID3;
     private Integer contentID4;
     private Integer contentID5;
     private Integer contentID6;
+
+//    被查重的作业数量
+    private Integer similarAmount;
 
     public Integer[] getContents(){
         Integer[] contents = new Integer[6];

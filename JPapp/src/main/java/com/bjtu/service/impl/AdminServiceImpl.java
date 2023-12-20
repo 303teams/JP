@@ -1,6 +1,7 @@
 package com.bjtu.service.impl;
 
 import com.bjtu.dao.AdminDao;
+import com.bjtu.dao.CourseDao;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
@@ -16,7 +17,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     AdminDao adminDao;
-
+    @Autowired
+    CourseDao courseDao;
 
     @Override
     public RspObject<String> addStudent(Student student) {
@@ -45,20 +47,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public RspObject<String> deleteStudent(String id) {
-        adminDao.deleteStudentByID(id);
+    public RspObject<String> deleteStudent(String[] ids) {
+        for(String id:ids){
+            adminDao.deleteStudentByID(id);
+        }
         return RspObject.success("成功删除学生！");
     }
     @Override
 
-    public RspObject<String> deleteTeacher(String id) {
-        adminDao.deleteTeacherByID(id);
+    public RspObject<String> deleteTeacher(String[] ids) {
+        for(String id:ids){
+            adminDao.deleteTeacherByID(id);
+        }
         return RspObject.success("成功删除老师！");
     }
 
     @Override
-    public RspObject<String> deleteCourse(String cno) {
-        adminDao.deleteCourseByCno(cno);
+    public RspObject<String> deleteCourse(String[] cnos) {
+        for(String cno:cnos){
+            adminDao.deleteCourseByCno(cno);
+        }
         return RspObject.success("成功删除课程！");
     }
 
@@ -110,6 +118,12 @@ public class AdminServiceImpl implements AdminService {
         }else{
             return RspObject.success("查询成功！",student);
         }
+    }
+
+    @Override
+    public RspObject<Boolean> modifyCourseTeacher(String id,String cno) {
+        courseDao.updateCourseTno(id,cno);
+        return RspObject.success("修改成功！",Boolean.TRUE);
     }
 
     @Override

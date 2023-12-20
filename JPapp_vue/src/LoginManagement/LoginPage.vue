@@ -70,7 +70,6 @@ const rules = reactive({
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 });
 
-
 const login = () => {
   LoginRef.value.validate((valid) => {
     if (valid) {

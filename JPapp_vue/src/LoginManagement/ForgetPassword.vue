@@ -7,6 +7,7 @@
           <el-form-item label="用户名" prop="username">
             <el-input
                 prefix-icon="user"
+                :disabled="usernameInput"
                 @keydown.enter="confirmEmail"
                 v-model="UserEmailVerifyForm.username"
                 placeholder="请输入用户名"/>
@@ -41,7 +42,7 @@
       </template>
     </el-dialog>
 
-    <reset-password ref="ResetRef"></reset-password>
+    <reset-password :username="PassUsername" ref="ResetRef"></reset-password>
   </div>
 
 </template>
@@ -58,6 +59,8 @@ const ResetRef = ref();
 const codeShow = ref(true);
 const timer = ref(null);
 const count = ref();
+const PassUsername= ref('');
+const usernameInput = ref(false);
 const UserEmailVerifyForm = ref({
   username: '',
   email: '',
@@ -86,6 +89,7 @@ const CountDown = () =>{
         count.value--;
       } else {
         codeShow.value = true;
+        usernameInput.value= false;
         clearInterval(timer.value);
         timer.value = null;
       }
@@ -120,6 +124,7 @@ const sendVerificationCode = () => {
   http.sendCode(data).then(res => {
     if (res.data.code === 200) {
       ElMessage.success("验证码已发送")
+      usernameInput.value= true;
       CountDown();
     } else {
       ElMessage.warning("验证码发送失败:" + res.data.msg)
@@ -133,12 +138,13 @@ const confirmEmail = () =>{
   UserEmailVerifyRef.value.validate((valid) => {
     if(valid){
       const data = {
-        'username': UserEmailVerifyForm.value.username,
-        'email': UserEmailVerifyForm.value.email,
+        'id': UserEmailVerifyForm.value.username,
         'code': UserEmailVerifyForm.value.code
       };
       http.confirmEmail(data).then(res => {
         if (res.data.code === 200) {
+          PassUsername.value = UserEmailVerifyForm.value.username;
+          usernameInput.value= false;
           EmailVerifyDialogVis.value = false;
           reset();
           ElMessage.success("验证成功！");

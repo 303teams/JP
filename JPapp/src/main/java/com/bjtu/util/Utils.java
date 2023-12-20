@@ -45,14 +45,14 @@ public class Utils {
         Student student = staticStudentDao.findByNum(id);
         Teacher teacher = staticTeachertDao.findByNum(id);
         Admin admin = staticAdminDao.findByNum(id);
-        if (student != null) {
+        if (student != null && student.getEmail() != null) {
             return student.getEmail().equals(email);
-        } else if (teacher != null) {
+        } else if (teacher != null && teacher.getEmail() != null) {
             return teacher.getEmail().equals(email);
-        } else if (admin != null) {
+        } else if (admin != null && admin.getEmail() != null) {
             return admin.getEmail().equals(email);
         } else {
-            throw new ServiceException(500, "该用户不存在!");
+            throw new ServiceException(500, "你未绑定邮箱，请联系管理员进行处理！");
         }
     }
 
@@ -91,6 +91,19 @@ public class Utils {
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param id
+     * @return id对应的用户是否任职 / 在读
+     */
+    public static boolean userIsOK(String id){
+        if(getUserType(id).equals("student")) {
+            return staticStudentDao.findByNum(id).getExist() == 1;
+        }else if(getUserType(id).equals("teacher")) {
+            return staticTeachertDao.findByNum(id).getExist() == 1;
+        }else return true;
     }
 
 }

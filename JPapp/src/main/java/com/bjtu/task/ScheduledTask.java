@@ -179,5 +179,9 @@ public class ScheduledTask {
         return new Timestamp(dateFormat.parse(time).getTime());
     }
 
+    public static void main(String[] args) {
+
+    }
+
 
 }

@@ -42,6 +42,8 @@ public class TeacherServiceImpl implements TeacherService {
             return RspObject.fail("该教师不存在!");
         } else if (!teacher.getPassword().equals(password)) {
             return RspObject.fail("密码错误!");
+        }else if(teacher.getExist() != 1){
+            return RspObject.fail("该教师已不在本校任教!");
         } else {
             String token = TokenUtils.createToken(id.toString(),password);
             teacher.setToken(token);
@@ -169,7 +171,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public RspObject<Boolean> setCTScore(Integer contentID, Integer score) {
+    public RspObject<Boolean> setCTScore(Integer contentID, double score) {
         try {
             contentDao.setCTScore(contentID,score);
             return RspObject.success("修改成功！",Boolean.TRUE);
@@ -244,6 +246,20 @@ public class TeacherServiceImpl implements TeacherService {
         try{
             contentDao.setCTScore(contentId, (int) (0.6*score+0.4*sum/scores.size()));
             return RspObject.success("修改成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
+    /**
+     * 查找相似作业列表
+     * @param contentID
+     * @return
+     */
+    @Override
+    public RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID) {
+        try{
+            return RspObject.success("查询成功！",contentDao.findSimilarCTs(contentID));
         }catch (Exception e){
             throw new ServiceException(500,e.getMessage());
         }

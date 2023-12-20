@@ -57,6 +57,9 @@ public class Homework implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Timestamp submitTime;
 
+//    是否被查重
+    private Integer isSimilar;
+
     public Homework() {
     }
 

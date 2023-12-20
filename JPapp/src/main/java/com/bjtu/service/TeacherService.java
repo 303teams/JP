@@ -30,7 +30,7 @@ public interface TeacherService {
 
     RspObject<List<Content>> findCTByHId(Integer homeworkId);
 
-    RspObject<Boolean> setCTScore(Integer contentId,Integer score);
+    RspObject<Boolean> setCTScore(Integer contentId,double score);
 
     RspObject<List<Map<String, Object>>> findAppeal(String id);
     
@@ -45,4 +45,6 @@ public interface TeacherService {
     RspObject<Boolean> deleteAPByAID(Integer appealID);
 
     RspObject<Boolean> setCTWeightedScore(Integer contentId,Integer score);
+
+    RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID);
 }

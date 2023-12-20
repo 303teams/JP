@@ -36,4 +36,9 @@ public interface HomeworkDao {
     public void updateScoreDdl(Integer homeworkID,String scoreDdl);
 
     public void updateSubmitDdl(Integer homeworkID,String submitDdl);
+
+    public void alterHWByHID(Integer homeworkID, byte[] content,String fileName,String info);
+
+//    将答案清空
+    public void resetAnswer(Integer homeworkID);
 }

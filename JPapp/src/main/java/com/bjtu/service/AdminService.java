@@ -12,11 +12,11 @@ public interface AdminService {
 
     public RspObject<String> addCourse(Course course);
 
-    public RspObject<String> deleteStudent(String id);
+    public RspObject<String> deleteStudent(String[] ids);
 
-    public RspObject<String> deleteTeacher(String id);
+    public RspObject<String> deleteTeacher(String[] id);
 
-    public RspObject<String> deleteCourse(String cno);
+    public RspObject<String> deleteCourse(String[] cno);
 
     public RspObject<Student> findStudent(String id);
 
@@ -36,6 +36,8 @@ public interface AdminService {
     public RspObject<List<Course>> findAllCourse();
     public RspObject<List<Student>> findAllStudent();
     public RspObject<List<Teacher>> findAllTeacher();
+
+    public RspObject<Boolean> modifyCourseTeacher(String id,String cno);
 
 
 

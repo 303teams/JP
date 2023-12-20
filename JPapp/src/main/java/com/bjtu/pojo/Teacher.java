@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 public class Teacher extends User {
     private Integer age;
     private String sex;
+    private Integer exist;
 
     public Teacher() {
     }

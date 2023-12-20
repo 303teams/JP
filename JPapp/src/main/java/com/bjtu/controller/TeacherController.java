@@ -52,7 +52,7 @@ public class TeacherController {
 
 //    教师修改学生分数
     @PostMapping("/setCTScore")
-    public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Integer score){
+    public RspObject<Boolean> setCTScore(@RequestParam Integer contentID,Double score){
             return teacherService.setCTScore(contentID, score);
     }
 
@@ -100,6 +100,11 @@ public class TeacherController {
     @PostMapping("/alterDdlByHID")
     public RspObject<Boolean> alterDdlByHID(Integer homeworkID,String submitDdl,String scoreDdl){
         return homeworkService.alterDdlByHID(homeworkID,submitDdl,scoreDdl);
+    }
+//    教师端返回与该学生作业相同的其他学生的学号列表
+    @PostMapping("/findSimilarCTs")
+    public RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID){
+        return teacherService.findSimilarCTs(contentID);
     }
 
 }
