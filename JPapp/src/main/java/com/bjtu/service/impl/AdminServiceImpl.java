@@ -2,9 +2,13 @@ package com.bjtu.service.impl;
 
 import com.bjtu.dao.AdminDao;
 import com.bjtu.dao.CourseDao;
+import com.bjtu.dao.StudentDao;
+import com.bjtu.dao.TeacherDao;
 import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.*;
 import com.bjtu.service.AdminService;
+import com.bjtu.service.StudentService;
+import com.bjtu.service.TeacherService;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.AcountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,12 @@ public class AdminServiceImpl implements AdminService {
     AdminDao adminDao;
     @Autowired
     CourseDao courseDao;
+    @Autowired
+    AcountUtils acountUtils;
+    @Autowired
+    TeacherDao teacherDao;
+    @Autowired
+    StudentDao studentDao;
 
     @Override
     public RspObject<String> addStudent(Student student) {
@@ -124,6 +134,40 @@ public class AdminServiceImpl implements AdminService {
     public RspObject<Boolean> modifyCourseTeacher(String id,String cno) {
         courseDao.updateCourseTno(id,cno);
         return RspObject.success("修改成功！",Boolean.TRUE);
+    }
+
+    @Override
+    public RspObject<Boolean> alterTeacherByID(String new_id,String new_name, String new_password, String new_email, String new_sex, Integer new_age) {
+        try{
+            Teacher teacher = new Teacher();
+            teacher.setId(new_id);
+            teacher.setPassword(new_password);
+            teacher.setName(new_name);
+            teacher.setEmail(new_email);
+            teacher.setSex(new_sex);
+            teacher.setAge(new_age);
+            teacherDao.alterTeacherByID(teacher);
+            return RspObject.success("修改成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException("修改失败！");
+        }
+    }
+
+    @Override
+    public RspObject<Boolean> alterStudentByID(String new_id, String new_name, String new_password, String new_email, String new_sex, Integer new_age) {
+        try{
+            Student student = new Student();
+            student.setId(new_id);
+            student.setPassword(new_password);
+            student.setName(new_name);
+            student.setEmail(new_email);
+            student.setSex(new_sex);
+            student.setAge(new_age);
+            studentDao.alterStudentByID(student);
+            return RspObject.success("修改成功！",Boolean.TRUE);
+        }catch (Exception e){
+            throw new ServiceException("修改失败！");
+        }
     }
 
     @Override

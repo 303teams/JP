@@ -39,6 +39,8 @@ public interface AdminService {
 
     public RspObject<Boolean> modifyCourseTeacher(String id,String cno);
 
+    public RspObject<Boolean> alterTeacherByID(String new_id,String new_name,String new_password,String new_email,String new_sex,Integer new_age);
 
+    public RspObject<Boolean> alterStudentByID(String new_id,String new_name,String new_password,String new_email,String new_sex,Integer new_age);
 
 }

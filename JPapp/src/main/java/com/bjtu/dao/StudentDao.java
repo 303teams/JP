@@ -1,9 +1,6 @@
 package com.bjtu.dao;
 
-import com.bjtu.pojo.Course;
-import com.bjtu.pojo.Homework;
-import com.bjtu.pojo.RspObject;
-import com.bjtu.pojo.Student;
+import com.bjtu.pojo.*;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -21,5 +18,7 @@ public interface StudentDao {
     public void updateInfo(Student student);
     public void updatePassword(Student student);
     public void updateEmail(String id, String email);
+
+    public void alterStudentByID(Student student);
 
 }
