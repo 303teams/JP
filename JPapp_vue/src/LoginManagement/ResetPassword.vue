@@ -69,7 +69,7 @@ const changePassword = () => {
   ResetPasswordRef.value.validate((valid) => {
     if (valid) {
       const data = {
-        username: props.username,
+        id: props.username,
         password: resetPasswordForm.newPassword,
       };
 

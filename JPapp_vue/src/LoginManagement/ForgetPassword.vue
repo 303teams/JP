@@ -138,13 +138,13 @@ const confirmEmail = () =>{
   UserEmailVerifyRef.value.validate((valid) => {
     if(valid){
       const data = {
-        'username': UserEmailVerifyForm.value.username,
-        'email': UserEmailVerifyForm.value.email,
+        'id': UserEmailVerifyForm.value.username,
         'code': UserEmailVerifyForm.value.code
       };
       http.confirmEmail(data).then(res => {
         if (res.data.code === 200) {
           PassUsername.value = UserEmailVerifyForm.value.username;
+          usernameInput.value= false;
           EmailVerifyDialogVis.value = false;
           reset();
           ElMessage.success("验证成功！");
