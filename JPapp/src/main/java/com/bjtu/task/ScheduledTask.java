@@ -1,7 +1,12 @@
 package com.bjtu.task;
 import com.bjtu.dao.ContentDao;
 import com.bjtu.dao.HomeworkDao;
+import com.bjtu.dao.ScoreDao;
+import com.bjtu.dao.SimilarityDao;
+import com.bjtu.pojo.Content;
 import com.bjtu.pojo.Homework;
+import com.bjtu.util.FileUtils;
+import com.bjtu.util.SimHashUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -14,7 +19,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,11 +39,23 @@ public class ScheduledTask {
     private static boolean submitflag = true;
     private static boolean scoreflag = true;
 
+//    最高可接受查重率
+    private double MAX_SIMILARITY = 0.8;
+
     @Autowired
     ContentDao contentDao;
 
     @Autowired
     HomeworkDao homeworkDao;
+
+    @Autowired
+    FileUtils fileUtils;
+
+    @Autowired
+    SimilarityDao similarityDao;
+
+    @Autowired
+    ScoreDao scoreDao;
 
     @PostConstruct
     public void setUserService() {
@@ -76,7 +95,6 @@ public class ScheduledTask {
         }
     }
 
-
     //    扫描scoreSet表，执行评分截止时间到达后的动作
     @Async
     @Scheduled(cron = "*/1 * * * * ?")
@@ -88,6 +106,9 @@ public class ScheduledTask {
                 if(scoreSet.get(i).getScoreDdl().getTime() < new Timestamp(System.currentTimeMillis()).getTime()){
                     Integer homeworkID = scoreSet.get(i).getHomeworkID();
                     System.out.println("分数统计 "+ homeworkID.toString()+" "+new Timestamp(System.currentTimeMillis()));
+//                    1.进行查重
+                    PlagiarismCheck(homeworkID);
+//                    2.分数统计
                     contentDao.calculateAllScore(homeworkID);
                     scoreSet.remove(i);
                 }
@@ -179,9 +200,41 @@ public class ScheduledTask {
         return new Timestamp(dateFormat.parse(time).getTime());
     }
 
+//    查重任务
+    private void PlagiarismCheck(Integer homeworkID){
+        List<Integer> cts = contentDao.findCTIDByHID(homeworkID);
+        Map<Integer,SimHashUtil> contents = new HashMap<>();
+        Map<String,Object> temp;
+        for(Integer CTid:cts){
+            temp = contentDao.findContentByCTID(CTid);
+            contents.put(CTid,new SimHashUtil(fileUtils.transToString(
+                    (byte[])temp.get("content"),
+                    (String)temp.get("fileName")),64));
+        }
+        int size = contents.size();
+        Integer i = 0,j = 0;
+        double s = 0;
+        Integer id_i,id_j;
+        for(; i < size; i++){
+            for(j = i+1; j < size; j++){
+//                获取汉明相似度
+                id_i = cts.get(i);
+                id_j = cts.get(j);
+                s = contents.get(id_i).getSimilar(contents.get(id_j));
+                if(s > MAX_SIMILARITY) {
+//                    若有一对作业查重率超标
+//                    1.添加查重记录
+                    similarityDao.addOne(id_i,id_j,s);
+                    similarityDao.addOne(id_j,id_i,s);
+//                    2.将两份作业的评分记录设为无效
+                    scoreDao.setInvalidByCID(id_i,id_j);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
     }
-
 
 }

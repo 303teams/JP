@@ -7,6 +7,7 @@ import com.bjtu.service.StudentService;
 import com.bjtu.util.MathUtils;
 import com.bjtu.util.TokenUtils;
 import com.bjtu.util.Utils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -233,22 +234,50 @@ public class StudentServiceImpl implements StudentService  {
 
     }
 
+    /**
+     * 处理学生申诉
+     * @param contentID
+     * @param appealContent
+     * @return
+     */
     @Override
     public RspObject<Boolean> handleAppeal(Integer contentID, String appealContent) {
 
-        Boolean flag = Boolean.FALSE;
-//        获取该作业的评分情况
+        int flag = 0;
         List<Score> scores = scoreDao.findSCByCID(contentID);
         MathUtils scoresfilter = new MathUtils(scores);
-        try{
-            while(scoresfilter.getStd() >= STD) {
-                flag = Boolean.TRUE;
+        User user = TokenUtils.getCurrentUser();
+//        没有查重记录
+        if (contentDao.findSimilarCTs(contentID).isEmpty()) {
+//        获取该作业的评分情况
+            while (scoresfilter.getStd() >= STD) {
+                flag = 1;
                 if (scoresfilter.getSize() >= MIN) {
 //            删除一个异常值
                     scoresfilter.cutScore();
                 } else {
+                    flag = 2;
+                    break;
+                }
+            }
+
+        } else flag = 2;
+
+        try{
+            switch (flag) {
+                case 0:
+                    return RspObject.success("不符合申诉条件，拒绝处理！", Boolean.TRUE);
+                case 1:
+                    //执行将待置0的评分置0操作
+                    List<Integer> cutList = scoresfilter.getCutIndex();
+                    for (Integer i : cutList) {
+                        scoreDao.setInvalid(i);
+                    }
+//            执行重新统计某项作业成绩的动作
+                    contentDao.updateScore(contentID);
+                    return RspObject.success("你的申诉已由机器自动处理", Boolean.TRUE);
+                case 2:
 //                将申诉交给老师处理
-                    User user = TokenUtils.getCurrentUser();
                     Appeal appeal = new Appeal();
                     appeal.setSno(user.getId());
                     appeal.setContentID(contentID);
@@ -259,25 +288,14 @@ public class StudentServiceImpl implements StudentService  {
                     appeal.setTime(currentTime);
 
                     appealDao.insertAppeal(appeal);
-                    return RspObject.success("你的申诉符合条件，已发送至任课教师，请耐心等待。",Boolean.TRUE);
-                }
+                    return RspObject.success("你的申诉符合条件，已发送至任课教师，请耐心等待。", Boolean.TRUE);
+                default:
+                    throw new ServiceException(500,"处理失败！");
             }
-
-            if(flag){
-//            执行将待置0的评分置0操作
-                List<Integer> cutList = scoresfilter.getCutIndex();
-                for(Integer i : cutList){
-                    scoreDao.setInvalid(i);
-                }
-//            执行重新统计某项作业成绩的动作
-                contentDao.updateScore(contentID);
-                return RspObject.success("你的申诉已由机器自动处理",Boolean.TRUE);
-            }else{
-                return RspObject.success("不符合申诉条件，拒绝处理！",Boolean.TRUE);
-            }
-        }catch (Exception e) {
-            throw new ServiceException(500, e.getMessage());
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
         }
+
     }
 
     @Override

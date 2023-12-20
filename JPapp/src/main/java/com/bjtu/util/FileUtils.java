@@ -1,5 +1,6 @@
 package com.bjtu.util;
 
+import com.bjtu.exception.ServiceException;
 import com.bjtu.pojo.FileObject;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -54,6 +55,7 @@ public class FileUtils {
             fileObject.setContent(contentBuilder.toString());
         } catch (IOException e) {
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
 
         return fileObject;
@@ -72,6 +74,7 @@ public class FileUtils {
             fileObject.setContent(fileContent);
         } catch (Exception e) {
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
 
         return fileObject;
@@ -93,6 +96,7 @@ public class FileUtils {
             inputStream.close();
         }catch (Exception e){
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
 
         return fileObject;
@@ -125,6 +129,7 @@ public class FileUtils {
             inputStream.close();
         }catch (Exception e){
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
         return fileObject;
     }
@@ -146,6 +151,7 @@ public class FileUtils {
             inputStream.close();
         }catch (Exception e){
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
         return fileObject;
     }
@@ -166,6 +172,7 @@ public class FileUtils {
             fileObject.setContent(text);
         }catch (Exception e){
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
         return fileObject;
     }
@@ -205,6 +212,7 @@ public class FileUtils {
             xmlSlideShow.close();
         } catch (Exception e) {
             fileObject.setFail();
+            throw new RuntimeException(e.getMessage());
         }
         return fileObject;
     }
@@ -215,20 +223,24 @@ public class FileUtils {
      * @param fileBytes fileName
      * @return String
      */
-    String transToString(byte[] fileBytes,String fileName){
+    public String transToString(byte[] fileBytes,String fileName){
         String fileContent = "";
-        if (fileName.endsWith(".txt")) {
-            fileContent = readTextFileByte(fileBytes).getContent();
-        } else if (fileName.endsWith(".doc")) {
-            fileContent = getTextFromDoc(fileBytes).getContent();
-        } else if (fileName.endsWith(".docx")) {
-            fileContent = getTextFromDocx(fileBytes).getContent();
-        } else if (fileName.endsWith(".pdf")) {
-            fileContent = getTextFromPDF(fileBytes).getContent();
-        } else if (fileName.endsWith(".ppt")) {
-            fileContent = getTextFromPPT(fileBytes).getContent();
-        } else if (fileName.endsWith(".pptx")) {
-            fileContent = getTextFromPPTX(fileBytes).getContent();
+        try {
+            if (fileName.endsWith(".txt")) {
+                fileContent = readTextFileByte(fileBytes).getContent();
+            } else if (fileName.endsWith(".doc")) {
+                fileContent = getTextFromDoc(fileBytes).getContent();
+            } else if (fileName.endsWith(".docx")) {
+                fileContent = getTextFromDocx(fileBytes).getContent();
+            } else if (fileName.endsWith(".pdf")) {
+                fileContent = getTextFromPDF(fileBytes).getContent();
+            } else if (fileName.endsWith(".ppt")) {
+                fileContent = getTextFromPPT(fileBytes).getContent();
+            } else if (fileName.endsWith(".pptx")) {
+                fileContent = getTextFromPPTX(fileBytes).getContent();
+            }
+        }catch (Exception e){
+                throw new RuntimeException(e.getMessage());
         }
         return fileContent;
     }

@@ -17,4 +17,7 @@ public interface ScoreDao {
     public void setInvalid(Integer scoreID);
 
     public Score findSCByCIDAndSno(Integer contentID,String sno);
+
+//    指定作业的所有互评记录无效
+    public void setInvalidByCID(Integer contentID1,Integer contentID2);
 }
