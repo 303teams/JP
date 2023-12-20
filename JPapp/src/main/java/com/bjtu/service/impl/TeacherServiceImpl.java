@@ -251,4 +251,18 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    /**
+     * 查找相似作业列表
+     * @param contentID
+     * @return
+     */
+    @Override
+    public RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID) {
+        try{
+            return RspObject.success("查询成功！",contentDao.findSimilarCTs(contentID));
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
+
 }

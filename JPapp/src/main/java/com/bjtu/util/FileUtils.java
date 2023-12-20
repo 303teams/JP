@@ -64,7 +64,7 @@ public class FileUtils {
      * @param fileBytes
      * @return 文件内容
      */
-    public FileObject readTextFileByte(byte[] fileBytes) {
+    private FileObject readTextFileByte(byte[] fileBytes) {
         FileObject fileObject = new FileObject();
 
         try {
@@ -82,7 +82,7 @@ public class FileUtils {
      * @param fileBytes
      * @return
      */
-    public FileObject getTextFromDocx(byte[] fileBytes) {
+    private FileObject getTextFromDocx(byte[] fileBytes) {
         FileObject fileObject = new FileObject();
         try{
             InputStream inputStream = new ByteArrayInputStream(fileBytes);
@@ -105,7 +105,7 @@ public class FileUtils {
      * @param fileBytes
      * @return
      */
-    public FileObject getTextFromDoc(byte[] fileBytes) {
+    private FileObject getTextFromDoc(byte[] fileBytes) {
         FileObject fileObject = new FileObject();
         StringBuilder content = new StringBuilder();
         try{
@@ -135,7 +135,7 @@ public class FileUtils {
      * @param fileBytes
      * @return
      */
-    public FileObject getTextFromPDF(byte[] fileBytes) {
+    private FileObject getTextFromPDF(byte[] fileBytes) {
         FileObject fileObject = new FileObject();
         try{
             InputStream inputStream = new ByteArrayInputStream(fileBytes);
@@ -156,7 +156,7 @@ public class FileUtils {
      * @param fileBytes
      * @return
      */
-    public FileObject getTextFromPPT(byte[] fileBytes) {
+    private FileObject getTextFromPPT(byte[] fileBytes) {
         FileObject fileObject = new FileObject();
         try{
             InputStream inputStream = new ByteArrayInputStream(fileBytes);
@@ -176,7 +176,7 @@ public class FileUtils {
      * @param fileBytes
      * @return
      */
-    public FileObject getTextFromPPTX(byte[] fileBytes) {
+    private FileObject getTextFromPPTX(byte[] fileBytes) {
         FileObject fileObject = new FileObject();
         InputStream inputStream = new ByteArrayInputStream(fileBytes);
         try {
@@ -207,6 +207,30 @@ public class FileUtils {
             fileObject.setFail();
         }
         return fileObject;
+    }
+
+/**
+     * Read all file types
+     *
+     * @param fileBytes fileName
+     * @return String
+     */
+    String transToString(byte[] fileBytes,String fileName){
+        String fileContent = "";
+        if (fileName.endsWith(".txt")) {
+            fileContent = readTextFileByte(fileBytes).getContent();
+        } else if (fileName.endsWith(".doc")) {
+            fileContent = getTextFromDoc(fileBytes).getContent();
+        } else if (fileName.endsWith(".docx")) {
+            fileContent = getTextFromDocx(fileBytes).getContent();
+        } else if (fileName.endsWith(".pdf")) {
+            fileContent = getTextFromPDF(fileBytes).getContent();
+        } else if (fileName.endsWith(".ppt")) {
+            fileContent = getTextFromPPT(fileBytes).getContent();
+        } else if (fileName.endsWith(".pptx")) {
+            fileContent = getTextFromPPTX(fileBytes).getContent();
+        }
+        return fileContent;
     }
 
 }

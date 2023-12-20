@@ -1,6 +1,5 @@
 package com.bjtu.util;
 
-import org.springframework.stereotype.Component;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import org.apache.commons.lang3.StringUtils;

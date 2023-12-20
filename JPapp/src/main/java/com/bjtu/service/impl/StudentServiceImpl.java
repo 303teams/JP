@@ -299,4 +299,18 @@ public class StudentServiceImpl implements StudentService  {
     public RspObject<Boolean> deleteStudentCourse(String id, String cno) {
         return scDao.deleteStudentCourse(id,cno);
     }
+
+    @Override
+    public RspObject<Boolean> isSimilar(Integer contentID) {
+        try{
+//            查询是否有查重记录
+            if(contentDao.findSimilarCTs(contentID).isEmpty()){
+                return RspObject.success("无查重记录！",Boolean.FALSE);
+            }else{
+                return RspObject.success("有查重记录！",Boolean.TRUE);
+            }
+        }catch (Exception e){
+            throw new ServiceException(500,e.getMessage());
+        }
+    }
 }

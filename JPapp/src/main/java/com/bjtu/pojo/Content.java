@@ -32,6 +32,9 @@ public class Content implements Serializable {
     private Integer contentID5;
     private Integer contentID6;
 
+//    被查重的作业数量
+    private Integer similarAmount;
+
     public Integer[] getContents(){
         Integer[] contents = new Integer[6];
         contents[0] = contentID1;

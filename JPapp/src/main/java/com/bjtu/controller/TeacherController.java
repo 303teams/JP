@@ -101,5 +101,10 @@ public class TeacherController {
     public RspObject<Boolean> alterDdlByHID(Integer homeworkID,String submitDdl,String scoreDdl){
         return homeworkService.alterDdlByHID(homeworkID,submitDdl,scoreDdl);
     }
+//    教师端返回与该学生作业相同的其他学生的学号列表
+    @PostMapping("/findSimilarCTs")
+    public RspObject<List<Map<String,Object>>> findSimilarCTs(Integer contentID){
+        return teacherService.findSimilarCTs(contentID);
+    }
 
 }
