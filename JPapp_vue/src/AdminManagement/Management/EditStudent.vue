@@ -20,45 +20,44 @@
       </el-form>
     </div>
     <div class="chosen-course">
-      <el-table :data="filterTableData" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="课程号" prop="cno" width="180"/>
-        <el-table-column label="课程名称" prop="cname" width="150"/>
-        <el-table-column label="授课教师" prop="teacherName" width="150"/>
-        <el-table-column align="center" label="操作" width="200">
-          <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.row)"
-          >编辑</el-button
-          >
-          <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.row)"
-          >删除</el-button
-          >
-          </template>
-        </el-table-column>
-      </el-table>
+      <div style="display: flex;font-size: 20px;margin-bottom: 20px">已选课程</div>
+      <div class="basic-info">
+        <el-table :data="filterTableData" style="width: 100%">
+          <el-table-column label="课程号" prop="cno" width="180"/>
+          <el-table-column label="课程名称" prop="cname" width="150"/>
+          <el-table-column label="授课教师" prop="teacherName" width="150"/>
+          <el-table-column align="center" label="操作" width="150">
+            <template #default="scope">
+            <el-button
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.row)"
+            >删除</el-button
+            >
+            </template>
+          </el-table-column>
+        </el-table>
 
-      <el-config-provider :locale="zhCn">
-        <div class="demo-pagination-block">
-          <el-pagination
-              v-model:current-page="currentPage"
-              v-model:page-size="pageSize"
-              :page-sizes="[2, 3, 5]"
-              background
-              layout="total, sizes, prev, pager, next"
-              :total="CourseList.length"
-          />
-        </div>
-      </el-config-provider>
+        <el-config-provider :locale="zhCn">
+          <div class="demo-pagination-block">
+            <el-pagination
+                v-model:current-page="currentPage"
+                v-model:page-size="pageSize"
+                :page-sizes="[2, 3, 5]"
+                background
+                layout="total, sizes, prev, pager, next"
+                :total="CourseList.length"
+            />
+          </div>
+        </el-config-provider>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import {computed, onMounted, ref} from "vue";
-import {ElConfigProvider, ElMessage} from "element-plus";
+import {ElConfigProvider, ElMessage, ElMessageBox} from "element-plus";
 import http from "@/api/http";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
@@ -90,6 +89,32 @@ const initData = () =>{
   new_sex.value = sex;
   new_age.value = age;
   new_email.value = email;
+}
+
+const handleDelete = (row) =>{
+  ElMessageBox.confirm('确定要删除这门课程吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    const data={
+      id: id,
+      cno: row.cno,
+    }
+
+    http.deleteStudentCourse(data).then(res =>{
+      if(res.data.code === 200) {
+        ElMessage.success("删除课程成功！")
+        fetchData()
+      }else{
+        ElMessage.error("删除失败")
+      }
+    }).catch(err => {
+      console.error("发送未知错误"+err)
+    })
+  }).catch(()=>{
+  });
+
 }
 const fetchData = () => {
   const data = {
@@ -125,7 +150,6 @@ onMounted(() => {
 .chosen-course{
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .basic-info {

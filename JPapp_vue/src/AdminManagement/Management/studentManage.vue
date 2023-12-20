@@ -2,7 +2,7 @@
   <div class="main-page">
     <div class="search-delete-add">
       <div>
-        <el-button type="primary" size="large" @click="handleEdit">
+        <el-button type="primary" size="large" @click="handleAdd">
           <el-icon><plus/></el-icon>添加
         </el-button>
         <el-button type="danger" size="large" @click="handleDelete">
@@ -24,12 +24,13 @@
     <div class="table-data">
       <el-table :data="filterTableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="学号" prop="id" width="180"/>
-        <el-table-column label="姓名" prop="name" width="150"/>
-        <el-table-column label="性别" prop="sex" width="150"/>
-        <el-table-column label="年龄" prop="age" width="200" show-overflow-tooltip/>
-        <el-table-column label="邮箱" prop="email" width="200" show-overflow-tooltip/>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column label="学号" prop="id"/>
+        <el-table-column label="姓名" prop="name"/>
+        <el-table-column label="性别" prop="sex"/>
+        <el-table-column label="年龄" prop="age" show-overflow-tooltip/>
+        <el-table-column label="密码" prop="password" show-overflow-tooltip/>
+        <el-table-column label="邮箱" prop="email" show-overflow-tooltip/>
+        <el-table-column align="center" label="操作">
           <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.row)"
           >编辑</el-button
@@ -56,10 +57,35 @@
           />
         </div>
       </el-config-provider>
-
     </div>
-
   </div>
+
+  <el-dialog title="添加学生" :close-on-click-modal="false" :lock-scroll="false" v-model="AddDialogVis" @close="resetData" width="40%">
+    <el-form ref="Ref" label-width="80px" :model="form" :rules="rules">
+      <el-form-item label="学号" prop="id">
+        <el-input v-model.trim="form.id" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model.trim="form.name" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-input v-model.trim="form.sex" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="年龄" prop="age">
+        <el-input v-model.trim="form.age" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model.trim="form.password" autocomplete="off" type="password" />
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model.trim="form.email" autocomplete="off" />
+      </el-form-item>
+    </el-form>
+    <div class="dialog-footer">
+      <el-button @click="resetData">取 消</el-button>
+      <el-button type="primary" @click="save">确 定</el-button>
+    </div>
+  </el-dialog>
 
 </template>
 
@@ -78,6 +104,32 @@ const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(15); //每页展示多少条数据
 const search = ref('')
 const router = useRouter();
+const AddDialogVis = ref(false);
+const Ref = ref();
+const form = reactive({
+  id: '',
+  name:'',
+  sex:'',
+  age:'',
+  password: '',
+  email: '',
+})
+
+const rules = reactive({
+  id: [{ required: true, trigger: 'blur', message: '学号不能为空' }],
+  name: [{ required: true, trigger: 'blur', message: '姓名不能为空' }],
+  sex: [{ required: true, trigger: 'blur', message: '性别不能为空' }],
+  age:[{ required: true, trigger: 'blur', message: '年龄不能为空' }],
+  password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
+  email: [ { required: true, trigger: 'blur', message: '邮箱不能为空' },
+      { type: 'email', trigger: 'blur', message: '请输入正确的邮箱格式' }],
+});
+
+const resetData = () => {
+  AddDialogVis.value = false;
+  Ref.value.resetFields();
+  Ref.value.clearValidate();
+}
 
 // 将表格中的数据按pageSize切片
 const filterTableData = computed(() =>
@@ -99,6 +151,10 @@ const clickSearch = () => {
 const handleSelectionChange = (val) => {
   multipleSelection.value = val;
 };
+
+const handleAdd = () =>{
+  AddDialogVis.value = true;
+}
 
 const handleDelete = (row) => {
   if (row.id) {
@@ -143,7 +199,7 @@ const handleDelete = (row) => {
             fetchData();
             console.log(res)
           } else {
-            ElMessage.error("获取信息失败:" + res.data.msg);
+            ElMessage.error("删除失败:" + res.data.msg);
           }
         })
             .catch((err) => {

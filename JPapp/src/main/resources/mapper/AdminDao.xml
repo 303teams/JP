@@ -65,7 +65,9 @@
     </select>
 
     <select id="findAllCourse" resultType="Course">
-        select * from course
+        select course.cno,course.cname,course.tno,teacher.name as tname
+        from course
+        join teacher on course.tno = teacher.id
     </select>
 
     <select id="findAll" resultType="Admin">

@@ -1,7 +1,7 @@
 <template>
-  <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+  <div>
     <!--修改密码的对话框-->
-    <el-dialog title="修改密码" :close-on-click-modal="false" v-model="modifyPasswordDialogVis" :label-position="right" :width="'40%'">
+    <el-dialog title="修改密码" center :close-on-click-modal="false" v-model="modifyPasswordDialogVis" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="modifyPasswordForm" ref="ModifyPasswordRef" label-width="80px" :rules="rules">
           <el-form-item label="旧密码" prop="oldPassword">
@@ -18,7 +18,7 @@
       <span class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
         <el-button type="primary" @click="submitForm">确认</el-button>
-        </span>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -27,7 +27,6 @@
 
 import qs from 'qs';
 import {mapState} from "vuex";
-import {right} from "core-js/internals/array-reduce";
 import http from "@/api/http";
 
 export default {
@@ -61,7 +60,6 @@ export default {
     };
   },
   methods: {
-    right,
     open() {
       if(this.$refs.ModifyPasswordRef !== undefined){
         this.$refs.ModifyPasswordRef.resetFields();
@@ -124,9 +122,12 @@ export default {
 </script>
 
 <style scoped>
-.updateinfo {
-  height: 350px;
-  overflow: auto;
+.dialog-footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+
 
 </style>

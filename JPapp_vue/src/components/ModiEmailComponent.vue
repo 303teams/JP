@@ -1,7 +1,7 @@
 <template>
-  <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+  <div class="dialog-main">
     <!--修改邮箱的对话框-->
-    <el-dialog title="修改邮箱" :close-on-click-modal="false" v-model="modifyEmailDialogVis" :width="'40%'">
+    <el-dialog title="修改邮箱" center :close-on-click-modal="false" v-model="modifyEmailDialogVis" width="40%">
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="modifyEmailForm" ref="ModifyEmailRef" label-width="80px" :rules="rules">
           <el-form-item label="新邮箱" prop="email">
@@ -18,10 +18,10 @@
           </el-form-item>
         </el-form>
       </div>
-      <span class="dialog-footer">
+      <div class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
         <el-button type="primary" @click="submitForm">确认</el-button>
-        </span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -151,9 +151,17 @@ export default {
 </script>
 
 <style scoped>
-.updateinfo {
-  height: 350px;
-  overflow: auto;
+.dialog-main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 </style>
