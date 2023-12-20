@@ -64,4 +64,9 @@ class ContentDaoTest {
     void findSimilarCTs() {
         System.out.println(contentDao.findSimilarCTs(29));
     }
+
+    @Test
+    void findContentByCTID() {
+        System.out.println(contentDao.findContentByCTID(122));
+    }
 }
