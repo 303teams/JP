@@ -29,6 +29,6 @@ public interface TeacherDao{
 
     public void updateEmail(String id, String email);
 
-
+    public void alterTeacherByID(Teacher teacher);
 
 }

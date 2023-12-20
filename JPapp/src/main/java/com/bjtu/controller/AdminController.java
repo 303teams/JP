@@ -167,4 +167,14 @@ public class AdminController {
     public RspObject<String> modifyCourseTeacher(String id,String cno) {
         return adminService.modifyCourseTeacher(id,cno);
     }
+
+    @PostMapping("/alterTeacherByID")
+    public RspObject<Boolean> alterTeacherByID(String new_id,String new_name,String new_password,String new_email,String new_sex,Integer new_age){
+        return adminService.alterTeacherByID(new_id,new_name,new_password,new_email,new_sex,new_age);
+    }
+
+    @PostMapping("/alterStudentByID")
+    public RspObject<Boolean> alterStudentByID(String new_id,String new_name,String new_password,String new_email,String new_sex,Integer new_age){
+        return adminService.alterStudentByID(new_id,new_name,new_password,new_email,new_sex,new_age);
+    }
 }
