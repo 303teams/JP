@@ -63,7 +63,6 @@ public interface ContentDao {
     public List<Map<String,Object>> findSimilarCTs(Integer contentID);
 
 //    根据contentID查找出content文件内容
-    @MapKey("")
     public Map<String,Object> findContentByCTID(Integer contentID);
 
 //    根据homeworkID查找出所有contentID

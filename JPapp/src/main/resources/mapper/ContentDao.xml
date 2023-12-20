@@ -149,7 +149,7 @@
         WHERE s.contentID1 = #{contentID}
 
     </select>
-    <select id="findContentByCTID">
+    <select id="findContentByCTID" resultType = "java.util.Map">
         SELECT content, fileName
         FROM content
         WHERE contentID = #{contentID}
