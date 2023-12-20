@@ -22,6 +22,7 @@
               class="upload-demo"
               action="#"
               ref="submitFile"
+              accept=".txt, .pdf, .doc, .docx, .ppt, .pptx"
               :auto-upload="false"
               :on-change="handleChange"
               :on-remove="handleRemove"
@@ -82,6 +83,16 @@ const rules = {
 
 
 const handleChange = (file,fileList) => {
+  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
+
+  const whiteList = ["txt", "doc", "docx", "pdf", "ppt", "pptx"];
+
+  if (whiteList.indexOf(fileSuffix) === -1) {
+    ElMessage.error("上传文件只能是、txt、pdf、doc、docx、ppt、pptx格式");
+    submitFile.value.handleRemove(file);
+    return false;
+  }
+
   const isLt10M = file.size / 1024 / 1024 < 100;
   if (!isLt10M) {
     ElMessage.error('上传文件大小不能超过 100MB!');

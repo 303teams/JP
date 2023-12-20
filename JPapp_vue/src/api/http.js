@@ -634,18 +634,6 @@ const http = {
         return request(config)
     },
 
-    //管理员查看老师未选课程
-    getTeacherUnCourse(data){
-        const config = {
-            url:'/admin/findTeacherUnCourse',
-            method:'post',
-            data:data,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        return request(config)
-    },
 
     //管理员添加老师授课
     addTeacherCourse(data){
