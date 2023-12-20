@@ -15,10 +15,25 @@
 
     <insert id="addStudentCourse">
         insert into sc(sno,cno,score)
-        values (#{sno}, #{cno},#{score})
+        values (#{id}, #{cno},#{score})
     </insert>
 
     <delete id="deleteStudentCourse">
-        delete from sc where sno = #{sno} and cno = #{cno}
+        delete from sc where sno = #{id} and cno = #{cno}
     </delete>
+
+
+    <!--    根据学生id查找该学生没有选的课程，返回符合条件的course和老师姓名-->
+    <select id="findCourseNotSelected" resultType="java.util.Map">
+        SELECT course.*,teacher.name as teacherName
+        FROM course
+        LEFT JOIN teacher ON course.tno = teacher.id
+        WHERE course.cno NOT IN (
+            SELECT sc.cno
+            FROM sc
+        WHERE sc.sno = #{id}
+        )
+    </select>
+
+
 </mapper>

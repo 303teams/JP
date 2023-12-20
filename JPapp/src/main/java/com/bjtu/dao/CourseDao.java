@@ -2,6 +2,7 @@ package com.bjtu.dao;
 
 import com.bjtu.pojo.Course;
 import com.bjtu.pojo.RspObject;
+import com.bjtu.pojo.Teacher;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -20,4 +21,6 @@ public interface CourseDao {
     public List<Map<String, Object>> findSTCourse(String id);
 
     public void updateCourseTno(String id,String cno);
+
+    List<Teacher> findUnTeacher(String cno);
 }

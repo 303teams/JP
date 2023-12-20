@@ -131,29 +131,36 @@ public class AdminController {
     }
 
     //展示学生未选课程
-//    @PostMapping("/findStudentUnCourse")
-//    public RspObject<List<Map<String, Object>>> UnCourseList(String id) {
-//
-//        return studentService.findUnCourse(id);
-//    }
+    @PostMapping("/findStudentUnCourse")
+    public RspObject<List<Course>> UnCourseList(String id) {
+
+        return studentService.findUnCourse(id);
+    }
     //添加学生选课
     @PostMapping("/addStudentCourse")
-    public RspObject<Boolean> addStudentCourse(String id,String cno) {
+    public RspObject<String> addStudentCourse(String id,String cno) {
 
         return studentService.addStudentCourse(id,cno);
+
     }
 
     //删除学生课程
     @PostMapping("/deleteStudentCourse")
-    public RspObject<Boolean> deleteStudentCourse(String id,String cno) {
+    public RspObject<String> deleteStudentCourse(String id,String cno) {
 
         return studentService.deleteStudentCourse(id,cno);
     }
 
+    //展示未教授此门课程的其他所有老师
+    @PostMapping("/findTeacherUnCourse")
+    public RspObject<List<Teacher>> UnTeacherList(String cno) {
+
+        return adminService.findUnTeacher(cno);
+    }
+
 //    修改课程任教老师
     @PostMapping("/modifyCourseTeacher")
-    public RspObject<Boolean> modifyCourseTeacher(String id,String cno) {
-
+    public RspObject<String> modifyCourseTeacher(String id,String cno) {
         return adminService.modifyCourseTeacher(id,cno);
     }
 }
