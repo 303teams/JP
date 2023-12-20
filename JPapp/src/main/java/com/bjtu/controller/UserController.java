@@ -65,7 +65,27 @@ public class UserController {
         Assert.hasLength(username,"用户名不能为空！");
         Assert.hasLength(email,"邮箱不能为空！");
 
-        return studentService.email(username,email);
+        if(Utils.userIsExist(username)){
+            return RspObject.fail("该用户不存在！");
+        }else if(Utils.userIsOK(username)){
+            return RspObject.fail("该用户账户未激活！");
+        }else if(!Utils.isMatchEmail(username,email)){
+            return RspObject.fail("用户名与邮箱不匹配！");
+        }else{
+            try{
+                // 生成验证码
+                String code = Utils.generateVerificationCode();
+
+                redisTemplate.opsForValue().set(username, code);
+//            验证码1分钟后过期
+                redisTemplate.expire(username,60, TimeUnit.SECONDS);
+
+                emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
+                return RspObject.success("验证码已发送至您的邮箱");
+            } catch (Exception e) {
+                throw new ServiceException(500,e.getMessage());
+            }
+        }
     }
 
     @AuthAccess

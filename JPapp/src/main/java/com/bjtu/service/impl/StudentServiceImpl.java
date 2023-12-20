@@ -66,32 +66,6 @@ public class StudentServiceImpl implements StudentService  {
     }
 
     @Override
-    public RspObject<Object> email(String username, String email) {
-        Student student = studentDao.findByNum(username);
-        if(student == null){
-            return RspObject.fail("该学生不存在！");
-        }else if(student.getExist() == 0){
-            return RspObject.fail("该学生已退学！");
-        }else if(!Utils.isMatchEmail(username,email)){
-            System.out.println("用户账号与邮箱不匹配！");
-            throw new ServiceException(500,"用户账号与邮箱不匹配！");
-        }
-        try{
-            // 生成验证码
-            String code = Utils.generateVerificationCode();
-
-            redisTemplate.opsForValue().set(username, code);
-//            验证码1分钟后过期
-            redisTemplate.expire(username,60, TimeUnit.SECONDS);
-
-            emailService.sendSimpleMessage(email, "验证码", "您的验证码是：" + code);
-            return RspObject.success("验证码已发送至您的邮箱");
-        } catch (Exception e) {
-            throw new ServiceException(500,e.getMessage());
-        }
-    }
-
-    @Override
     public RspObject<Boolean> insert(Student student) {
         if(Utils.userIsExist(student.getId())){
             return RspObject.fail("用户已存在!",Boolean.FALSE);
