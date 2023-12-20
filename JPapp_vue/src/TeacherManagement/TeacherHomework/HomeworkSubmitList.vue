@@ -34,7 +34,18 @@
           <span v-else>未提交</span>
           </template>
         </el-table-column>
-        <el-table-column label="作业成绩" width="120px" align="center" sortable prop="score" />
+        <el-table-column label="作业成绩" width="120px" align="center" sortable>
+          <template v-slot="scope">
+          <el-tooltip v-if="scope.row.similarAmount > 0" class="item" effect="dark" content="点击查看重复列表" placement="top">
+          <span @click="ClickSimilar(scope.row)" style="cursor: pointer; color:red">
+            {{ scope.row.score }}
+            <el-icon><Search /></el-icon>
+          </span>
+          </el-tooltip>
+
+          <span v-else>{{ scope.row.score }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="140px">
           <template v-slot="scope">
           <el-button size="large" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
@@ -106,6 +117,8 @@
       </template>
     </el-dialog>
   </div>
+
+  <review-details ref="ReviewDetailRef"></review-details>
 </template>
 
 
@@ -115,6 +128,7 @@ import {dayjs, ElConfigProvider, ElMessage} from 'element-plus';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
  import {useRouter} from "vue-router";
 import http from "@/api/http";
+import ReviewDetails from "@/TeacherManagement/TeacherHomework/ReviewDetails.vue";
 
 const currentPage = ref(1); // 从第一页开始
 const pageSize = ref(10); //每页展示多少条数据
@@ -132,7 +146,7 @@ let submitDdl = history.state.submitDdl;
 let scoreDdl = history.state.scoreDdl;
 const newSubmitDdl = ref('');
 const newScoreDdl = ref('');
-
+const ReviewDetailRef= ref();
 
 // 在 Input 值改变时触发
 const handleEdit = (e) => {
@@ -146,6 +160,10 @@ const handleEdit = (e) => {
 
   newScore.value = value;
 }
+
+const ClickSimilar = (row) =>{
+  ReviewDetailRef.value.openDetailDialog(row.contentID);
+};
 
 // 禁用日期
 const disabledSubmitDate = (time) => {
