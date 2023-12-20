@@ -142,12 +142,6 @@ public class StudentServiceImpl implements StudentService  {
         }
     }
 
-//    @Override
-//    public RspObject<List<Student>> findAll(){
-//        return RspObject.success("查询成功！",studentDao.findAll());
-//    }
-
-
     public RspObject<List<Map<String, Object>>> findCourse(String id){
         try {
             List<Map<String, Object>> courses = courseDao.findSTCourse(id);
