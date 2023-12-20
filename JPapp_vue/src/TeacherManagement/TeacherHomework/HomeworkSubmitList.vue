@@ -1,5 +1,5 @@
 <template>
-  <div class="homeListMain" style="position: relative; display: flex; justify-content: center">
+  <div class="submitListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="base_title">
       <div class="title">提交情况</div>
@@ -669,14 +669,19 @@ onMounted(() => {
 
 
 <style scoped>
-.homeListMain{
-  margin-top: 50px;
+.submitListMain{
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 20px;
 }
 
 .icon{
   position: absolute;
-  top: -40px;
-  left: 50px;
+  top: 95px;
+  left: 268px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
@@ -684,10 +689,9 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: 0px;
-  left: 170px;
+  top: 100px;
+  left: 420px;
 }
-
 .title {
   position: relative;
   padding-left: 13px;

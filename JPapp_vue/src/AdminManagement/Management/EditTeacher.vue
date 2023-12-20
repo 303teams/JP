@@ -1,7 +1,7 @@
 <template>
   <div class="modify-main-page">
     <div style="display: flex; justify-content: space-between;margin-top: 100px">
-      <div class="basic-info">
+      <div class="basic-teacher-info">
         <el-form ref="InfoRef" :model="Info" :rules="rules">
           <el-form-item label="姓名:" label-width="5em" prop="new_name">
             <el-input v-model="Info.new_name" />
@@ -24,7 +24,7 @@
         </el-form>
         <el-button style="margin-top: 20px" type="primary" @click="Modifyinfo">提交</el-button>
       </div>
-      <div class="chosen-course">
+      <div class="basic-teacher-info">
         <div style="display: flex;font-size: 20px;margin-bottom: 20px;margin-left: 100px">已选课程</div>
         <div class="basic-info">
           <el-table :data="filterTableData" style="width: 100%">
@@ -165,13 +165,13 @@ onMounted(() => {
   padding: 20px;
 }
 
-.chosen-course{
+.chosen-teacher-course{
   display: flex;
   flex-direction: column;
   margin-right: 200px;
 }
 
-.basic-info {
+.basic-teacher-info {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -32,6 +32,10 @@ body {
 }
 
 .app-main-height {
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 20px;
   min-height: 83vh;
 }
 

@@ -670,16 +670,14 @@ const Back = () => {
 
 <style scoped>
 .homeListMain{
-  margin-top: 50px;
-  position: relative;
   display: flex;
   justify-content: center
 }
 
 .icon{
   position: absolute;
-  top: -40px;
-  left: 50px;
+  top: 95px;
+  left: 268px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
@@ -687,8 +685,8 @@ const Back = () => {
 
 .base_title {
   position: absolute;
-  top: -20px;
-  left: 120px;
+  top: 100px;
+  left: 370px;
 }
 
 .title {
@@ -729,7 +727,7 @@ const Back = () => {
 
 .upload-button {
   position: absolute;
-  top: 0;
+  top: 110px;
   right: 120px;
   margin-top: 100px;
   margin-bottom: 10px;

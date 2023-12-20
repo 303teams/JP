@@ -32,10 +32,10 @@
             <div class="delete-button" @click.stop="deleteMessage(item)">
               <el-icon
                   size="40px"
-                  @mouseenter="hoveredRowIndex = scope.$index"
+                  @mouseenter="hoveredRowIndex = item.$index"
                   @mouseleave="hoveredRowIndex = null"
               >
-                <Delete v-if="hoveredRowIndex !== scope.$index" />
+                <Delete v-if="hoveredRowIndex !== item.$index" />
                 <DeleteFilled v-else />
               </el-icon>
             </div>

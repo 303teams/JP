@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="stu-info">
     <el-card class="box-card">
       <el-descriptions class="margin-top" title="简介" :column="1" border>
         <el-descriptions-item label="账号">{{ id }}</el-descriptions-item>
@@ -34,12 +34,17 @@ const age = computed(() => store.state.age);
 </script>
 
 <style scoped>
+.stu-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .box-card {
-  width: 1200px; /* 卡片宽度占满父元素(main) */
-  height: 754px; /* 卡片高度占满父元素(main) */
-  background-color: #f0f0f0; /* 卡片背景颜色 */
+  width: 500px;
+  height: 350px;
+  background-color: #f0f0f0;
   padding: 20px;
-  box-sizing: border-box; /* 内边距和边框不会增加卡片的实际宽度 */
+  box-sizing: border-box;
 }
 
 </style>

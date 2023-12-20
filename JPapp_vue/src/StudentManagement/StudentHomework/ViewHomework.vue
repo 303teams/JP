@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 50px">
+  <div style="display: flex; flex-direction: column; justify-content: center">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
     <div class="progress-boxes">
       <div :class="{ 'active-box': currentStage === 'submission' }" class="progress-box">
@@ -180,8 +180,8 @@ onMounted(() => {
 <style scoped>
 .icon{
   position: absolute;
-  top: 100px;
-  left: 278px;
+  top: 95px;
+  left: 268px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;

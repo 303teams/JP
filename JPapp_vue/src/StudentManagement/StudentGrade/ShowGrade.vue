@@ -2,8 +2,10 @@
   <div class="demo-collapse">
     <el-collapse v-model="activeNames" @change="handleChange" v-if="tableData.length > 0">
       <el-collapse-item class="score_item" v-for="item in tableData" :key="item.cno" :title="item.cname" :name="item.cno">
-        <div :id="`lineChart-${item.cno}`" :style="{width: '600px', height: '400px'}"></div>
-        <div>总成绩：{{item.score}}</div>
+        <div style="margin: 20px">
+          <div :id="`lineChart-${item.cno}`" :style="{width: '800px', height: '400px'}"></div>
+          <div>总成绩：{{item.score}}</div>
+        </div>
       </el-collapse-item>
     </el-collapse>
     <el-empty v-else />
@@ -48,12 +50,15 @@ const initialEcharts = (chartsObject, data) => {
     const option = {
       xAxis: {
         type: 'category',
-        data: item.ranks.map((_, index) => index+1)
+        data: item.ranks.map((_, index) => index+1),
+        name:'作业次数'
       },
       yAxis: {
         type: 'value',
         min: 0,
-        max: Math.max(...item.ranks)
+        max: Math.max(...item.ranks),
+        inverse: true ,// 反向设置
+        name:'排名'
       },
       series: [{
         data: item.ranks,

@@ -155,16 +155,14 @@ onMounted(() => {
 
 <style scoped>
 .homeListMain{
-  margin-top: 50px;
-  position: relative;
   display: flex;
   justify-content: center;
 }
 
 .icon{
   position: absolute;
-  top: -40px;
-  left: 20px;
+  top: 95px;
+  left: 268px;
   font-size: 30px;
   color: #3796EC;
   cursor: pointer;
@@ -172,8 +170,8 @@ onMounted(() => {
 
 .base_title {
   position: absolute;
-  top: 0px;
-  left: 80px;
+  top: 100px;
+  left: 330px;
 }
 
 .title {

@@ -1,6 +1,6 @@
 <template>
   <div class="modify-main-page">
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; justify-content: space-between">
       <div class="basic-info">
         <el-form ref="InfoRef" :model="Info" :rules="rules">
           <el-form-item label="姓名:" label-width="5em" prop="new_name">
