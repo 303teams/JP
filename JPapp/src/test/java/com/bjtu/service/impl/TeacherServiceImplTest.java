@@ -39,4 +39,8 @@ class TeacherServiceImplTest {
         System.out.println(teacherService.findCTByHId(1));
     }
 
+    @Test
+    void setCTWeightedScore() {
+        System.out.println(teacherService.setCTWeightedScore(266,100));
+    }
 }
