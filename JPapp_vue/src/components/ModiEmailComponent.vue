@@ -98,12 +98,12 @@ export default {
       }
       //发送验证码
         http.SendEmail(data).then(res => {
-        if (res.code === 200) {
+        if (res.data.code === 200) {
           this.$message.success("验证码发送成功！");
           this.emailInput = true;
           this.CountDown();
         } else {
-          this.$message.warning("验证码发送失败:" + res.msg)
+          this.$message.warning("验证码发送失败:" + res.data.msg)
         }
       }).catch(err => {
         this.$message.error("发生未知错误！");
@@ -120,7 +120,7 @@ export default {
           const data = qs.stringify(this.modifyEmailForm);
           http.changeEmail(data).then(res => {
             // 根据返回的数据来判断请求的结果
-            if (res.code === 200) {
+            if (res.data.code === 200) {
               // 修改成功，显示成功提示信息
               this.$message.success('修改成功');
               this.$store.commit('setEmail', this.modifyEmailForm.email)
@@ -128,7 +128,7 @@ export default {
               this.handleClose()
             } else {
               // 修改失败，显示失败提示信息
-              this.$message.error('修改失败：' + res.msg);
+              this.$message.error('修改失败：' + res.data.msg);
             }
           }).catch(err => {
             // 发生未知错误，显示错误提示信息
