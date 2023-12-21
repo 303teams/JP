@@ -57,7 +57,7 @@
             <el-button
                 size="small"
                 color="#36963BC7"
-                @click="handleDelete(scope.row)"
+                @click="handleRecover(scope.row)"
             >激活</el-button
             >
           </el-tooltip>
@@ -289,6 +289,33 @@ const handleDelete = (row) => {
       ElMessage.warning("未选中任何行!");
     }
   }
+};
+
+const handleRecover = (row) => {
+  ElMessageBox.confirm('确定要激活这个学生吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    // 用户点击了确定后的逻辑
+    const data = {
+      id: row.id,
+    }
+    http.recoverStudent(data).then((res) => {
+      if (res.data.code === 200) {
+        ElMessage.success("激活成功");
+        fetchData();
+        console.log(res)
+      } else {
+        ElMessage.error("获取信息失败:" + res.data.msg);
+      }
+    })
+        .catch((err) => {
+          console.error("发生未知错误！");
+          console.log(err);
+        });
+  }).catch(() => {
+  });
 };
 
 const handleEdit = (row) =>{

@@ -495,6 +495,19 @@ const http = {
         return request(config)
     },
 
+    //管理员恢复学生
+    recoverStudent(data){
+        const config = {
+            url:'/admin/reviveStudent',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //管理员添加学生
     addStudent(data){
         const config = {
@@ -608,6 +621,19 @@ const http = {
         return request(config)
     },
 
+    //管理员恢复老师
+    recoverTeacher(data){
+        const config = {
+            url:'/admin/reviveTeacher',
+            method:'post',
+            data:data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        return request(config)
+    },
+
     //管理员修改老师信息
     modifyTeacherInfo(data){
         const config = {
@@ -635,32 +661,6 @@ const http = {
     },
 
 
-    //管理员添加老师授课
-    addTeacherCourse(data){
-        const config = {
-            url:'/admin/addTeacherCourse',
-            method:'post',
-            data:data,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        console.log("addTeacherCourse")
-        return request(config)
-    },
-
-    //管理员删除老师授课
-    deleteTeacherCourse(data){
-        const config = {
-            url:'/admin/deleteTeacherCourse',
-            method:'post',
-            data:data,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        return request(config)
-    },
 
     //管理员获取所有课程信息
     getAllCourse(){
