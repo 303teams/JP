@@ -39,12 +39,13 @@ const age = computed(() => store.state.age);
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: url("../../assets/Info.png") no-repeat center/cover;
 }
 
 .box-card {
   width: 500px;
   height: 350px;
-  background-color: #f0f0f0;
+  background-color: rgba(240, 240, 240, 0.44);
   padding: 20px;
   box-sizing: border-box;
 }
