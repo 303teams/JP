@@ -15,6 +15,11 @@
         delete from student where id = #{id}
     </delete>
 
+    <!--    将id为id的学生的exist值设为1-->
+    <update id="reviveStudent">
+        update student set exist = 1 where id = #{id}
+    </update>
+
     <select id="findAll" resultType="Student">
         select * from student
     </select>

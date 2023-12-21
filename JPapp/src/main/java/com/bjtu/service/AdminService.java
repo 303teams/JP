@@ -18,6 +18,10 @@ public interface AdminService {
 
     public RspObject<String> deleteCourse(String[] cno);
 
+    public RspObject<String> reviveStudent(String id);
+
+    public RspObject<String> reviveTeacher(String id);
+
     public RspObject<Student> findStudent(String id);
 
     public RspObject<Teacher> findTeacher(String id);

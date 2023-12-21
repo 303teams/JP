@@ -90,6 +90,20 @@ public class AdminController {
         return adminService.deleteCourse(cnos);
     }
 
+    //复活学生
+    @AuthAccess
+    @PostMapping("/reviveStudent")
+    public RspObject<String> reviveStudent(String id){
+        return adminService.reviveStudent(id);
+    }
+
+    //复活老师
+    @AuthAccess
+    @PostMapping("/reviveTeacher")
+    public RspObject<String> reviveTeacher(String id){
+        return adminService.reviveTeacher(id);
+    }
+
     //查询学生
     @AuthAccess
     @PostMapping("/findStudent")

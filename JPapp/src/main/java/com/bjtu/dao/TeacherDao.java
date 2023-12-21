@@ -22,6 +22,7 @@ public interface TeacherDao{
     public Teacher findByNum(String id);
 
     public void deleteByNum(String num);
+    void reviveTeacher(String id);
 
     public void updateInfo(Teacher teacher);
 

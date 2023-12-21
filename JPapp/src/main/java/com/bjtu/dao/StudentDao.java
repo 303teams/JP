@@ -15,6 +15,7 @@ public interface StudentDao {
     public List<Student> findAll();
     public Student findByNum(String id);
     public void deleteByNum(String id);
+    void reviveStudent(String id);
     public void updateInfo(Student student);
     public void updatePassword(Student student);
     public void updateEmail(String id, String email);
