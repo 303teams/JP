@@ -68,6 +68,7 @@ public class AdminServiceImpl implements AdminService {
     public RspObject<String> deleteTeacher(String[] ids) {
         for(String id:ids){
             adminDao.deleteTeacherByID(id);
+            adminDao.deleteTeacherInCourse(id);
         }
         return RspObject.success("成功删除老师！");
     }

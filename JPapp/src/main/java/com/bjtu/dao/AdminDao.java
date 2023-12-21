@@ -29,6 +29,8 @@ public interface AdminDao{
 
     void deleteTeacherByID(String id);
 
+    void deleteTeacherInCourse(String id);
+
     void deleteCourseByCno(String cno);
 
     public Student findStudentByID(String id);
