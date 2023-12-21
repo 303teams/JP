@@ -86,7 +86,7 @@
                   :page-sizes="[2, 3, 5]"
                   background
                   layout="total, sizes, prev, pager, next"
-                  :total="CourseList.length"
+                  :total="UnCourseUnList.length"
               />
             </div>
           </el-config-provider>
@@ -149,6 +149,8 @@ const filterTableData2 = computed(() =>
         currentPage2.value * pageSize2.value
     )
 );
+
+
 
 const initData = () =>{
   Info.new_id = parseInt(id);
@@ -244,13 +246,21 @@ const fetchData = () => {
   ]).then(([res1, res2]) =>{
     if (res1.data.code === 200) {
       console.log(res1)
-      CourseList.value = res1.data.data;
+      if(res1.data.data){
+        CourseList.value = res1.data.data;
+      }else{
+        CourseList.value = [];
+      }
     } else {
       ElMessage.error("获取信息失败:" + res1.data.msg);
     }
     if(res2.data.code === 200) {
       console.log(res2)
-      UnCourseUnList.value = res2.data.data;
+      if(res2.data.data){
+        UnCourseUnList.value = res2.data.data;
+      }else{
+        UnCourseUnList.value = [];
+      }
     }else{
       ElMessage.error("获取信息失败:" + res2.data.msg);
     }

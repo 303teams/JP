@@ -25,11 +25,14 @@
     <select id="findUnTeacher" resultType="com.bjtu.pojo.Teacher" parameterType="string">
         SELECT teacher.*
         FROM teacher
-        WHERE teacher.id NOT IN (
-            SELECT tno
-            FROM course
-            WHERE cno = #{cno}
-        )
+        WHERE
+        ((SELECT tno FROM course WHERE cno = #{cno}) IS NULL OR
+        teacher.id NOT IN (
+        SELECT tno
+        FROM course
+        WHERE cno = #{cno}
+        )) AND teacher.exist = 1
+
     </select>
 
 

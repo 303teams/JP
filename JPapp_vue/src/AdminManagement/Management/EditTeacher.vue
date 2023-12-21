@@ -135,7 +135,13 @@ const fetchData = () => {
   }
   http.getTeacherCourse(data).then((res) => {
     if (res.data.code === 200) {
-      CourseList.value = res.data.data;
+      if(res.data.data){
+        CourseList.value = res.data.data;
+      }else{
+        CourseList.value = [];
+      }
+
+      console.log(CourseList.value)
       console.log(res)
     } else {
       ElMessage.error("获取信息失败:" + res.data.msg);

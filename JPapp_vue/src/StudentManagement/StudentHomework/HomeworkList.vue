@@ -117,7 +117,11 @@ const fetchData = () => {
   http.stuHomeworkList(data).then((res) => {
     if (res.data.code === 200) {
       console.log(props.cno);
-      tableData.data = res.data.data;
+      if(res.data.data) {
+        tableData.data = res.data.data;
+      }else{
+        tableData.data = [];
+      }
       console.log(res)
       updateFilteredData(); // 更新过滤后的数据
     } else {

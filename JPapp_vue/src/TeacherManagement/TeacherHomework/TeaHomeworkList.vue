@@ -31,13 +31,7 @@
         <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
         <el-table-column label="作业内容" width="100px" prop="content" >
           <template v-slot="scope">
-            <el-link
-                :href="scope.row.blobUrl"
-                :download="scope.row.fileName"
-                style="color: dodgerblue; text-decoration: underline;"
-            >
-              查看作业
-            </el-link>
+          <el-button type="text" @click="DownloadHW(scope.row)">查看作业</el-button>
           </template>
         </el-table-column>
         <el-table-column label="提交情况" width="150px" align="center">
@@ -441,56 +435,49 @@ const disabledScoreSeconds = (selectedHour,selectedMinute) => {
   }
 };
 
+const DownloadHW = (row) =>{
+  const data = {
+    homeworkID: row.homeworkID,
+  }
+  http.downloadHomework(data)
+      .then(res => {
+        console.log(res)
+        const blob = new Blob([res.data], {type: 'application/octet-stream'});
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = row.fileName;
+
+        // 模拟点击下载
+        link.click();
+
+        // 释放 URL 对象
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch(error => {
+        console.error('下载失败', error);
+      });
+}
+
 
 const fetchData = () => {
-  return new Promise((resolve, reject) => {
-    const data1={
-      cno: props.cno,
-    }
-    http.getHomeworkList(data1)
-        .then(res1 => {
-          if (res1.data.code === 200) {
-            // courseName.value = res1.data.data[0].courseName;
-            if(res1.data.data !==null){
-              console.log(props.cno);
-              tableData.data = res1.data.data;
-              console.log(res1);
-
-              // 使用promise实现多个接口的调用
-              const promises = tableData.data.map(item => {
-                const data2={
-                  homeworkId: item.homeworkID,
-                }
-                return http.downloadHomework(data2)
-                    .then(res2 => {
-                  console.log(res2)
-                  const blob = new Blob([res2.data], {type: 'application/octet-stream'});
-                  const blobUrl = URL.createObjectURL(blob);
-
-                  // 给每项作业分配url用来下载
-                  item.blobUrl = blobUrl;
-                  updateFilteredData(); // 更新过滤后的数据
-                });
-              });
-
-              console.log(tableData.data)
-              // 使用Promise.all来执行promises数组里的所有promise
-              return Promise.all(promises);
-            }
-          } else {
-            console.log(res1.data.msg)
+  const data={
+    cno: props.cno,
+  }
+  http.getHomeworkList(data)
+      .then(res => {
+        if (res.data.code === 200) {
+          console.log(res);
+          if (res.data.data) {
+            tableData.data = res.data.data;
+          }else{
+            tableData.data = [];
           }
-        })
-        .then(() => {
-          resolve({success: true, message: 'Data fetched successfully'});
-        })
-        .catch(error => {
-          console.error("发生未知错误！");
-          console.log(error);
-
-          reject("发生未知错误！");
-        });
-  });
+          updateFilteredData();
+        }
+      }).catch((err) => {
+    console.error("发生未知错误！"+err);
+    });
 };
 
 const updateFilteredData = () => {

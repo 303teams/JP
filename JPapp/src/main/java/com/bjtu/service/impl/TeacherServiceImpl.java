@@ -128,7 +128,9 @@ public class TeacherServiceImpl implements TeacherService {
     public RspObject<List<Map<String, Object>>> findCourse(String id){
         try {
             List<Map<String, Object>> courses = courseDao.findTHCourse(id);
-
+            if (courses.size() == 1 && courses.get(0) == null) {
+                return RspObject.success("无课程信息！");
+            }
             if (courses.isEmpty()) {
                 return RspObject.success("无课程信息！");
             }

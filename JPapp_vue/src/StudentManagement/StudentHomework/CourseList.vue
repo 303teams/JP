@@ -44,7 +44,11 @@ const router = useRouter();
 const fetchData = async () => {
   http.stuCourseList().then((res) => {
     if (res.data.code === 200) {
-      items.value = res.data.data;
+      if(res.data.data){
+        items.value = res.data.data;
+      }else{
+        items.value = [];
+      }
       console.log(res)
     } else {
       window.alert("获取信息失败:" + res.data.msg);
