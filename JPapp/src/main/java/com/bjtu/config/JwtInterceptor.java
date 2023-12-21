@@ -24,7 +24,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
 
 //        System.out.println(StrUtil.isBlank(request.getHeader("token")));
-
         // 如果不是映射到方法直接通过
         if (handler instanceof HandlerMethod) {
             AuthAccess annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthAccess.class);

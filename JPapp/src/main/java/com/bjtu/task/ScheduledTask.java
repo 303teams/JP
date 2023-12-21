@@ -40,7 +40,7 @@ public class ScheduledTask {
     private static boolean scoreflag = true;
 
 //    最高可接受查重率
-    private double MAX_SIMILARITY = 90;
+    private double MAX_SIMILARITY = 80;
 
     @Autowired
     ContentDao contentDao;
@@ -222,12 +222,16 @@ public class ScheduledTask {
                 id_j = cts.get(j);
                 s = contents.get(id_i).getSimilar(contents.get(id_j));
                 if(s > MAX_SIMILARITY) {
-//                    若有一对作业查重率超标
+                    try{
+//                        若有一对作业查重率超标
 //                    1.添加查重记录
-                    similarityDao.addOne(id_i,id_j,s);
-                    similarityDao.addOne(id_j,id_i,s);
+                        similarityDao.addOne(id_i,id_j,s);
+                        similarityDao.addOne(id_j,id_i,s);
 //                    2.将两份作业的评分记录设为无效
-                    scoreDao.setInvalidByCID(id_i,id_j);
+                        scoreDao.setInvalidByCID(id_i,id_j);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }
