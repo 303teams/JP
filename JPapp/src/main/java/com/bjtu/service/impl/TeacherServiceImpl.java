@@ -37,7 +37,9 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherDao.findByNum(id);
         if (teacher == null) {
             return RspObject.fail("该教师不存在!");
-        } else if (!teacher.getPassword().equals(password)) {
+        } else if (!AcountUtils.userIsOK(teacher.getId())){
+            return RspObject.fail("该账号未激活！");
+        }else if(!teacher.getPassword().equals(password)) {
             return RspObject.fail("密码错误!");
         }else if(teacher.getExist() != 1){
             return RspObject.fail("该教师已不在本校任教!");

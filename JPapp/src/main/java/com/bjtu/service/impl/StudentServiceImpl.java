@@ -54,10 +54,11 @@ public class StudentServiceImpl implements StudentService  {
 
         if (student == null) {
             return RspObject.fail("该学生不存在!");
-        } else if (!student.getPassword().equals(password)) {
+        } else if (!AcountUtils.userIsOK(student.getId())){
+            return RspObject.fail("学生账号未激活!");
+        }else if(!student.getPassword().equals(password)) {
             return RspObject.fail("密码错误!");
         }  else {
-
             String token = TokenUtils.createToken(id.toString(),password);
             student.setToken(token);
             return RspObject.success("登录成功！",student);
