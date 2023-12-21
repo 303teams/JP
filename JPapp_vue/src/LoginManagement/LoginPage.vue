@@ -1,13 +1,12 @@
 <template>
   <div class = "background">
     <div class = "login">
+      <div class="logo">
+        <img :src="logo" class="image">
+      </div>
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="LoginRef" label-width="80px" :model="user" :rules="rules">
-          <div style="display:flex;justify-content:start;">
-            <img :src="logo" class="image">
-            <p class="header_1">简评</p>
-          </div>
-
+          <p class="header_1">简评</p>
           <h3 style="color:white">欢迎登录!</h3>
           <el-form-item label="用户名:" label-width="5em" prop="username">
             <el-input
@@ -146,9 +145,15 @@ const EmailVerify = () => {
   border: 0
 }
 
+.logo{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .image{
-  width: 120px;
-  height: 120px;
+  width: 250px;
+  height: 250px;
   margin-left: 20px;
 }
 
