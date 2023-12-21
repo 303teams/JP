@@ -26,8 +26,6 @@ const email = computed(() => store.state.email);
 
 <style scoped>
 .info_main {
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

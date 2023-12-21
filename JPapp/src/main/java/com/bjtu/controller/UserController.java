@@ -124,9 +124,9 @@ public class UserController {
         User user = TokenUtils.getCurrentUser();
         if(user.getClass() == Student.class){
             return studentService.modifyPassword(newPassword,oldPassword);
-        }else if(user.getClass() == Admin.class){
-            return teacherService.modifyPassword(newPassword,oldPassword);
         }else if(user.getClass() == Teacher.class){
+            return teacherService.modifyPassword(newPassword,oldPassword);
+        }else if(user.getClass() == Admin.class){
             return adminService.modifyPassword(newPassword,oldPassword);
         }else{
             return RspObject.fail("修改密码失败！");

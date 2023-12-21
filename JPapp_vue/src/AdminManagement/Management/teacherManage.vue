@@ -22,8 +22,17 @@
       </div>
     </div>
     <div class="table-data">
-      <el-table :data="filterTableData" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" />
+      <el-table
+          :data="filterTableData"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+          :cell-style="cellStyle"
+      >
+        <el-table-column
+            type="selection"
+            width="55"
+            :selectable="selectionSelectable"
+        />
         <el-table-column label="职工号" prop="id"/>
         <el-table-column label="姓名" prop="name"/>
         <el-table-column label="性别" prop="sex"/>
@@ -35,11 +44,21 @@
           >编辑</el-button
           >
           <el-button
+              v-if="scope.row.exist === 1"
               size="small"
               type="danger"
               @click="handleDelete(scope.row)"
           >删除</el-button
           >
+
+          <el-tooltip v-if="scope.row.exist === 0" effect="dark" content="该老师已不再任教">
+            <el-button
+                size="small"
+                color="#36963BC7"
+                @click="handleDelete(scope.row)"
+            >激活</el-button
+            >
+          </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -99,7 +118,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, reactive, ref} from 'vue'
+import {computed, onMounted, reactive, ref, watch} from 'vue'
 import {Delete} from "@element-plus/icons-vue";
 import http from "@/api/http";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
@@ -169,14 +188,34 @@ const save =() =>{
   });
 };
 
-// 将表格中的数据按pageSize切片
-const filterTableData = computed(() =>
-    filteredData.value.slice(
-        (currentPage.value - 1) * pageSize.value,
-        currentPage.value * pageSize.value
-    )
-);
+// 根据data返回的每一行的exist,再修改这一行的样式
+const cellStyle = (data) => {
+  if (data.row.exist == 0) {
+    return {
+      background: "rgba(155,154,154,0.29)",
+    };
+  }
+};
 
+const selectionSelectable = (row) => {
+  return row.exist === 1;
+};
+
+// 将表格中的数据按pageSize切片
+const filterTableData = computed(() =>{
+  const exist1Data = filteredData.value.filter((data) => data.exist === 1);
+  const exist0Data = filteredData.value.filter((data) => data.exist === 0);
+  return exist1Data.concat(exist0Data).slice(
+      (currentPage.value - 1) * pageSize.value,
+      currentPage.value * pageSize.value
+  )
+});
+
+watch( search, () => {
+  if(search.value === ''){
+    clickSearch();
+  }
+});
 const clickSearch = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
@@ -319,5 +358,9 @@ onMounted(() => {
 
 .demo-pagination-block{
   margin-top: 20px;
+}
+
+.el-table .warning-row {
+  background-color: #323233;
 }
 </style>

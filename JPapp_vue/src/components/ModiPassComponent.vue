@@ -92,7 +92,7 @@ export default {
           const data = qs.stringify(this.modifyPasswordForm);
           http.modifyPassword(data).then(res => {
             // 根据返回的数据来判断请求的结果
-            if (res.code === 200) {
+            if (res.data.code === 200) {
               // 修改成功，显示成功提示信息
               this.$message.success('修改成功');
               // 关闭对话框
@@ -100,7 +100,7 @@ export default {
               this.LeaveSystem()
             } else {
               // 修改失败，显示失败提示信息
-              this.$message.error('修改失败：' + res.msg);
+              this.$message.error('修改失败：' + res.data.msg);
             }
           }).catch(err => {
             // 发生未知错误，显示错误提示信息

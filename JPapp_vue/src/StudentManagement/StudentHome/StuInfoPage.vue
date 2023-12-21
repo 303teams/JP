@@ -8,8 +8,8 @@
         <el-descriptions-item label="邮箱">{{ email }}</el-descriptions-item>
         <el-descriptions-item label="年龄">{{ age }}</el-descriptions-item>
       </el-descriptions>
-      <el-button style="margin-top: 100px" type="primary" size="large" @click="Modifyinfo">修改</el-button>
     </el-card>
+    <el-button style="margin-top: 100px" type="primary" size="large" @click="Modifyinfo">修改</el-button>
     <StuModifyInfo ref="stuModifyInfoRef"></StuModifyInfo>
   </div>
 </template>
@@ -36,6 +36,7 @@ const age = computed(() => store.state.age);
 <style scoped>
 .stu-info{
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }

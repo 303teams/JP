@@ -56,12 +56,10 @@
 
     <select id="findAllStudent" resultType="Student">
         select * from student
-        where exist = 1
     </select>
 
     <select id="findAllTeacher" resultType="Teacher">
         select * from teacher
-        where exist = 1
     </select>
 
     <select id="findAllCourse" resultType="Course">

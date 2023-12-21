@@ -25,7 +25,7 @@
         <el-button style="margin-top: 20px" type="primary" @click="Modifyinfo">提交</el-button>
       </div>
       <div class="basic-teacher-info">
-        <div style="display: flex;font-size: 20px;margin-bottom: 20px;margin-left: 100px">已选课程</div>
+        <div style="display: flex;font-size: 20px;margin-bottom: 20px">任教科目</div>
         <div class="basic-info">
           <el-table :data="filterTableData" style="width: 100%">
             <el-table-column label="课程号" prop="cno" width="180"/>

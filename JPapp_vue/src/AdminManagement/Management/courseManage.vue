@@ -11,7 +11,7 @@
       </div>
       <div class="search-container">
         <div class="search_input">
-          <el-input v-model="search" size="large" placeholder="输入学号或者名字进行搜索" />
+          <el-input v-model="search" size="large" placeholder="输入课程号或者课程名进行搜索" />
         </div>
         <el-button type="primary" size="large" class="search_button" @click="clickSearch">
           <el-icon style="vertical-align: middle">
@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, reactive, ref} from 'vue'
+import {computed, onMounted, reactive, ref, watch} from 'vue'
 import {Delete} from "@element-plus/icons-vue";
 import http from "@/api/http";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
@@ -188,12 +188,18 @@ const filterTableData = computed(() =>
     )
 );
 
+watch( search, () => {
+  if(search.value === ''){
+    clickSearch();
+  }
+});
+
 const clickSearch = () => {
   filteredData.value = tableData.data.filter(
       (data) =>
           !search.value ||
-          data.id.toLowerCase().includes(search.value.toLowerCase())||
-          data.name.toLowerCase().includes(search.value.toLowerCase())
+          data.cno.toLowerCase().includes(search.value.toLowerCase())||
+          data.cname.toLowerCase().includes(search.value.toLowerCase())
   );
 };
 
@@ -207,7 +213,7 @@ const handleAdd = () =>{
 
 const handleDelete = (row) => {
   if (row.cno) {
-    ElMessageBox.confirm('确定要删除这门课程吗？', '提示', {
+    ElMessageBox.confirm('该操作无法撤销，所有与该门课相关的信息将被删除！确定要删除这门课程吗？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
