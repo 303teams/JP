@@ -6,7 +6,7 @@
       </div>
       <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form ref="LoginRef" label-width="80px" :model="user" :rules="rules">
-          <p class="header_1">简评</p>
+          <p class="header_1" >简评</p>
           <h3 style="color:white">欢迎登录!</h3>
           <el-form-item label="用户名:" label-width="5em" prop="username">
             <el-input
@@ -152,15 +152,15 @@ const EmailVerify = () => {
 }
 
 .image{
-  width: 250px;
-  height: 250px;
+  width: 360px;
+  height: 360px;
   margin-left: 20px;
 }
 
 .header_1{
-  height: 50px;
+  height: 60px;
   margin-top: 35px;
-  font-size: 43px;
+  font-size: 50px;
   background-image: -webkit-linear-gradient(
       left,
       rgb(42, 134, 141),
