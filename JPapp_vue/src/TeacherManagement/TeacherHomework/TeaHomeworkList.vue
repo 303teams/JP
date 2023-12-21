@@ -678,8 +678,8 @@ const Back = () => {
 
 .title {
   position: relative;
-  padding-left: 13px;
   font-size: 20px;
+  left: -40px;
   font-weight: bold;
   margin-top: 40px;
 }
@@ -690,7 +690,7 @@ const Back = () => {
   width: 4px;
   height: 23px;
   position: absolute;
-  left: 0;
+  left: 40px;
   top: 50%;
   margin-top: -10px;
 }
@@ -698,7 +698,7 @@ const Back = () => {
 .search-container {
   display: flex;
   width: auto;
-  margin-top: 100px;
+  margin-top: 120px;
   margin-bottom: 10px;
 }
 
@@ -714,7 +714,7 @@ const Back = () => {
 
 .upload-button {
   position: absolute;
-  top: 110px;
+  top: 120px;
   right: 120px;
   margin-top: 100px;
   margin-bottom: 10px;
