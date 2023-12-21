@@ -48,10 +48,15 @@
         where id = #{id}
     </update>
 
-    <!--    将id为id的教师的exist值设为0-->
     <update id="deleteTeacherByID">
-        update teacher set exist = 0
-        where id = #{id}
+        <!-- 将id为id的教师的exist值设为0 -->
+        update teacher set exist = 0 where id = #{id};
+    </update>
+
+    <!-- 将老师为id执教的课程中的tno设为null -->
+    <update id="deleteTeacherInCourse">
+        update course set tno = null
+        where tno = #{id}
     </update>
 
     <select id="findAllStudent" resultType="Student">

@@ -68,6 +68,7 @@ public class AdminServiceImpl implements AdminService {
     public RspObject<String> deleteTeacher(String[] ids) {
         for(String id:ids){
             adminDao.deleteTeacherByID(id);
+            adminDao.deleteTeacherInCourse(id);
         }
         return RspObject.success("成功删除老师！");
     }
@@ -78,6 +79,28 @@ public class AdminServiceImpl implements AdminService {
             adminDao.deleteCourseByCno(cno);
         }
         return RspObject.success("成功删除课程！");
+    }
+
+    @Override
+    public RspObject<String> reviveStudent(String id) {
+        Student student = adminDao.findStudentByID(id);
+        if(student == null){
+            return RspObject.fail("该学生不存在！");
+        }else{
+            studentDao.reviveStudent(id);
+            return RspObject.success("学生复活！");
+        }
+    }
+
+    @Override
+    public RspObject<String> reviveTeacher(String id) {
+        Teacher teacher = adminDao.findTeacherByID(id);
+        if(teacher == null){
+            return RspObject.fail("该老师不存在！");
+        }else{
+            teacherDao.reviveTeacher(id);
+            return RspObject.success("老师复活！");
+        }
     }
 
     @Override
