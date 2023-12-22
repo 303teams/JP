@@ -152,8 +152,8 @@ const EmailVerify = () => {
 }
 
 .image{
-  width: 250px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
   margin-left: 20px;
 }
 
