@@ -17,7 +17,7 @@
             <span style="vertical-align: middle"> 查询 </span>
           </el-button>
 
-          <div>
+          <div style="margin-left: 250px">
             <el-button @click="modifyContent" size="large" class="modify-ddl-button">修改作业内容</el-button>
             <el-button @click="modifyDdl" size="large" class="modify-ddl-button">修改截止时间</el-button>
           </div>
@@ -29,7 +29,12 @@
                   :header-cell-style="{background:'#cde2ee',color:'#000'}">
           <el-table-column label="学生学号" align="center" sortable prop="sno" />
           <el-table-column label="学生姓名" align="center" sortable prop="sname" />
-          <el-table-column label="提交时间" align="center" width="200px" sortable prop="submitTime" />
+          <el-table-column label="提交时间" align="center" width="200px" sortable >
+            <template v-slot="scope">
+            <span type="text" v-if="scope.row.contentID !== null">{{scope.row.submitTime}}</span>
+            <span v-else>----</span>
+            </template>
+          </el-table-column>
           <el-table-column label="作业提交内容" align="center">
             <template v-slot="scope">
             <el-button type="text" v-if="scope.row.contentID !== null" @click="DownloadCT(scope.row)">查看作业</el-button>
@@ -50,7 +55,13 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template v-slot="scope">
-            <el-button size="large" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
+            <el-button
+                size="large"
+                v-if="scope.row.contentID !== null"
+                @click="modifyScore(scope.row.contentID,scope.row.score)"
+            >修改成绩
+            </el-button>
+            <span v-else>未提交</span>
             </template>
           </el-table-column>
         </el-table>
