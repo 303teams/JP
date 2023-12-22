@@ -1,162 +1,165 @@
 <template>
   <div class="submitListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
-    <div class="base_title">
-      <div class="title">提交情况</div>
-    </div>
-    <div class="main">
-      <div class="search-container">
-        <div class="search_input">
-          <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
-        </div>
-        <el-button size="large" class="search_button" @click="clickSearch">
-          <el-icon style="vertical-align: middle">
-            <Search />
-          </el-icon>
-          <span style="vertical-align: middle"> 查询 </span>
-        </el-button>
-
-        <div>
-          <el-button @click="modifyContent" size="large" class="modify-ddl-button">修改作业内容</el-button>
-          <el-button @click="modifyDdl" size="large" class="modify-ddl-button">修改截止时间</el-button>
-        </div>
+    <div style="margin-top: 50px;padding:20px">
+      <div class="base_title">
+        <div class="title">提交情况</div>
       </div>
-      <el-table :data="filterTableData"
-                class="HomeworkList"
-                size="large"
-                stripe
-                :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="学生学号" width="120px" align="center" sortable prop="sno" />
-        <el-table-column label="学生姓名" width="120px" align="center" sortable prop="sname" />
-        <el-table-column label="提交时间" width="200px" align="center" sortable prop="submitTime" />
-        <el-table-column label="作业提交内容" align="center" width="150px">
-          <template v-slot="scope">
-          <el-button type="text" v-if="scope.row.contentID !== null" @click="DownloadCT(scope.row)">查看作业</el-button>
-          <span v-else>未提交</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="作业成绩" width="120px" align="center" sortable>
-          <template v-slot="scope">
-          <el-tooltip v-if="scope.row.similarAmount > 0" class="item" effect="dark" content="点击查看查重名单" placement="top">
+      <div class="main">
+        <div class="search-container">
+          <div class="search_input">
+            <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
+          </div>
+          <el-button size="large" class="search_button" @click="clickSearch">
+            <el-icon style="vertical-align: middle">
+              <Search />
+            </el-icon>
+            <span style="vertical-align: middle"> 查询 </span>
+          </el-button>
+
+          <div>
+            <el-button @click="modifyContent" size="large" class="modify-ddl-button">修改作业内容</el-button>
+            <el-button @click="modifyDdl" size="large" class="modify-ddl-button">修改截止时间</el-button>
+          </div>
+        </div>
+        <el-table :data="filterTableData"
+                  class="HomeworkList"
+                  size="large"
+                  stripe
+                  :header-cell-style="{background:'#cde2ee',color:'#000'}">
+          <el-table-column label="学生学号" align="center" sortable prop="sno" />
+          <el-table-column label="学生姓名" align="center" sortable prop="sname" />
+          <el-table-column label="提交时间" align="center" width="200px" sortable prop="submitTime" />
+          <el-table-column label="作业提交内容" align="center">
+            <template v-slot="scope">
+            <el-button type="text" v-if="scope.row.contentID !== null" @click="DownloadCT(scope.row)">查看作业</el-button>
+            <span v-else>未提交</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="作业成绩" align="center" sortable>
+            <template v-slot="scope">
+            <el-tooltip v-if="scope.row.similarAmount > 0" class="item" effect="dark" content="点击查看查重名单" placement="top">
           <span @click="ClickSimilar(scope.row)" style="cursor: pointer; color:red">
             {{ scope.row.score }}
             <el-icon><Search /></el-icon>
           </span>
-          </el-tooltip>
+            </el-tooltip>
 
-          <span v-else>{{ scope.row.score }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="140px">
-          <template v-slot="scope">
-          <el-button size="large" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+            <span v-else>{{ scope.row.score }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template v-slot="scope">
+            <el-button size="large" @click="modifyScore(scope.row.contentID,scope.row.score)">修改成绩</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
 
-      <el-config-provider :locale="zhCn">
-        <div class="demo-pagination-block">
-          <el-pagination
-              v-model:current-page="currentPage"
-              v-model:page-size="pageSize"
-              :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
-              background
-              layout="total, sizes, prev, pager, next"
-              :total="filteredData.length"
-          />
-        </div>
-      </el-config-provider>
+        <el-config-provider :locale="zhCn">
+          <div class="demo-pagination-block">
+            <el-pagination
+                v-model:current-page="currentPage"
+                v-model:page-size="pageSize"
+                :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
+                background
+                layout="total, sizes, prev, pager, next"
+                :total="filteredData.length"
+            />
+          </div>
+        </el-config-provider>
 
-    </div>
+      </div>
 
-    <el-dialog title="修改成绩" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyScoreDia" width="30%">
+      <el-dialog title="修改成绩" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyScoreDia" width="30%">
         <div>
           <p>当前分数：{{ currentScore }}</p>
           <el-input v-model="newScore" style="width: 150px;" @input="handleEdit" placeholder="输入新的分数"/>
         </div>
 
-      <template #footer>
+        <template #footer>
         <span>
           <el-button @click="modifyScoreDia = false">取 消</el-button>
           <el-button type="primary" @click="modiScoreSubmit">确 定</el-button>
         </span>
-      </template>
-    </el-dialog>
+        </template>
+      </el-dialog>
 
-    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" @close="closeDia" width="50%" >
-      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
-          <el-form-item label="上传附件" prop="content">
-            <el-upload
-                class="upload-demo"
-                drag
-                action="#"
-                :auto-upload="false"
-                ref="uploadFile"
-                :on-change="handleChange"
-                :on-remove="handleRemove"
-                :on-exceed="handleExceed"
-                :before-upload="beforeUpload"
-                :file-list="homeworkData.content"
-                limit="1"
-            >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">
-                拖动文件到这或者 <em>点击上传</em>
+      <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" @close="closeDia" width="50%" >
+        <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+          <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
+            <el-form-item label="上传附件" prop="content">
+              <el-upload
+                  class="upload-demo"
+                  drag
+                  action="#"
+                  :auto-upload="false"
+                  ref="uploadFile"
+                  :on-change="handleChange"
+                  :on-remove="handleRemove"
+                  :on-exceed="handleExceed"
+                  :before-upload="beforeUpload"
+                  :file-list="homeworkData.content"
+                  limit="1"
+              >
+                <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                <div class="el-upload__text">
+                  拖动文件到这或者 <em>点击上传</em>
+                </div>
+                <template #tip>
+                <div class="el-upload__tip">
+                  文件大小不超过100Mb
+                </div>
+                </template>
+              </el-upload>
+            </el-form-item>
+            <el-form-item  label="作业内容" prop="info">
+              <div style="width: 400px">
+                <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
               </div>
-              <template #tip>
-              <div class="el-upload__tip">
-                文件大小不超过100Mb
-              </div>
-              </template>
-            </el-upload>
-          </el-form-item>
-          <el-form-item  label="作业内容" prop="info">
-            <div style="width: 400px">
-              <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
-            </div>
-          </el-form-item>
-        </el-form>
-      </div>
-      <span class="dialog-footer">
+            </el-form-item>
+          </el-form>
+        </div>
+        <span class="dialog-footer">
         <el-button @click="modifyHomework">提交</el-button>
         <el-button @click="closeDia">取消</el-button>
       </span>
-    </el-dialog>
-    <el-dialog title="修改截止时间" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyDdlDia" width="30%">
-      <div class="modify-ddl">
-        <p>当前提交截止时间：{{submitDdl}}</p>
-        <el-date-picker
-            v-model="newSubmitDdl"
-            type="datetime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            format="YYYY-MM-DD HH:mm:ss"
-            :disabled-date="disabledSubmitDate"
-            :disabled-hours="disabledSubmitHours"
-            :disabled-minutes="disabledSubmitMinutes"
-            :disabled-seconds="disabledSubmitSeconds"
-            placeholder="选择日期和时间"/>
+      </el-dialog>
+      <el-dialog title="修改截止时间" :close-on-click-modal="false" :lock-scroll="false" v-model="modifyDdlDia" width="30%">
+        <div class="modify-ddl">
+          <p>当前提交截止时间：{{submitDdl}}</p>
+          <el-date-picker
+              v-model="newSubmitDdl"
+              type="datetime"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              format="YYYY-MM-DD HH:mm:ss"
+              :disabled-date="disabledSubmitDate"
+              :disabled-hours="disabledSubmitHours"
+              :disabled-minutes="disabledSubmitMinutes"
+              :disabled-seconds="disabledSubmitSeconds"
+              placeholder="选择日期和时间"/>
 
-        <p>当前互评截止时间：{{scoreDdl }}</p>
-        <el-date-picker
-            v-model="newScoreDdl"
-            type="datetime"
-            value-format="YYYY-MM-DD HH:mm:ss"
-            format="YYYY-MM-DD HH:mm:ss"
-            :disabled-date="disabledScoreDate"
-            :disabled-hours="disabledScoreHours"
-            :disabled-minutes="disabledScoreMinutes"
-            :disabled-seconds="disabledScoreSeconds"
-            placeholder="选择日期和时间"/>
-      </div>
+          <p>当前互评截止时间：{{scoreDdl }}</p>
+          <el-date-picker
+              v-model="newScoreDdl"
+              type="datetime"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              format="YYYY-MM-DD HH:mm:ss"
+              :disabled-date="disabledScoreDate"
+              :disabled-hours="disabledScoreHours"
+              :disabled-minutes="disabledScoreMinutes"
+              :disabled-seconds="disabledScoreSeconds"
+              placeholder="选择日期和时间"/>
+        </div>
 
-      <template #footer>
+        <template #footer>
         <span>
           <el-button @click="modifyDdlDia = false">取 消</el-button>
           <el-button type="primary" @click="modiDdlSubmit">确 定</el-button>
         </span>
-      </template>
-    </el-dialog>
+        </template>
+      </el-dialog>
+    </div>
+
   </div>
 
   <review-details ref="ReviewDetailRef"></review-details>
@@ -671,7 +674,7 @@ onMounted(() => {
 <style scoped>
 .submitListMain{
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   background: #fff;
   border-radius: 4px;
   overflow: hidden;
@@ -688,10 +691,12 @@ onMounted(() => {
 }
 
 .base_title {
-  position: absolute;
-  top: 100px;
-  left: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
 }
+
 .title {
   position: relative;
   padding-left: 13px;
@@ -734,7 +739,6 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
   margin-top: 20px;
   right: 170px;
 }

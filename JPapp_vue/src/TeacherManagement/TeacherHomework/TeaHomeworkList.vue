@@ -1,171 +1,172 @@
 <template>
   <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
-    <div class="base_title">
-      <span style="font-size: 30px; font-weight: bold;">{{ courseName}}</span>
-      <div class="title">课程作业</div>
-    </div>
-    <div class="main">
-      <div class="search-container">
-        <div class="search_input">
-          <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
-        </div>
-        <el-button size="large" class="search_button" @click="clickSearch">
-          <el-icon style="vertical-align: middle">
-          <Search />
-        </el-icon>
-          <span style="vertical-align: middle"> 查询 </span>
-        </el-button>
-
-        <el-button @click="uploadHomework" size="large" class="upload-button">上传作业</el-button>
+    <div style="margin-top: 50px;padding:20px">
+      <div class="base_title">
+        <span style="font-size: 30px; font-weight: bold;">{{ courseName}}</span>
+        <div class="title">课程作业</div>
       </div>
-      <el-table :data="filterTableData"
-                class="HomeworkList"
-                v-loading = "loading"
-                element-loading-text = "拼命加载中"
-                size="large"
-                stripe
-                :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" width="120px" sortable prop="name" show-overflow-tooltip/>
-        <el-table-column label="作业截止时间" width="180px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
-        <el-table-column label="作业内容" width="100px" prop="content" >
-          <template v-slot="scope">
-          <el-button type="text" @click="DownloadHW(scope.row)">查看作业</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="提交情况" width="150px" align="center">
-          <template v-slot="scope">
-          <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
+      <div class="main">
+        <div class="search-container">
+          <div class="search_input">
+            <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
+          </div>
+          <el-button size="large" class="search_button" @click="clickSearch">
+            <el-icon style="vertical-align: middle">
+              <Search />
+            </el-icon>
+            <span style="vertical-align: middle"> 查询 </span>
+          </el-button>
+
+          <el-button @click="uploadHomework" size="large" class="upload-button">上传作业</el-button>
+        </div>
+        <el-table :data="filterTableData"
+                  class="HomeworkList"
+                  v-loading = "loading"
+                  element-loading-text = "拼命加载中"
+                  size="large"
+                  stripe
+                  :header-cell-style="{background:'#cde2ee',color:'#000'}">
+          <el-table-column label="作业名称" sortable prop="name" show-overflow-tooltip/>
+          <el-table-column label="作业截止时间" sortable prop="submitDdl" />
+          <el-table-column label="互评截止时间" sortable prop="scoreDdl" />
+          <el-table-column label="作业内容" prop="content" >
+            <template v-slot="scope">
+            <el-button type="text" @click="DownloadHW(scope.row)">查看作业</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="提交情况" align="center">
+            <template v-slot="scope">
+            <el-tooltip class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleClick(scope.row)" style="cursor: pointer; color:dodgerblue">
             {{ scope.row.submitAmount }} / {{ scope.row.totalAmount }}
             <el-icon><Search /></el-icon>
           </span>
-          </el-tooltip>
-          </template>
-        </el-table-column>
-        <el-table-column label="上传答案" align="center" width="160px">
-          <template v-slot="scope">
-          <el-upload
-              v-if="scope.row.afilename === null"
-              class="upload-demo"
-              action="/homework/setAnswer"
-              :http-request="(params) => uploadAnswer(params, scope.row)"
-              :before-upload="beforeUpload"
-              :on-success="successHandle"
-              :show-file-list="false"
-              limit="1"
-          >
-            <el-button type="primary">上传答案</el-button>
-            <template #tip>
-            <div class="el-upload__tip">
-              文件大小不超过100Mb
-            </div>
+            </el-tooltip>
             </template>
-          </el-upload>
-          <span v-else>已上传</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="right">
-          <template #default="scope">
-          <el-icon
-              size="40px"
-              @mouseenter="hoveredRowIndex = scope.$index"
-              @mouseleave="hoveredRowIndex = null"
-              @click="handleDelete(scope.$index, scope.row)"
-              style="cursor: pointer;color: rgba(87,86,86,0.55)"
-          >
-            <Delete v-if="hoveredRowIndex !== scope.$index" />
-            <DeleteFilled v-else />
-          </el-icon>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <el-config-provider :locale="zhCn">
-        <div class="demo-pagination-block">
-          <el-pagination
-              v-model:current-page="currentPage"
-              v-model:page-size="pageSize"
-              :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
-              background
-              layout="total, sizes, prev, pager, next"
-              :total="filteredData.length"
-          />
-        </div>
-      </el-config-provider>
-
-    </div>
-
-    <!-- 上传作业的弹出框 -->
-    <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" @close="closeDia" width="50%" >
-      <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
-        <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
-          <el-form-item label="作业名字:" prop="name" >
-            <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
-          </el-form-item>
-          <el-form-item label="提交截止日期:" prop="submitDdl" >
-            <el-date-picker
-                v-model="homeworkData.submitDdl"
-                type="datetime"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                format="YYYY-MM-DD HH:mm:ss"
-                :disabled-date="disabledSubmitDate"
-                :disabled-hours="disabledSubmitHours"
-                :disabled-minutes="disabledSubmitMinutes"
-                :disabled-seconds="disabledSubmitSeconds"
-                placeholder="选择日期和时间"/>
-          </el-form-item>
-          <el-form-item label="互评截止日期:" prop="scoreDdl" >
-            <el-date-picker
-                v-model="homeworkData.scoreDdl"
-                type="datetime"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                format="YYYY-MM-DD HH:mm:ss"
-                :disabled-date="disabledScoreDate"
-                :disabled-hours="disabledScoreHours"
-                :disabled-minutes="disabledScoreMinutes"
-                :disabled-seconds="disabledScoreSeconds"
-                placeholder="选择日期和时间"/>
-          </el-form-item>
-          <el-form-item label="上传附件" prop="content">
+          </el-table-column>
+          <el-table-column label="上传答案" align="center">
+            <template v-slot="scope">
             <el-upload
+                v-if="scope.row.afilename === null"
                 class="upload-demo"
-                drag
-                action="#"
-                :auto-upload="false"
-                ref="uploadFile"
-                :on-change="handleChange"
-                :on-remove="handleRemove"
-                :on-exceed="handleExceed"
+                action="/homework/setAnswer"
+                :http-request="(params) => uploadAnswer(params, scope.row)"
                 :before-upload="beforeUpload"
-                :file-list="homeworkData.content"
+                :on-success="successHandle"
+                :show-file-list="false"
                 limit="1"
             >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">
-                拖动文件到这或者 <em>点击上传</em>
-              </div>
+              <el-button type="primary">上传答案</el-button>
               <template #tip>
               <div class="el-upload__tip">
                 文件大小不超过100Mb
               </div>
               </template>
             </el-upload>
-          </el-form-item>
-          <el-form-item  label="作业内容" prop="info">
-            <div style="width: 400px">
-              <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
-            </div>
-          </el-form-item>
-        </el-form>
+            <span v-else>已上传</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="right">
+            <template #default="scope">
+            <el-icon
+                size="40px"
+                @mouseenter="hoveredRowIndex = scope.$index"
+                @mouseleave="hoveredRowIndex = null"
+                @click="handleDelete(scope.$index, scope.row)"
+                style="cursor: pointer;color: rgba(87,86,86,0.55)"
+            >
+              <Delete v-if="hoveredRowIndex !== scope.$index" />
+              <DeleteFilled v-else />
+            </el-icon>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <el-config-provider :locale="zhCn">
+          <div class="demo-pagination-block">
+            <el-pagination
+                v-model:current-page="currentPage"
+                v-model:page-size="pageSize"
+                :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
+                background
+                layout="total, sizes, prev, pager, next"
+                :total="filteredData.length"
+            />
+          </div>
+        </el-config-provider>
+
       </div>
-      <span class="dialog-footer">
+
+      <!-- 上传作业的弹出框 -->
+      <el-dialog title="上传作业" :close-on-click-modal="false" :lock-scroll="false" v-model="dialogTableVisible" @close="closeDia" width="50%" >
+        <div style = "flex: 1; display: flex; align-items: center; justify-content: center">
+          <el-form ref="HomeworkFormRef" :model="homeworkData" :rules="homeFormRules" label-width="130px">
+            <el-form-item label="作业名字:" prop="name" >
+              <el-input style="width: 220px" v-model="homeworkData.name" ></el-input>
+            </el-form-item>
+            <el-form-item label="提交截止日期:" prop="submitDdl" >
+              <el-date-picker
+                  v-model="homeworkData.submitDdl"
+                  type="datetime"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                  format="YYYY-MM-DD HH:mm:ss"
+                  :disabled-date="disabledSubmitDate"
+                  :disabled-hours="disabledSubmitHours"
+                  :disabled-minutes="disabledSubmitMinutes"
+                  :disabled-seconds="disabledSubmitSeconds"
+                  placeholder="选择日期和时间"/>
+            </el-form-item>
+            <el-form-item label="互评截止日期:" prop="scoreDdl" >
+              <el-date-picker
+                  v-model="homeworkData.scoreDdl"
+                  type="datetime"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                  format="YYYY-MM-DD HH:mm:ss"
+                  :disabled-date="disabledScoreDate"
+                  :disabled-hours="disabledScoreHours"
+                  :disabled-minutes="disabledScoreMinutes"
+                  :disabled-seconds="disabledScoreSeconds"
+                  placeholder="选择日期和时间"/>
+            </el-form-item>
+            <el-form-item label="上传附件" prop="content">
+              <el-upload
+                  class="upload-demo"
+                  drag
+                  action="#"
+                  :auto-upload="false"
+                  ref="uploadFile"
+                  :on-change="handleChange"
+                  :on-remove="handleRemove"
+                  :on-exceed="handleExceed"
+                  :before-upload="beforeUpload"
+                  :file-list="homeworkData.content"
+                  limit="1"
+              >
+                <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                <div class="el-upload__text">
+                  拖动文件到这或者 <em>点击上传</em>
+                </div>
+                <template #tip>
+                <div class="el-upload__tip">
+                  文件大小不超过100Mb
+                </div>
+                </template>
+              </el-upload>
+            </el-form-item>
+            <el-form-item  label="作业内容" prop="info">
+              <div style="width: 400px">
+                <el-input type="textarea" resize="none" :rows="5" v-model="homeworkData.info" placeholder="请输入作业内容"/>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span class="dialog-footer">
         <el-button @click="assignHomework">提交</el-button>
         <el-button @click="closeDia">取消</el-button>
       </span>
-    </el-dialog>
-
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -658,7 +659,7 @@ const Back = () => {
 <style scoped>
 .homeListMain{
   display: flex;
-  justify-content: center
+  flex-direction: column;
 }
 
 .icon{
@@ -671,17 +672,17 @@ const Back = () => {
 }
 
 .base_title {
-  position: absolute;
-  top: 100px;
-  left: 370px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
 }
 
 .title {
   position: relative;
+  padding-left: 13px;
   font-size: 20px;
-  left: -40px;
   font-weight: bold;
-  margin-top: 40px;
 }
 
 .title:before {
@@ -690,7 +691,7 @@ const Back = () => {
   width: 4px;
   height: 23px;
   position: absolute;
-  left: 40px;
+  left: 0;
   top: 50%;
   margin-top: -10px;
 }
@@ -698,7 +699,7 @@ const Back = () => {
 .search-container {
   display: flex;
   width: auto;
-  margin-top: 120px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
@@ -712,19 +713,12 @@ const Back = () => {
   margin-left: 10px;
 }
 
-.upload-button {
-  position: absolute;
-  top: 120px;
-  right: 120px;
-  margin-top: 100px;
-  margin-bottom: 10px;
-}
+
 
 .demo-pagination-block{
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
   margin-top: 20px;
   right: 170px;
 }
