@@ -14,7 +14,7 @@ class ContentDaoTest {
 
     @Test
     void findxCTById() {
-        System.out.println(contentDao.findxCTById(49,"21301005"));
+        System.out.println(contentDao.findxCTById(146,"21301008"));
     }
 
     @Test

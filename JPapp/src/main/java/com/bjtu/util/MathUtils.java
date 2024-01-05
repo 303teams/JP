@@ -49,10 +49,17 @@ public class MathUtils {
         double avg = getAvg();
         double std = getStd();
         for(Score score : scores){
-            if(Math.abs(score.getScore() - avg) > 2 * std){
+            if(Math.abs(score.getScore() - avg) > std){
                 scores.remove(score);
 //                将该评分记录的id加入cutIndex表中
-                cutIndex.add(score.getContentID());
+                cutIndex.add(score.getScoreID());
+
+                System.out.println("-------");
+                for(Score sc: scores){
+                    System.out.println(sc.getScoreID());
+                }
+                System.out.println("-------");
+
                 break;
             }
         }

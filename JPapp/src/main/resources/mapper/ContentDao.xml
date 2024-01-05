@@ -50,9 +50,9 @@
             COALESCE(score.content, 'No comment') as comment
         FROM
             content c
-                LEFT JOIN score ON c.contentID = score.contentID
+                LEFT JOIN score ON c.contentID = score.contentID AND score.sno = #{sno}
         WHERE
-            c.contentID = #{contentID} AND score.sno = #{sno}
+            c.contentID = #{contentID}
 
     </select>
 

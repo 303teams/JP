@@ -173,11 +173,15 @@ public class StudentServiceImpl implements StudentService  {
     @Override
     public RspObject<List<Content>> findCTsByCID(Integer contentID) {
         String id = contentDao.findSnoByCID(contentID);
+        System.out.println(id);
         try {
             Content content = contentDao.findCTSByCID(contentID);
+            System.out.println(content);
             Integer[] temp = content.getContents();
+            System.out.println(temp);
             List<Content> contents = new ArrayList<>();
             for(int i = 0; i<6; i++){
+                System.out.println(temp[i]);
                 contents.add(contentDao.findxCTById(temp[i],id));
             }
             return RspObject.success("查询成功！", contents);
@@ -236,6 +240,7 @@ public class StudentServiceImpl implements StudentService  {
     @Override
     public RspObject<Boolean> handleAppeal(Integer contentID, String appealContent) {
 
+        System.out.println("handleAppeal: "+contentID+" "+appealContent);
         int flag = 0;
         List<Score> scores = scoreDao.findSCByCID(contentID);
         MathUtils scoresfilter = new MathUtils(scores);
@@ -256,6 +261,8 @@ public class StudentServiceImpl implements StudentService  {
 
         } else flag = 2;
 
+        System.out.println("flag: "+flag);
+
         try{
             switch (flag) {
                 case 0:
@@ -264,6 +271,7 @@ public class StudentServiceImpl implements StudentService  {
                     //执行将待置0的评分置0操作
                     List<Integer> cutList = scoresfilter.getCutIndex();
                     for (Integer i : cutList) {
+                        System.out.println(i);
                         scoreDao.setInvalid(i);
                     }
 //            执行重新统计某项作业成绩的动作

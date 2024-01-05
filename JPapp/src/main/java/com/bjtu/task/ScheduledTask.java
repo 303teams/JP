@@ -228,7 +228,9 @@ public class ScheduledTask {
                         similarityDao.addOne(id_i,id_j,s);
                         similarityDao.addOne(id_j,id_i,s);
 //                    2.将两份作业的评分记录设为无效
+                        System.out.println("查重:"+id_i.toString()+" "+id_j.toString());
                         scoreDao.setInvalidByCID(id_i,id_j);
+                        System.out.println("查重:"+id_j.toString()+" "+id_i.toString());
                     }catch (Exception e){
                         e.printStackTrace();
                     }

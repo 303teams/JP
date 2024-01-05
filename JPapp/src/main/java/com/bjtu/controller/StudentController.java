@@ -1,5 +1,6 @@
 package com.bjtu.controller;
 
+import com.bjtu.config.AuthAccess;
 import com.bjtu.pojo.*;
 import com.bjtu.service.ContentService;
 import com.bjtu.service.HomeworkService;
