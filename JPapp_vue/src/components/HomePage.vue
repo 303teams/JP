@@ -28,7 +28,7 @@ body {
 
 .layout-container-demo {
   width: 100vw;
-  height: 100vh;
+  height: 100vh;l
 }
 
 .app-main-height {
