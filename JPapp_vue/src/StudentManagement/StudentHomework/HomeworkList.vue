@@ -1,71 +1,73 @@
 <template>
   <div class="homeListMain">
     <el-icon class="icon" @click="Back"><ArrowLeft /></el-icon>
-    <div class="base_title">
-      <div class="title">课程作业</div>
-    </div>
-    <div class="main">
-      <div class="search-container">
-        <div class="search_input">
-          <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
-        </div>
-        <el-button size="large" class="search_button" @click="clickSearch">
-          <el-icon style="vertical-align: middle">
-          <Search />
-        </el-icon>
-          <span style="vertical-align: middle"> 查询 </span>
-        </el-button>
+    <div style="margin-top: 50px;padding:20px">
+      <div class="base_title">
+        <div class="title">课程作业</div>
       </div>
-      <el-table :data="filterTableData"
-                class="HomeworkList"
-                size="large"
-                v-loading = "loading"
-                element-loading-text = "拼命加载中"
-                stripe
-                :header-cell-style="{background:'#cde2ee',color:'#000'}">
-        <el-table-column label="作业名称" width="150px" sortable prop="name" />
-        <el-table-column label="课程名称" width="150px" sortable prop="courseName" />
-        <el-table-column label="发布人" width="120px" prop="teacherName" />
-        <el-table-column label="提交截止时间" width="180px" sortable prop="submitDdl" />
-        <el-table-column label="互评截止时间" width="180px" sortable prop="scoreDdl" />
-        <el-table-column label="查看作业" width="140px" align="center">
-          <template v-slot="scope">
-          <el-button
-              @click="handleCheck(cno,scope.row)"
-              size="large"
-          >
-            查看作业
+      <div class="main">
+        <div class="search-container">
+          <div class="search_input">
+            <el-input v-model="search" size="large" placeholder="输入关键字搜索" />
+          </div>
+          <el-button size="large" class="search_button" @click="clickSearch">
+            <el-icon style="vertical-align: middle">
+              <Search />
+            </el-icon>
+            <span style="vertical-align: middle"> 查询 </span>
           </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="作业成绩" width="120px" align="center">
-          <template v-slot="scope">
-          <el-tooltip v-if="scope.row.submitTime !== null" class="item" effect="dark" content="查看详情" placement="top">
+        </div>
+        <el-table :data="filterTableData"
+                  class="HomeworkList"
+                  size="large"
+                  v-loading = "loading"
+                  element-loading-text = "拼命加载中"
+                  stripe
+                  :header-cell-style="{background:'#cde2ee',color:'#000'}">
+          <el-table-column label="作业名称" sortable prop="name" />
+          <el-table-column label="课程名称" sortable prop="courseName" />
+          <el-table-column label="发布人" prop="teacherName" />
+          <el-table-column label="提交截止时间" width="200px" sortable prop="submitDdl" />
+          <el-table-column label="互评截止时间" width="200px" sortable prop="scoreDdl" />
+          <el-table-column label="查看作业" align="center">
+            <template v-slot="scope">
+            <el-button
+                @click="handleCheck(cno,scope.row)"
+                size="large"
+            >
+              查看作业
+            </el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="作业成绩" width="120px" align="center">
+            <template v-slot="scope">
+            <el-tooltip v-if="scope.row.contentID !== null" class="item" effect="dark" content="查看详情" placement="top">
           <span @click="handleCheck(cno,scope.row)" style="cursor: pointer; color:dodgerblue">
             {{ scope.row.score }}
             <el-icon><Search /></el-icon>
           </span>
-          </el-tooltip>
+            </el-tooltip>
 
-          <span v-else>--</span>
-          </template>
-        </el-table-column>
-      </el-table>
+            <span v-else>--</span>
+            </template>
+          </el-table-column>
+        </el-table>
 
-      <el-config-provider :locale="zhCn">
-        <div class="demo-pagination-block">
-          <el-pagination
-              v-model:current-page="currentPage"
-              v-model:page-size="pageSize"
-              :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
-              background
-              layout="total, sizes, prev, pager, next"
-              :total="filteredData.length"
-          />
-        </div>
-      </el-config-provider>
+        <el-config-provider :locale="zhCn">
+          <div class="demo-pagination-block">
+            <el-pagination
+                v-model:current-page="currentPage"
+                v-model:page-size="pageSize"
+                :page-sizes="[2, 5, 10, 15, 30, 50, 100]"
+                background
+                layout="total, sizes, prev, pager, next"
+                :total="filteredData.length"
+            />
+          </div>
+        </el-config-provider>
+      </div>
+
     </div>
-
   </div>
 </template>
 
@@ -160,7 +162,7 @@ onMounted(() => {
 <style scoped>
 .homeListMain{
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
 
 .icon{
@@ -173,9 +175,10 @@ onMounted(() => {
 }
 
 .base_title {
-  position: absolute;
-  top: 100px;
-  left: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
 }
 
 .title {
@@ -220,9 +223,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
   margin-top: 20px;
-  right: 40px;
 }
 
 

@@ -100,6 +100,7 @@ const HandleAppeal = () =>{
     contentID: contentID,
     appealContent: info.value,
   }
+
   http.submitAppeal(data)
      .then((res) => {
         if (res.data.code === 200) {
@@ -108,7 +109,7 @@ const HandleAppeal = () =>{
           ElMessageBox.confirm(res.data.msg, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            type: 'success',
+            type: 'warning',
           }).then(() => {
           }).catch(()=>{
           });
@@ -160,7 +161,6 @@ const fetchData = () => {
         if(res3.data.code === 200) {
           console.log(res3)
           check.value= res3.data.data;
-          console.log(check)
         }else{
           window.alert("获取信息失败:" + res3.data.msg);
         }
